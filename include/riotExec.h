@@ -1,3 +1,6 @@
+#ifndef RIOT_EXEC
+#define RIOT_EXEC
+
 #include "riotCommon.h"
 
 /* Data Types */
@@ -8,3 +11,5 @@ struct MenuEntry {
 };
 
 /* Function Prototypes */
+
+#endif

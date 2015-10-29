@@ -1,3 +1,6 @@
+#ifndef RIOT_UNITS
+#define RIOT_UNITS
+
 #include "riotCommon.h"
 
 /* Data Types */
@@ -20,3 +23,5 @@ struct Guard {
 /* Function Prototypes */
 
 _Bool unitAdd(char InmateType);
+
+#endif

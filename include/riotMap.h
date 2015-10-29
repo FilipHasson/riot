@@ -1,3 +1,6 @@
+#ifndef RIOT_MAP
+#define RIOT_MAP
+
 #include "riotCommon.h"
 
 /* Data Types */
@@ -21,3 +24,5 @@ struct TileNode {
 /* Function Prototypes */
 
 struct Map *parsemap(char *loadDir);
+
+#endif

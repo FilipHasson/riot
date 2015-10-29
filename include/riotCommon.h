@@ -1,3 +1,9 @@
+#ifndef RIOT_COMMON
+#define RIOT_COMMON
+
+#define MINX 100
+#define MINY 100
+
 /* InmateType will allow for a bidirectional equivalence between unit types and
    their associated char values.*/
 enum InmateType {
@@ -33,3 +39,5 @@ enum Colour {
     ORANGE,
     RED
 };
+
+#endif
