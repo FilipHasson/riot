@@ -1,8 +1,8 @@
 #ifndef RIOT_COMMON
 #define RIOT_COMMON
 
-#define MINX 100
-#define MINY 100
+#define MINX 80
+#define MINY 24
 
 /* InmateType will allow for a bidirectional equivalence between unit types and
    their associated char values.*/
@@ -30,7 +30,7 @@ enum GuardType {
 enum AI {
     prox, //proximity
     aoe, //area of effect
-    exit //closest to exit
+    end //closest to end
 };
 
 enum Colour {

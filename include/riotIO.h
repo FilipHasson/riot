@@ -5,6 +5,8 @@
 
 /* Data Types */
 
+
+
 /* Function Prototypes */
 
 enum InmateType getKeypress();

@@ -10,6 +10,9 @@ struct MenuEntry {
     struct MenuEntry *next;
 };
 
+
 /* Function Prototypes */
+
+void checkArgs(int argc, char **argv);
 
 #endif

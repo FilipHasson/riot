@@ -23,6 +23,6 @@ struct TileNode {
 
 /* Function Prototypes */
 
-struct Map *parsemap(char *loadDir);
+struct Map *parseMap(char *loadDir);
 
 #endif
