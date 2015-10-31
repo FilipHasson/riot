@@ -1,5 +1,6 @@
 #include "riotUI.h"
-
+#include <locale.h>
+#include <wchar.h>
 
 void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface) {
 
@@ -9,7 +10,7 @@ void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface) {
             initscr();
             noecho(); // hide keypresses
             curs_set(FALSE); // hide cursor
-            gameInterface = calloc(sizeof(gameInterface),1);
+
             gameInterface->header = newwin(HEADER, SIZE_X, 0, 0);
             gameInterface->main = newwin(MAIN, SIZE_X, HEADER + 1, 0);
             gameInterface->footer = newwin(SIZE_Y, FOOTER, HEADER + MAIN + 1, 0);
@@ -17,7 +18,6 @@ void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface) {
             break;
 
         case MENU:
-            box(gameInterface->menu, 0, 0);
             wrefresh(gameInterface->menu);
             break;
 
@@ -36,41 +36,45 @@ void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface) {
             break;
 
         default:
-            error("Invalid game mode initialized");
+            done("Invalid game mode initialized");
             break;
     }
-    return;
 
+    return;
 }
 
-enum GameMode menuMain(struct GameInterface *gi) {
+enum GameMode menuMain(struct GameInterface *gameInterface) {
 
     enum GameMode gameMode;
-    int y = 21;
+    WINDOW * menu =  gameInterface->menu;
 
-    mvwaddstr(gi->menu, y++, 21, "8888888b. 8888888 .d88888b.88888888888");
-    mvwaddstr(gi->menu, y++, 21, "888   Y88b  888  d88P   Y88b   888");
-    mvwaddstr(gi->menu, y++, 21, "888    888  888  888     888   888");
-    mvwaddstr(gi->menu, y++, 21, "888   d88P  888  888     888   888");
-    mvwaddstr(gi->menu, y++, 21, "8888888P    888  888     888   888");
-    mvwaddstr(gi->menu, y++, 21, "888 T88b    888  888     888   888");
-    mvwaddstr(gi->menu, y++, 21, "888  T88b   888  Y88b. .d88P   888");
-    mvwaddstr(gi->menu, y++, 21, "888   T88b8888888  Y88888P     888");
+    int y = 3;
 
-    y = y + 2;
-//    mvprintw(y++,21,"──────────────────────────────────────");
-    y = y + 2;
-    mvwaddstr(gi->menu, y++, 21, "GAME MENU");
-    mvwaddstr(gi->menu, y++, 21, "[n]ew game");
-    mvwaddstr(gi->menu, y++, 21, "[c]ontinue");
-    mvwaddstr(gi->menu, y++, 21, "[e]xit");
+    box(menu, 0, 0);
+    mvwaddstr(menu, y++, 21, "8888888b. 8888888 .d88888b.88888888888");
+    mvwaddstr(menu, y++, 21, "888   Y88b  888  d88P   Y88b   888");
+    mvwaddstr(menu, y++, 21, "888    888  888  888     888   888");
+    mvwaddstr(menu, y++, 21, "888   d88P  888  888     888   888");
+    mvwaddstr(menu, y++, 21, "8888888P    888  888     888   888");
+    mvwaddstr(menu, y++, 21, "888 T88b    888  888     888   888");
+    mvwaddstr(menu, y++, 21, "888  T88b   888  Y88b. .d88P   888");
+    mvwaddstr(menu, y++, 21, "888   T88b8888888  Y88888P     888");
 
-    wrefresh(gi->menu);
+    mvwhline(menu,y+=2,21,ACS_HLINE,37);
+
+    mvwaddstr(menu, y+=3, 21, "GAME MENU");
+    y+=2;
+    mvwaddstr(menu, y++, 21, "[n]ew game");
+    mvwaddstr(menu, y++, 21, "[c]ontinue");
+    mvwaddstr(menu, y++, 21, "[e]xit");
+
+    wrefresh(menu);
+
     do {
-        gameMode = (enum GameMode) wgetch(gi->menu);
+        gameMode = (enum GameMode) wgetch(menu);
     } while (gameMode != 'n' && gameMode != 'c' && gameMode != 'e');
 
-    return EXIT;
+    return gameMode;
 }
 
 void menuNew() {
@@ -92,7 +96,7 @@ void checkDisplay() {
 
     /* Exit if < minimally permissable dimensions */
     if ((x < SIZE_X) || (y < SIZE_Y)) {
-        error("Terminal size too small");
+        done("Terminal size too small");
     }
 
     return;

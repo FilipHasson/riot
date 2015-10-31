@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* Macro Constants */
 
@@ -64,6 +65,6 @@ enum GameMode {
 
 /* Function Prototypes */
 
-void error(char* message);
+void done(char *message);
 
 #endif
