@@ -32,4 +32,7 @@ bin/*
 # Debug files
 *.dSYM/
 
+#Clion
+.idea
+CMakeLists.txt
 

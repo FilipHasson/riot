@@ -1,36 +1,48 @@
 #ifndef RIOT_COMMON
 #define RIOT_COMMON
 
-#define MINX 80
-#define MINY 24
+#include <ncurses.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+/* Macro Constants */
+
+#define SIZE_X 80
+#define SIZE_Y 24
+#define HEADER 3
+#define FOOTER 4
+#define MAIN 16
+
+
+/* Data Types */
 
 /* InmateType will allow for a bidirectional equivalence between unit types and
    their associated char values.*/
 enum InmateType {
-    homeboy = 'h',
-    bruiser = 'b',
-    lunatic = 'l',
-    fatty = 'f',
-    speedy = 's',
-    cutie = 'c',
-    attorney = 'a',
-    doctor = 'd'
+    HOMEBOY = 'h',
+    BRUISER = 'b',
+    LUNATIC = 'l',
+    FATTY = 'f',
+    SPEEDY = 's',
+    CUTIE = 'c',
+    ATTORNEY = 'a',
+    DOCTOR = 'd'
 };
 
 enum GuardType {
-    guard,
-    dogs,
-    lunchlady,
-    psychiatrist,
-    shartshooter,
-    warder,
-    cyborg
+    GUARD,
+    DOGS,
+    LUNCH, //lunch lady
+    PSYCH, //pshychiatrist
+    SHARP, //sharpshooter
+    WARDEN,
+    CYBORG
 };
 
 enum AI {
-    prox, //proximity
-    aoe, //area of effect
-    end //closest to end
+    PROX, //proximity
+    AOE, //area of effect
+    END //closest to end
 };
 
 enum Colour {
@@ -39,5 +51,19 @@ enum Colour {
     ORANGE,
     RED
 };
+
+enum GameMode {
+    INIT,
+    MENU,
+    NEW = 'n',
+    CONTINUE = 'c',
+    PLAY,
+    EXIT='e'
+};
+
+
+/* Function Prototypes */
+
+void error(char* message);
 
 #endif

@@ -2,8 +2,6 @@
 #define RIOT_UI
 
 #include "riotCommon.h"
-#include <ncurses.h>
-
 
 /* Data Types */
 
@@ -15,10 +13,10 @@ struct GameInterface {
 };
 
 /* Function Prototypes */
-_Bool menuInit(struct GameInterface *) ;
+void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface);
+enum GameMode menuMain(struct GameInterface *) ;
 void inmateUpdate(enum Colour, char inmateType, short from, short to);
 void inmateRemove(short position);
 void guardUpdate(_Bool isAttacking, short position);
-void checkDisplay();
 
 #endif
