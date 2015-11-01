@@ -2,7 +2,7 @@
 
 CC      = gcc
 CFLAGS  = -Wall -std=c99 -pedantic -g
-LDFLAGS = -lncursesw
+LDFLAGS = -lncurses
 INCLUDES = -Iinclude
 
 BINDIR   = bin
@@ -25,4 +25,4 @@ testLink: compiple
 	$(CC) $(LDFLAGS) -o $(BINDIR)/test $(TEST_OBJ) $(LIBS)
 
 clean:
-	@ rm -f *.o bin/*
+	rm -r -f *.o bin/*

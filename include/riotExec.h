@@ -14,6 +14,7 @@ struct MenuEntry {
 /* Function Prototypes */
 
 void checkArgs(int argc, char **argv);
+
 void checkDisplay();
 
 #endif

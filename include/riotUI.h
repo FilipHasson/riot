@@ -14,9 +14,13 @@ struct GameInterface {
 
 /* Function Prototypes */
 void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface);
-enum GameMode menuMain(struct GameInterface *) ;
+
+enum GameMode menuMain(struct GameInterface *);
+
 void inmateUpdate(enum Colour, char inmateType, short from, short to);
+
 void inmateRemove(short position);
+
 void guardUpdate(_Bool isAttacking, short position);
 
 #endif

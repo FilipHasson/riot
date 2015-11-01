@@ -34,7 +34,7 @@ enum GuardType {
     GUARD,
     DOGS,
     LUNCH, //lunch lady
-    PSYCH, //pshychiatrist
+    PSYCH, //psychiatrist
     SHARP, //sharpshooter
     WARDEN,
     CYBORG
@@ -59,12 +59,12 @@ enum GameMode {
     NEW = 'n',
     CONTINUE = 'c',
     PLAY,
-    EXIT='e'
+    EXIT = 'e'
 };
 
 
 /* Function Prototypes */
 
-void done(char *message);
+void quit(char *message);
 
 #endif

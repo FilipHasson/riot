@@ -6,7 +6,7 @@
 /* Data Types */
 
 struct Map {
-    char **overlay; //walls, scenerery, etc.
+    char overlay[SIZE_Y][SIZE_X]; //walls, scenery, etc.
     struct Path *path; //a list containing the path tiles
 };
 
