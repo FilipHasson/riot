@@ -11,20 +11,25 @@ struct Inmate {/*
  Inmate stores the information related to inmate units.*/
 
     char type;
+    double position;
+    short speed;
     short healthMax;
     short healthCur;
     char repCost;
     struct Inmate *next;
-};
+}Inmate;
 
 
 struct Guard {/*
 
  Inmate stores the information related to guard units.*/
+
     char type;
     enum AI ai;
+    short damage;
+    short positionRange[10]; 
     struct Guard *next;
-};
+}Guard;
 
 
 /* Function Prototypes */
