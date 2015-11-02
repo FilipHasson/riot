@@ -5,7 +5,7 @@
 
 /* Data Types */
 
-struct Inmate {
+typedef struct Inmate {
     char type;
     double position;
     short speed;
@@ -13,15 +13,15 @@ struct Inmate {
     short healthCur;
     char repCost;
     struct Inmate *next;
-};
+}Inmate;
 
-struct Guard {
+typedef struct Guard {
     char type;
     enum AI ai;
     short damage;
-    short[10] positionRange; 
+    short positionRange[10]; 
     struct Guard *next;
-};
+}Guard;
 
 
 /* Function Prototypes */
