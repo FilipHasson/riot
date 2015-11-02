@@ -11,11 +11,11 @@ struct Inmate {/*
  Inmate stores the information related to inmate units.*/
 
     char type;
-    double position;
     short speed;
     short healthMax;
     short healthCur;
     char repCost;
+    short position;
     struct Inmate *next;
 }Inmate;
 
@@ -27,7 +27,7 @@ struct Guard {/*
     char type;
     enum AI ai;
     short damage;
-    short positionRange[10]; 
+    short range[10];
     struct Guard *next;
 }Guard;
 
@@ -45,5 +45,18 @@ PRECONDITIONS: The character provided corresponds with an inmate type
  specified within the Inmate enum.
 
 POSTCONDITIONS: An Inmate is added to the Inmate list.*/
+
+
+void inmateMove(struct Inmate *inmate);/*
+
+ DESCRIPTION: Move inmate every turn by its speed.*/
+
+
+void guardAttack(struct Guard *guard, struct Inmate *inmate);/*
+
+ DESCRIPTION: Compares the positions of every inmate, and the positions of
+ attack of every guard if the units position matches the area of attack of
+ the guard than subtract its health by the guards damage*/
+
 
 #endif //RIOT_UNITS
