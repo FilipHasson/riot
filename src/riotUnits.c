@@ -1,10 +1,7 @@
-//Units move
-	//Move unit speed/8 units every turn
-//Guard Attack
-	//Every turn decrement unit health by damage of the guard
-	//if the unit is within range
+#include "riotUnits.h"
+
+/*Move inmate every turn by its speed*/
 void inmateMove(Inmate *inmate){
-	int i;
 	int prevPos;
 	Inmate * nextInmate;
 
@@ -18,30 +15,35 @@ void inmateMove(Inmate *inmate){
 		  ,the position is typecasted to an int that way the 
 		   decimal place is truncated, meaning the position will
 		  be redrawn if a units position changes by a whole unit*/
-		inmate->position = inmate->position + inmate.speed/8;
+		inmate->position = inmate->position + inmate->speed/8;
 		/* inmateRedraw(int previousPosition, int currentPosition, char type) is
 		   a function which should be located inside the UI source file*/
 		inmateRedraw(prevPos,(int)inmate->position,inmate->type);
 		nextInmate = nextInmate->next;
 	}
 }
+/*Compare the positions of every inmate, and the positions of attack of every guard
+  if the units position matches the area of attack of the guard than subtract its 
+  health by the guards damage*/	
 void guardAttack(Guard * guard,Inmate *inmate){
 	int i;
+	int range;
 	Inmate * nextInmate;
 	Guard * nextGuard;
 	
 	nextGuard = guard;
 	nextInmate = inmate;
-
 	while(nextGuard->next != NULL){
+		/*Get the unit range*/
+		range = sizeof(nextGuard->positionRange)/sizeof(short);
 		while(nextInmate->next != NULL){
-			//Pseudo code for checking if inmate within range
-			//For i=0 to i<Guard.proximityArraySize
-			//if proximityArray[i] == nextInmate.position
-			//nextInmate->healthCur = nextInmate->healthCut-Guard->damage 
+			for (i=0;i<range;i++){
+				if (nextGuard->positionRange[i] == nextInmate->position){
+					nextInmate->healthCur = nextInmate->healthCur - nextGuard->damage;
+				}
+			}
 			nextInmate = nextInmate->next;
 		}
 		nextGuard = nextGuard->next;	
 	}	
 }
-
