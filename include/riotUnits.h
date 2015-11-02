@@ -3,9 +3,13 @@
 
 #include "riotCommon.h"
 
+
 /* Data Types */
 
-struct Inmate {
+struct Inmate {/*
+
+ Inmate stores the information related to inmate units.*/
+
     char type;
     short healthMax;
     short healthCur;
@@ -13,7 +17,10 @@ struct Inmate {
     struct Inmate *next;
 };
 
-struct Guard {
+
+struct Guard {/*
+
+ Inmate stores the information related to guard units.*/
     char type;
     enum AI ai;
     struct Guard *next;
@@ -22,6 +29,16 @@ struct Guard {
 
 /* Function Prototypes */
 
-_Bool unitAdd(char InmateType);
+_Bool unitAdd(char InmateType);/*
 
-#endif
+DESCRIPTION: unitAdd() is used to add an inmate to the game.
+
+ARGUMENTS: The character pressed by the user which corresponds to an
+ associated unit type.
+
+PRECONDITIONS: The character provided corresponds with an inmate type
+ specified within the Inmate enum.
+
+POSTCONDITIONS: An Inmate is added to the Inmate list.*/
+
+#endif //RIOT_UNITS
