@@ -7,6 +7,8 @@
 
 struct Inmate {
     char type;
+    double position;
+    short speed;
     short healthMax;
     short healthCur;
     char repCost;
@@ -16,6 +18,8 @@ struct Inmate {
 struct Guard {
     char type;
     enum AI ai;
+    short damage;
+    short[10] positionRange; 
     struct Guard *next;
 };
 
