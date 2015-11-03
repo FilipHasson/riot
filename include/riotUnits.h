@@ -34,6 +34,20 @@ struct Guard {/*
 
 /* Function Prototypes */
 
+void inmateDestroy(struct Inmate *inmateList, int position);/*
+
+DESCRIPTION: inmateDestroy() is used to remove a unit from the game.
+
+ARGUMENTS: struct Inmate *inmateList is the list of inmates present in
+the game, this argument should be changed to a header node once one is
+present.
+
+int position is the position that the inmate should be removed from.
+
+PRECONDITIONS: The position is within the size of the list.
+
+POSTCONDITIONS: The inmate at position has been removed.*/
+
 _Bool unitAdd(char InmateType);/*
 
 DESCRIPTION: unitAdd() is used to add an inmate to the game.
