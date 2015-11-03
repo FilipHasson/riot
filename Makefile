@@ -10,7 +10,7 @@ SRCDIR   = src
 
 SRC = $(SRCDIR)/*.c
 RIOT_OBJ = riotExec.o riotIO.o riotMap.o riotUI.o riotUnits.o
-TEST_OBJ =
+TEST_OBJ = riotTesting.o riotIO.o riotMap.o riotUI.o riotUnits.o
 
 
 default: riotLink
@@ -21,7 +21,7 @@ compile:
 riotLink: compile
 	$(CC) $(LDFLAGS) -o $(BINDIR)/riot $(RIOT_OBJ) $(LIBS)
 
-testLink: compiple
+testLink: compile
 	$(CC) $(LDFLAGS) -o $(BINDIR)/test $(TEST_OBJ) $(LIBS)
 
 clean:

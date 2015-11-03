@@ -1,7 +1,7 @@
 #ifndef RIOT_MAP
 #define RIOT_MAP
 
-#include "riotCommon.h"
+#include "riotExec.h"
 
 
 /* Data Types */

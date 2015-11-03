@@ -1,44 +1,63 @@
 #ifndef RIOT_UNITS
 #define RIOT_UNITS
 
-#include "riotCommon.h"
+#include "riotExec.h"
 
 
 /* Data Types */
 
-struct Inmate {/*
+struct UnitList {
+    struct UnitNode* head;
+    struct UnitNode* tail;
+    short count;
+};
 
- Inmate stores the information related to inmate units.*/
 
-    char type;
+struct UnitNode {/*
+
+ UnitNode stores variable unit stats.*/
+
+    enum UnitType type;
     short speed;
     short healthMax;
     short healthCur;
-    char repCost;
     short position;
-    struct Inmate *next;
-}Inmate;
-
-
-struct Guard {/*
-
- Inmate stores the information related to guard units.*/
-
-    char type;
-    enum AI ai;
-    short damage;
-    short range[10];
-    struct Guard *next;
-}Guard;
+    struct UnitNode *next;
+    struct UnitNode *prev;
+};
 
 
 /* Function Prototypes */
 
-void inmateDestroy(struct Inmate *inmateList, int position);/*
+
+struct UnitList* createList(void);
+
+void destroyList(struct UnitList*);
+
+short getLength(struct UnitList*);
+
+bool isEmpty(struct UnitList *);
+
+struct UnitNode* getHead(struct UnitList*);
+
+struct UnitNode* getTail(struct UnitList*);
+
+void insertFront(struct UnitList *listIn, struct UnitNode *unit);
+
+void insertBack(struct UnitList *listIn, struct UnitNode *unit);
+
+void deleteFront(struct UnitList*);
+
+void deleteBack(struct UnitList*);
+
+void printList(struct UnitList*);
+
+
+void inmateDestroy(struct UnitNode *inmateList, int position);/*
 
 DESCRIPTION: inmateDestroy() is used to remove a unit from the game.
 
-ARGUMENTS: struct Inmate *inmateList is the list of inmates present in
+ARGUMENTS: struct UnitNode *inmateList is the list of inmates present in
 the game, this argument should be changed to a header node once one is
 present.
 
@@ -48,7 +67,8 @@ PRECONDITIONS: The position is within the size of the list.
 
 POSTCONDITIONS: The inmate at position has been removed.*/
 
-_Bool unitAdd(char InmateType);/*
+
+bool unitAdd(char inmateType);/*
 
 DESCRIPTION: unitAdd() is used to add an inmate to the game.
 
@@ -56,17 +76,17 @@ ARGUMENTS: The character pressed by the user which corresponds to an
  associated unit type.
 
 PRECONDITIONS: The character provided corresponds with an inmate type
- specified within the Inmate enum.
+ specified within the InmateNode enum.
 
-POSTCONDITIONS: An Inmate is added to the Inmate list.*/
+POSTCONDITIONS: A UnitNode is added to the UnitList.*/
 
 
-void inmateMove(struct Inmate *inmate);/*
+void inmateMove(struct UnitNode *inmate);/*
 
  DESCRIPTION: Move inmate every turn by its speed.*/
 
 
-void guardAttack(struct Guard *guard, struct Inmate *inmate);/*
+void guardAttack(struct UnitNode *guard, struct UnitNode *inmate);/*
 
  DESCRIPTION: Compares the positions of every inmate, and the positions of
  attack of every guard if the units position matches the area of attack of

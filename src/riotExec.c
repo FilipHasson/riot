@@ -1,5 +1,6 @@
 #include "riotUI.h"
 
+
 int main(int argc, char **argv) {
 
 //    struct Map map;
@@ -24,6 +25,7 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+
 
 void quit(char *message) {
     if (stdscr) endwin();;

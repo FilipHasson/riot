@@ -1,7 +1,7 @@
 #ifndef RIOT_UI
 #define RIOT_UI
 
-#include "riotCommon.h"
+#include "riotExec.h"
 
 
 /* Data Types */
@@ -11,6 +11,12 @@ struct GameInterface {
     WINDOW *main;
     WINDOW *header;
     WINDOW *footer;
+};
+
+struct MenuEntry {
+    char key;
+    char *text;
+    struct MenuEntry *next;
 };
 
 
@@ -39,6 +45,6 @@ void inmateUpdate(enum Colour, char inmateType, short from, short to);
 
 void inmateRemove(short position);
 
-void guardUpdate(_Bool isAttacking, short position);
+void guardUpdate(bool isAttacking, short position);
 
 #endif //RIOT_UI
