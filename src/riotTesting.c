@@ -1,52 +1,16 @@
-/******************************************************************************
-
-ABOUT:
- - listTesting.c; logic testing for a singly linked list ADT
- - Last modified 06/16/2015
-
-AUTHOR:
- - Written by Jessy Williams-Rancourt (0873195)
- - jwilli19@mail.uoguelph.ca
-
-*******************************************************************************/
-
 #include "riotTesting.h"
 
-int main() {
+int main(int argc, char** argv) {
 
-    struct List* list;
+    struct List *inmates, *guards;
     int i;
 
-    list = createList();
-    
-    for (i = 0; i < 5; i++) {
+    inmates = createList();
+    guards = createList();
 
-        printf("\n###### RUN %d #####\n\n", i);
-
-        if (i % 2) {
-            printf("Removing %d from front\n",getFirst(list));
-            deleteFront(list);
-        }
-
-        else {
-            printf("Removing %d from back\n",getLast(list));
-            deleteBack(list);
-        }
-
-        printf("Adding %d to front\n",arg[0]);
-        insertFront(list, arg[0]);
-
-        printf("Adding %d to back\n",arg[1]);
-        insertBack(list, arg[1]);
-
-        printf("\nResults:\n");
-        printList(list);
-
-        printf("\n");
-    }
-
-    destroyList(list);
-
-    return 1;
-
+    destroyList(inmates);
+    destroyList(guards);
 }
+
+
+void quit(char *message) {}

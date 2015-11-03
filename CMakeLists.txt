@@ -11,14 +11,15 @@ set(SOURCE_FILES
         include/riotMap.h
         include/riotUI.h
         include/riotUnits.h
-        src/riotExec.c
         src/riotIO.c
         src/riotMap.c
         src/riotUI.c
         src/riotUnits.c)
 
-add_executable(riot ${SOURCE_FILES})
+#add_executable(riot ${SOURCE_FILES} src/riotExec.c)
+add_executable(testing ${SOURCE_FILES} src/riotTesting.c include/riotTesting.h)
 
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
-target_link_libraries(riot ${CURSES_LIBRARIES})
+#target_link_libraries(riot ${CURSES_LIBRARIES})
+target_link_libraries(testing ${CURSES_LIBRARIES})

@@ -20,6 +20,7 @@
 
 enum UnitType {
 
+    _INMATES,
     HOMEBOY = 'h',
     BRUISER = 'b',
     LUNATIC = 'l',
@@ -29,6 +30,7 @@ enum UnitType {
     ATTORNEY = 'a',
     DOCTOR = 'd',
 
+    _GUARDS,
     GUARD,
     DOGS,
     LUNCH, //lunch lady

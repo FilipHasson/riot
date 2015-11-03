@@ -6,51 +6,73 @@
 
 /* Data Types */
 
-struct UnitList {
-    struct UnitNode* head;
-    struct UnitNode* tail;
+struct List {
+    struct UnitNode *head;
+    struct UnitNode *tail;
     short count;
 };
 
-
-struct UnitNode {/*
-
- UnitNode stores variable unit stats.*/
-
-    enum UnitType type;
-    short speed;
-    short healthMax;
-    short healthCur;
-    short position;
+struct UnitNode {
+    void *unit;
     struct UnitNode *next;
     struct UnitNode *prev;
 };
 
+struct Inmate {
+    /*
+     Inmate stores the information related to inmate units.*/
+
+    char type;
+    short speed;
+    short healthMax;
+    short healthCur;
+    char repCost;
+    short position;
+
+} Inmate;
+
+
+struct Guard {
+    /*
+     Inmate stores the information related to guard units.*/
+
+    char type;
+    enum AI ai;
+    short damage;
+    short range;
+} Guard;
+
+
+/* Linked List Operations */
+
+struct List *createList(void);
+
+void destroyList(struct List *);
+
+short getLength(struct List *);
+
+bool isEmpty(struct List *);
+
+struct UnitNode *getHead(struct List *);
+
+struct UnitNode *getTail(struct List *);
+
+void printGuards(struct List *);
+
+void printInmates(struct List *);
+
+
+/* Linked List Interfaces */
+
+struct UnitNode *enqueue(struct List *queue, void *unit);
+
+struct UnitNode *dequeue(struct List *queue);
+
+struct UnitNode *pop(struct List *stack);
+
+
 
 /* Function Prototypes */
-
-
-struct UnitList* createList(void);
-
-void destroyList(struct UnitList*);
-
-short getLength(struct UnitList*);
-
-bool isEmpty(struct UnitList *);
-
-struct UnitNode* getHead(struct UnitList*);
-
-struct UnitNode* getTail(struct UnitList*);
-
-void insertFront(struct UnitList *listIn, struct UnitNode *unit);
-
-void insertBack(struct UnitList *listIn, struct UnitNode *unit);
-
-void deleteFront(struct UnitList*);
-
-void deleteBack(struct UnitList*);
-
-void printList(struct UnitList*);
 
 
 void inmateDestroy(struct UnitNode *inmateList, int position);/*
@@ -68,7 +90,9 @@ PRECONDITIONS: The position is within the size of the list.
 POSTCONDITIONS: The inmate at position has been removed.*/
 
 
-bool unitAdd(char inmateType);/*
+bool unitAdd(char inmateType);
+
+/*
 
 DESCRIPTION: unitAdd() is used to add an inmate to the game.
 
@@ -78,10 +102,12 @@ ARGUMENTS: The character pressed by the user which corresponds to an
 PRECONDITIONS: The character provided corresponds with an inmate type
  specified within the InmateNode enum.
 
-POSTCONDITIONS: A UnitNode is added to the UnitList.*/
+POSTCONDITIONS: A UnitNode is added to the List.*/
 
 
-void inmateMove(struct UnitNode *inmate);/*
+void inmateMove(struct UnitNode *inmate);
+
+/*
 
  DESCRIPTION: Move inmate every turn by its speed.*/
 
