@@ -6,29 +6,32 @@
 
 /* Data Types */
 
-struct Map {/*
+struct Map {
+    /*
 
- Map stores the game landscape as a 2D array, along with a linked list
- containing the pathh.*/
+     Map stores the game landscape as a 2D array, along with a linked list
+     containing the pathh.*/
 
     char overlay[SIZE_Y][SIZE_X]; //walls, scenery, etc.
     struct Path *path; //a list containing the path tiles
 };
 
 
-struct Path {/*
+struct Path {
+    /*
 
- Path stores the game path as a list of TileNodes.*/
+     Path stores the game path as a list of TileNodes.*/
 
     struct TileNode *first;
-    short count;
+    unsigned short count;
 };
 
 
-struct TileNode {/*
+struct TileNode {
+    /*
 
- TileNode contains the location of the map on the board, along with a the
- character representation of the tile.*/
+     TileNode contains the location of the map on the board, along with a the
+     character representation of the tile.*/
 
     short location;
     char type;

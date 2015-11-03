@@ -18,9 +18,13 @@
 
 /* Data Types */
 
-enum UnitType {
+enum InmateType {
+    /*
 
-    _INMATES,
+     InmateType is a mnemonic which can be used to equivocate inmate types with
+     the associated keypresses used to spawn them.*/
+
+            PROTAGONIST,
     HOMEBOY = 'h',
     BRUISER = 'b',
     LUNATIC = 'l',
@@ -28,46 +32,55 @@ enum UnitType {
     SPEEDY = 's',
     CUTIE = 'c',
     ATTORNEY = 'a',
-    DOCTOR = 'd',
+    DOCTOR = 'd'
+};
 
-    _GUARDS,
-    GUARD,
+
+enum GuardType {
+    /*
+
+     GuardType provides a mnemonic for guard unit types.*/
+
+            GUARD,
     DOGS,
     LUNCH, //lunch lady
     PSYCH, //psychiatrist
     SHARP, //sharpshooter
     WARDEN,
-    CYBORG,
+    CYBORG
 };
 
 
-enum AI {/*
+enum AI {
+    /*
 
- AI provides a mnemonic for guard AI profiles.*/
+     AI provides a mnemonic for guard AI profiles.*/
 
-    PROX, //proximity
+            PROX, //proximity
     AOE, //area of effect
     END, //closest to end
 };
 
 
-enum Colour {/*
+enum Colour {
+    /*
 
- Colour provides a mnemonic for the colours used to convey health values.*/
+     Colour provides a mnemonic for the colours used to convey health values.*/
 
-    GREEN,
+            GREEN,
     YELLOW,
     ORANGE,
     RED,
 };
 
 
-enum GameMode {/*
+enum GameMode {
+    /*
 
- GameMode is a mnemonic which can be used to equivocate game modes with
- the associated keypresses used to inititate them.*/
+     GameMode is a mnemonic which can be used to equivocate game modes with
+     the associated keypresses used to inititate them.*/
 
-    INIT,
+            INIT,
     MENU,
     NEW = 'n',
     CONTINUE = 'c',
@@ -78,7 +91,9 @@ enum GameMode {/*
 
 /* Function Prototypes */
 
-void quit(char *message);/*
+void quit(char *message);
+
+/*
 
 DESCRIPTION: quit() is called as a method for the program to gracefully return
  to the command prompt when facing undefined behaviour or user input. Will

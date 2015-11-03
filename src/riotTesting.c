@@ -1,9 +1,8 @@
 #include "riotTesting.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
     struct List *inmates, *guards;
-    int i;
 
     inmates = createList();
     guards = createList();
@@ -13,4 +12,4 @@ int main(int argc, char** argv) {
 }
 
 
-void quit(char *message) {}
+void quit(char *message) { }

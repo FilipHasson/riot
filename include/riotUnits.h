@@ -12,35 +12,41 @@ struct List {
     short count;
 };
 
+
 struct UnitNode {
     void *unit;
     struct UnitNode *next;
     struct UnitNode *prev;
 };
 
+
 struct Inmate {
     /*
+
      Inmate stores the information related to inmate units.*/
 
     char type;
-    short speed;
-    short healthMax;
-    short healthCur;
-    char repCost;
     short position;
-
-} Inmate;
+    unsigned short health[2];
+    unsigned short speed;
+    unsigned short rep;
+    unsigned short panic;
+};
 
 
 struct Guard {
     /*
+
      Inmate stores the information related to guard units.*/
 
     char type;
+    short position;
+    unsigned short damage;
+    unsigned short range;
+    unsigned short cooldown;
     enum AI ai;
-    short damage;
-    short range;
-} Guard;
+
+};
 
 
 /* Linked List Operations */
@@ -71,13 +77,14 @@ struct UnitNode *dequeue(struct List *queue);
 struct UnitNode *pop(struct List *stack);
 
 
-
 /* Function Prototypes */
 
 
-void inmateDestroy(struct UnitNode *inmateList, int position);/*
+void inmateRm(struct UnitNode *inmateList, int position);
 
-DESCRIPTION: inmateDestroy() is used to remove a unit from the game.
+/*
+
+DESCRIPTION: inmateRm() is used to remove a unit from the game.
 
 ARGUMENTS: struct UnitNode *inmateList is the list of inmates present in
 the game, this argument should be changed to a header node once one is
@@ -90,19 +97,7 @@ PRECONDITIONS: The position is within the size of the list.
 POSTCONDITIONS: The inmate at position has been removed.*/
 
 
-bool unitAdd(char inmateType);
-
-/*
-
-DESCRIPTION: unitAdd() is used to add an inmate to the game.
-
-ARGUMENTS: The character pressed by the user which corresponds to an
- associated unit type.
-
-PRECONDITIONS: The character provided corresponds with an inmate type
- specified within the InmateNode enum.
-
-POSTCONDITIONS: A UnitNode is added to the List.*/
+struct Inmate *addInmate(enum InmateType type);
 
 
 void inmateMove(struct UnitNode *inmate);

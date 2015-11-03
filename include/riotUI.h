@@ -22,7 +22,9 @@ struct MenuEntry {
 
 /* Function Prototypes */
 
-void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface);/*
+void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface);
+
+/*
 
 DESCRIPTION: uiSet() will initialize the various ncurses windows used
  throughout gameplay.
@@ -34,7 +36,9 @@ POSTCONDITIONS: Memory may either be allocated or deallocated for ncurses
  windows depending on the passed gameMode.*/
 
 
-enum GameMode menuMain(struct GameInterface *);/*
+enum GameMode menuMain(struct GameInterface *);
+
+/*
 
 DESCRIPTION: menuMain() will present the user with the main menu.
 

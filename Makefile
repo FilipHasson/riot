@@ -13,7 +13,7 @@ RIOT_OBJ = riotExec.o riotIO.o riotMap.o riotUI.o riotUnits.o
 TEST_OBJ = riotTesting.o riotIO.o riotMap.o riotUI.o riotUnits.o
 
 
-default: riotLink
+default: riotLink testLink
 
 compile: 
 	$(CC) $(CFLAGS) -c $(SRC) $(INCLUDES)
