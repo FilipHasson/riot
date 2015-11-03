@@ -79,8 +79,9 @@ struct UnitNode *pop(struct List *stack);
 
 /* Function Prototypes */
 
-
-void inmateRm(struct UnitNode *inmateList, int position);
+struct Inmate *createInmate(enum InmateType type);
+struct Guard *createGuard(enum GuardType type);
+void rmUnit(struct UnitNode* target);
 
 /*
 
@@ -97,7 +98,7 @@ PRECONDITIONS: The position is within the size of the list.
 POSTCONDITIONS: The inmate at position has been removed.*/
 
 
-struct Inmate *addInmate(enum InmateType type);
+struct Inmate *createInmate(enum InmateType type);
 
 
 void inmateMove(struct UnitNode *inmate);

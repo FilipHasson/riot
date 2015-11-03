@@ -24,7 +24,7 @@ enum InmateType {
      InmateType is a mnemonic which can be used to equivocate inmate types with
      the associated keypresses used to spawn them.*/
 
-            PROTAGONIST,
+    PROTAGONIST,
     HOMEBOY = 'h',
     BRUISER = 'b',
     LUNATIC = 'l',
@@ -41,7 +41,7 @@ enum GuardType {
 
      GuardType provides a mnemonic for guard unit types.*/
 
-            GUARD,
+    GUARD,
     DOGS,
     LUNCH, //lunch lady
     PSYCH, //psychiatrist

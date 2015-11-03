@@ -119,72 +119,14 @@ struct UnitNode *pop(struct List *stack) {
 }
 
 
-void printGuards(struct List *list) {
-
-    int i;
-    struct UnitNode *node = list->head;
-    struct Inmate *inmate;
-
-    for (i = 0; i < list->count; i++) {
-
-        inmate = node->unit;
-        printf("Inmate #%d\n", i + 1);
-        printf("type: %c\n", inmate->type);
-        printf("pos: %d\n", inmate->position);
-        printf("curHealth: %d\n", inmate->health[0]);
-        printf("maxHealth: %d\n", inmate->health[1]);
-        printf("speed: %d\n", inmate->speed);
-        printf("rep: %d\n", inmate->rep);
-        printf("panic: %d\n", inmate->panic);
-        printf("\n");
-    }
-
+void rmUnit(struct UnitNode* target) {
+    free(target->unit);
+    free(target);
     return;
 }
 
-void printInmates(struct List *list) {
 
-    int i;
-    struct UnitNode *node = list->head;
-    struct Guard *guard;
-
-    for (i = 0; i < list->count; i++) {
-
-        guard = node->unit;
-        printf("Guard #%d\n", i + 1);
-        printf("type: %c\n", guard->type);
-        printf("pos: %d\n", guard->position);
-        printf("damage: %d\n", guard->damage);
-        printf("range: %d\n", guard->range);
-        printf("cooldown: %d\n", guard->cooldown);
-        printf("ai: %d\n", guard->ai);
-        printf("\n");
-    }
-
-    return;
-}
-
-//
-//
-//void inmateRm(struct UnitNode *inmateList, int position) {
-//    struct UnitNode *nextInmate;
-//    struct UnitNode *temp;
-//    int i;
-//
-//    nextInmate = inmateList;
-//    for (i = 0; i < position - 1; i++) {
-//        nextInmate = nextInmate->next;
-//    }
-//
-//    //undrawUnit(nextInmate->next->pos);
-//
-//    temp = nextInmate->next;
-//    nextInmate->next = nextInmate->next->next;
-//    //destroy(temp);
-//}
-//
-
-struct Inmate *addInmate(enum InmateType type) {
+struct Inmate *createInmate(enum InmateType type) {
 
     struct Inmate *unit = malloc(sizeof(struct Inmate));
 
@@ -243,17 +185,17 @@ struct Inmate *addInmate(enum InmateType type) {
             break;
 
         case ATTORNEY:
-            unit->health[0] = unit->health[1] = 10;
+            unit->health[0] = unit->health[1] = 30;
             unit->speed = 5;
-            unit->rep = 40;
+            unit->rep = 30;
             unit->panic = 2;
             break;
 
         case DOCTOR:
-            unit->health[0] = unit->health[1] = 0;
-            unit->speed = 0;
-            unit->rep = 0;
-            unit->panic = 0;
+            unit->health[0] = unit->health[1] = 10;
+            unit->speed = 5;
+            unit->rep = 40;
+            unit->panic = 2;
             break;
 
         default:
@@ -265,7 +207,7 @@ struct Inmate *addInmate(enum InmateType type) {
 }
 
 
-struct Guard *addGuard(enum GuardType type) {
+struct Guard *createGuard(enum GuardType type) {
 
     struct Guard *unit = malloc(sizeof(struct Guard));
 
@@ -333,12 +275,11 @@ struct Guard *addGuard(enum GuardType type) {
 
 ///*Move inmate every turn by its speed*/
 //void inmateMove(struct UnitNode *inmate) {
-//    int prevPos;
-//    struct InmateNode * nextInmate;
 //
-//    nextInmate = inmate;
+//    int prevPos;
+//    struct UnitNode * nextInmate = inmate;
 //    while(nextInmate->next != NULL) {
-//        prevPos = inmate->pos;
+//        prevPos = inmate->unit->position;
 //        /*The idea here is that the position changes every turn
 //          by a fraction of the maximum speed, meaning a unit with
 //          speed 8 (highest speed) will move one unit every turn
@@ -346,7 +287,7 @@ struct Guard *addGuard(enum GuardType type) {
 //          ,the position is typecasted to an int that way the
 //           decimal place is truncated, meaning the position will
 //          be redrawn if a units position changes by a whole unit*/
-//        inmate->pos = inmate->pos + inmate->speed/8;
+//        inmate->position = inmate->pos + inmate->speed/8;
 //        /* inmateRedraw(int previousPosition, int currentPosition, char type) is
 //           a function which should be located inside the UI source file*/
 //

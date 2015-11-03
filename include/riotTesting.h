@@ -9,5 +9,7 @@
 
 #define TRIALS 10
 
+void printInmates(struct List *list);
+void printGuards(struct List *list);
 
 #endif //RIOT_TESTING
