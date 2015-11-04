@@ -16,13 +16,13 @@ TEST_OBJ = riotTesting.o riotMap.o riotUI.o riotUnits.o
 default: riotLink testLink
 
 compile: 
-	$(CC) $(CFLAGS) -c $(SRC) $(INCLUDES)
+	$(CC) $(CFLAGS) $(LDFLAGS) -c $(SRC) $(INCLUDES)
 
 riotLink: compile
-	$(CC) $(LDFLAGS) -o $(BINDIR)/riot $(RIOT_OBJ) $(LIBS)
+	$(CC) -o $(BINDIR)/riot $(RIOT_OBJ) $(LIBS) $(LDFLAGS)
 
 testLink: compile
-	$(CC) $(LDFLAGS) -o $(BINDIR)/test $(TEST_OBJ) $(LIBS)
+	$(CC) -o $(BINDIR)/test $(TEST_OBJ) $(LIBS) $(LDFLAGS) 
 
 clean:
 	rm -r -f *.o bin/*
