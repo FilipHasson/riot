@@ -6,24 +6,30 @@
 
 /* Data Types */
 
-struct List {
+struct UnitList {/*
+
+     UnitList stores the head, tail, and count of a doubly linked list of
+     UnitNodes.*/
+
     struct UnitNode *head;
     struct UnitNode *tail;
     short count;
 };
 
 
-struct UnitNode {
+struct UnitNode {/*
+
+    UnitNode stores the information related to inmate units.*/
+
     void *unit;
     struct UnitNode *next;
     struct UnitNode *prev;
 };
 
 
-struct Inmate {
-    /*
+struct Inmate {/*
 
-     Inmate stores the information related to inmate units.*/
+     Inmate stores the stats related to inmate units.*/
 
     char type;
     short position;
@@ -34,10 +40,9 @@ struct Inmate {
 };
 
 
-struct Guard {
-    /*
+struct Guard {/*
 
-     Inmate stores the information related to guard units.*/
+     Inmate stores the stats related to guard units.*/
 
     char type;
     short position;
@@ -49,41 +54,115 @@ struct Guard {
 };
 
 
-/* Linked List Operations */
+/* Linked UnitList Operations */
 
-struct List *createList(void);
+struct UnitList *createList(void);/*
 
-void destroyList(struct List *);
+DESCRIPTION: createList() is used to allocate memory for a UnitList struct.
+ Initializes values to NULL or 0.
 
-short getLength(struct List *);
-
-bool isEmpty(struct List *);
-
-struct UnitNode *getHead(struct List *);
-
-struct UnitNode *getTail(struct List *);
-
-void printGuards(struct List *);
-
-void printInmates(struct List *);
+POSTCONDITIONS: Memory is allocated for a UnitList, the address for which is
+ returned by the function.*/
 
 
-/* Linked List Interfaces */
+void destroyList(struct UnitList *);/*
 
-struct UnitNode *enqueue(struct List *queue, void *unit);
+DESCRIPTION: destroyList() is used to deallocate memory for a UnitList struct.
 
-struct UnitNode *dequeue(struct List *queue);
+ARGUMENTS: A Pointer to the UnitList to be destroyed.
 
-struct UnitNode *pop(struct List *stack);
+POSTCONDITIONS: Each node listed within the UnitList is destroyed and the
+ memory used for it is returned to the calling OS.*/
+
+
+short getLength(struct UnitList *);/*
+
+DESCRIPTION: getLength() is used to get the number of nodes containted within
+ a UnitList.
+
+ARGUMENTS: The UnitList to be examined.
+
+POSTCONDITIONS: Will return a short value corresponding to the number of
+ UnitNodes contained withing the UnitList*/
+
+
+bool isEmpty(struct UnitList *);/*
+
+DESCRIPTION: isEmpty() is used to determine whether a UnitList has been
+ initialized and is capable of storing UnitNodes.
+
+ARGUMENTS: The UnitList to be examined.
+
+PRECONDITIONS: The position is within the size of the list.
+
+POSTCONDITIONS: Will return TRUE is empty, otherwide FALSE.*/
+
+
+struct UnitNode *getHead(struct UnitList *);/*
+
+DESCRIPTION: getHead() is used to get a pointer to the first UnitNode stored
+ within the UnitList.
+
+ARGUMENTS: The UnitList to be querried.
+
+POSTCONDITIONS: Will return a pointer to the UnitNode, else NULL.*/
+
+
+struct UnitNode *getTail(struct UnitList *);/*
+
+DESCRIPTION: getTail() is used to get a pointer to the last UnitNode stored
+ within the UnitList.
+
+ARGUMENTS: The UnitList to be querried.
+
+POSTCONDITIONS: Will return a pointer to the UnitNode, else NULL.*/
+
+
+/* Linked UnitList Interfaces */
+
+struct UnitNode *enqueue(struct UnitList *queue, void *unit);/*
+
+DESCRIPTION: enqueue() will store any data type (presumably either an Inmate
+ or Guard type) at the back of a UnitList.
+
+ARGUMENTS: The list to be extended and a pointer to the data to be added.
+
+POSTCONDITIONS: Will store either the newly created UnitStore cointaing the
+ unit within it's data member or NULL if not possible.*/
+
+
+struct UnitNode *dequeue(struct UnitList *queue);/*
+
+DESCRIPTION: dequeue() will remove the front UnitNode of the passed UnitList.
+ Memory is not freed by this funtion-- either its returned UnitNode will need
+ to be freed by rmUnit or enqueued in a seperate UnitList which can later be
+ destroyed.
+
+ARGUMENTS: The list to be modified.
+
+POSTCONDITIONS: The front UnitNode is either removed from the passed UnitList
+ and its pointer is returned, else NULL is returned.*/
+
+
+struct UnitNode *pop(struct UnitList *stack);/*
+
+DESCRIPTION: pop() will remove the back UnitNode of the passed UnitList.
+ Memory is not freed by this funtion-- either its returned UnitNode will need
+ to be freed by rmUnit or enqueued in a seperate UnitList which can later be
+ destroyed.
+
+ARGUMENTS: The list to be modified.
+
+POSTCONDITIONS: The back UnitNode is either removed from the passed UnitList
+ and its pointer is returned, else NULL is returned.*/
 
 
 /* Function Prototypes */
 
 struct Inmate *createInmate(enum InmateType type);
 struct Guard *createGuard(enum GuardType type);
-void rmUnit(struct UnitNode* target);
 
-/*
+void rmUnit(struct UnitNode* target);/*
 
 DESCRIPTION: inmateRm() is used to remove a unit from the game.
 
@@ -101,9 +180,7 @@ POSTCONDITIONS: The inmate at position has been removed.*/
 struct Inmate *createInmate(enum InmateType type);
 
 
-void inmateMove(struct UnitNode *inmate);
-
-/*
+void inmateMove(struct UnitNode *inmate);/*
 
  DESCRIPTION: Move inmate every turn by its speed.*/
 

@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv) {
 
-    struct List *inmates, *guards;
+    struct UnitList *inmates, *guards;
 
     inmates = createList();
     guards = createList();

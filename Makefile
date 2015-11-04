@@ -9,8 +9,8 @@ BINDIR   = bin
 SRCDIR   = src
 
 SRC = $(SRCDIR)/*.c
-RIOT_OBJ = riotExec.o riotIO.o riotMap.o riotUI.o riotUnits.o
-TEST_OBJ = riotTesting.o riotIO.o riotMap.o riotUI.o riotUnits.o
+RIOT_OBJ = riotExec.o riotMap.o riotUI.o riotUnits.o
+TEST_OBJ = riotTesting.o riotMap.o riotUI.o riotUnits.o
 
 
 default: riotLink testLink

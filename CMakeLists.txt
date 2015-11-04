@@ -7,11 +7,9 @@ include_directories(include)
 
 set(SOURCE_FILES
         include/riotExec.h
-        include/riotIO.h
         include/riotMap.h
         include/riotUI.h
         include/riotUnits.h
-        src/riotIO.c
         src/riotMap.c
         src/riotUI.c
         src/riotUnits.c)

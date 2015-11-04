@@ -6,8 +6,7 @@
 
 /* Data Types */
 
-struct Map {
-    /*
+struct Map {/*
 
      Map stores the game landscape as a 2D array, along with a linked list
      containing the pathh.*/
@@ -17,8 +16,7 @@ struct Map {
 };
 
 
-struct Path {
-    /*
+struct Path {/*
 
      Path stores the game path as a list of TileNodes.*/
 
@@ -27,8 +25,7 @@ struct Path {
 };
 
 
-struct TileNode {
-    /*
+struct TileNode {/*
 
      TileNode contains the location of the map on the board, along with a the
      character representation of the tile.*/

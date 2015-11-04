@@ -1,9 +1,9 @@
 #include "riotUnits.h"
 
 
-struct List *createList(void) {
+struct UnitList *createList(void) {
 
-    struct List *newList = malloc(sizeof(struct List));
+    struct UnitList *newList = malloc(sizeof(struct UnitList));
 
     newList->count = 0;
     newList->head = NULL;
@@ -13,28 +13,28 @@ struct List *createList(void) {
 }
 
 
-void destroyList(struct List *listIn) {
+void destroyList(struct UnitList *list) {
 
     struct UnitNode *tempNode = NULL;
 
-    while (listIn->count) {
-        tempNode = listIn->head->next;
-        free(listIn->head);
-        listIn->count--;
-        listIn->head = tempNode;
+    while (list->count) {
+        tempNode = list->head->next;
+        free(list->head);
+        list->count--;
+        list->head = tempNode;
     }
-    free(listIn);
+    free(list);
 
     return;
 }
 
 
-bool isEmpty(struct List *listIn) {
+bool isEmpty(struct UnitList *list) {
 
     bool eval = TRUE;
 
-    if (listIn) {
-        if (listIn->count)
+    if (list) {
+        if (list->count)
             eval = FALSE;
     }
 
@@ -43,21 +43,26 @@ bool isEmpty(struct List *listIn) {
 }
 
 
-struct UnitNode *getHead(struct List *listIn) {
+struct UnitNode *getNext(struct UnitNode *list){
+    return list ? list->next : NULL;
+}
+
+
+struct UnitNode *getHead(struct UnitList *listIn) {
     return listIn ? listIn->head : NULL;
 }
 
 
-struct UnitNode *getTail(struct List *listIn) {
+struct UnitNode *getTail(struct UnitList *listIn) {
     return listIn ? listIn->tail : NULL;
 }
 
 
-short getLength(struct List *listIn) {
+short getLength(struct UnitList *listIn) {
     return listIn ? listIn->count : (short) -1;
 }
 
-struct UnitNode *enqueue(struct List *queue, void *unit) {
+struct UnitNode *enqueue(struct UnitList *queue, void *unit) {
 
     struct UnitNode *newNode = malloc(sizeof(struct UnitNode));
     newNode->unit = unit;
@@ -82,7 +87,7 @@ struct UnitNode *enqueue(struct List *queue, void *unit) {
 }
 
 
-struct UnitNode *dequeue(struct List *queue) {
+struct UnitNode *dequeue(struct UnitList *queue) {
 
     struct UnitNode *tempNode, *request = NULL;
 
@@ -100,7 +105,7 @@ struct UnitNode *dequeue(struct List *queue) {
     return request;
 }
 
-struct UnitNode *pop(struct List *stack) {
+struct UnitNode *pop(struct UnitList *stack) {
 
     struct UnitNode *tempNode, *request = NULL;
 

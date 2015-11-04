@@ -91,9 +91,7 @@ enum GameMode {
 
 /* Function Prototypes */
 
-void quit(char *message);
-
-/*
+void quit(char *message);/*
 
 DESCRIPTION: quit() is called as a method for the program to gracefully return
  to the command prompt when facing undefined behaviour or user input. Will

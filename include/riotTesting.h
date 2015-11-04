@@ -2,14 +2,13 @@
 #define RIOT_TESTING
 
 #include "riotExec.h"
-#include "riotIO.h"
 #include "riotMap.h"
-#include "riotIO.h"
 #include "riotUnits.h"
+#include "riotUI.h"
 
 #define TRIALS 10
 
-void printInmates(struct List *list);
-void printGuards(struct List *list);
+void printInmates(struct UnitList *list);
+void printGuards(struct UnitList *list);
 
 #endif //RIOT_TESTING
