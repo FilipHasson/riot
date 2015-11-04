@@ -1,7 +1,16 @@
 #include "riotMap.h"
 
-struct Map *parseMap(char *loadDir) {
-    return NULL;
+struct MapList *parseMap(char *loadDir) {
+
+    /* Map Placeholder Test Values */
+
+    struct MapList *list = malloc(sizeof(struct MapList));
+    list->first = malloc(sizeof(struct Map));
+    strcpy(list->first->name,"Detention");
+    list->first->path = NULL;
+    list->first->next = NULL;
+    list->count = 1;
+    return list;
 }
 
 void checkArgs(int argc, char **argv) {
@@ -17,3 +26,6 @@ void checkArgs(int argc, char **argv) {
 
     return;
 }
+
+
+

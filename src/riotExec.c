@@ -3,23 +3,33 @@
 
 int main(int argc, char **argv) {
 
-//    struct Map map;
+    struct MapList* mapList;
     enum GameMode gameMode;
-    struct GameInterface gameInterface;
-//    map = parseMap(argv[1] ? argv[1] : NULL);
+    struct Interface gameInterface;
+    mapList = parseMap(argv[1] ? argv[1] : NULL);
+
 
     uiSet(INIT, &gameInterface);
-    gameMode = menuMain(&gameInterface);
 
-    if (gameMode == NEW) {
-        uiSet(NEW, &gameInterface);
-//        newGame();
 
-    } else {
-        uiSet(CONTINUE, &gameInterface);
-//        continueGame();
-    }
+   do {
 
+        gameMode = menuMain(&gameInterface);
+        uiSet(gameMode, &gameInterface);
+
+        switch (gameMode) {
+            case NEW:
+//                newGame();
+                break;
+
+            case CONTINUE:
+                menuContinue(&gameInterface, mapList);
+                break;
+
+            default:
+                break;
+        }
+    } while (gameMode != EXIT);
 
     quit("Thanks for playing.");
 
@@ -28,7 +38,7 @@ int main(int argc, char **argv) {
 
 
 void quit(char *message) {
-    if (stdscr) endwin();;
+    if (stdscr) endwin();
     printf("%s. Exiting.", message);
-    exit(-1);
+    exit(1);
 }

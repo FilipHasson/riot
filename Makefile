@@ -19,10 +19,10 @@ compile:
 	$(CC) $(CFLAGS) -c $(SRC) $(INCLUDES)
 
 riotLink: compile
-	$(CC) $(LDFLAGS) -o $(BINDIR)/riot $(RIOT_OBJ) $(LIBS)
+	$(CC) -o $(BINDIR)/riot $(RIOT_OBJ) $(LDFLAGS)
 
 testLink: compile
-	$(CC) $(LDFLAGS) -o $(BINDIR)/test $(TEST_OBJ) $(LIBS)
+	$(CC) -o $(BINDIR)/test $(TEST_OBJ) $(LDFLAGS)
 
 clean:
 	rm -r -f *.o bin/*

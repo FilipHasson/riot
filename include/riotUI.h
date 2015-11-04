@@ -2,11 +2,11 @@
 #define RIOT_UI
 
 #include "riotExec.h"
-
+#include "riotMap.h"
 
 /* Data Types */
 
-struct GameInterface {
+struct Interface {
     WINDOW *menu;
     WINDOW *main;
     WINDOW *header;
@@ -22,29 +22,32 @@ struct MenuEntry {
 
 /* Function Prototypes */
 
-void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface);/*
+void uiSet(enum GameMode gameMode, struct Interface *win);/*
 
 DESCRIPTION: uiSet() will initialize the various ncurses windows used
  throughout gameplay.
 
 ARGUMENTS: a GameMode enum corresponding with the required game mode and a
- GameInterface struct which contains pointers to the target ncurses WINDOWs.
+ Interface struct which contains pointers to the target ncurses WINDOWs.
 
 POSTCONDITIONS: Memory may either be allocated or deallocated for ncurses
  windows depending on the passed gameMode.*/
 
 
-enum GameMode menuMain(struct GameInterface *);/*
+enum GameMode menuMain(struct Interface *);/*
 
 DESCRIPTION: menuMain() will present the user with the main menu.
 
-ARGUMENTS: the GameInterface struct containing the targer ncurses WINDOWs.*/
+ARGUMENTS: the Interface struct containing the targer ncurses WINDOWs.*/
 
+
+short menuContinue(struct Interface *gameInterface, struct MapList *levels);
 
 void inmateUpdate(enum Colour, char inmateType, short from, short to);
 
 void inmateRemove(short position);
 
 void guardUpdate(bool isAttacking, short position);
+
 
 #endif //RIOT_UI

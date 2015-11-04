@@ -8,8 +8,8 @@
 
 struct UnitList {/*
 
-     UnitList stores the head, tail, and count of a doubly linked list of
-     UnitNodes.*/
+ UnitList stores the head, tail, and count of a doubly linked list of
+ UnitNodes.*/
 
     struct UnitNode *head;
     struct UnitNode *tail;
@@ -19,7 +19,7 @@ struct UnitList {/*
 
 struct UnitNode {/*
 
-    UnitNode stores the information related to inmate units.*/
+UnitNode stores the information related to inmate units.*/
 
     void *unit;
     struct UnitNode *next;
@@ -29,7 +29,7 @@ struct UnitNode {/*
 
 struct Inmate {/*
 
-     Inmate stores the stats related to inmate units.*/
+ Inmate stores the stats related to inmate units.*/
 
     char type;
     short position;
@@ -42,7 +42,7 @@ struct Inmate {/*
 
 struct Guard {/*
 
-     Inmate stores the stats related to guard units.*/
+ Inmate stores the stats related to guard units.*/
 
     char type;
     short position;
@@ -160,7 +160,9 @@ POSTCONDITIONS: The back UnitNode is either removed from the passed UnitList
 /* Function Prototypes */
 
 struct Inmate *createInmate(enum InmateType type);
+
 struct Guard *createGuard(enum GuardType type);
+
 
 void rmUnit(struct UnitNode* target);/*
 
@@ -170,14 +172,21 @@ ARGUMENTS: struct UnitNode *inmateList is the list of inmates present in
 the game, this argument should be changed to a header node once one is
 present.
 
-int position is the position that the inmate should be removed from.
-
 PRECONDITIONS: The position is within the size of the list.
 
 POSTCONDITIONS: The inmate at position has been removed.*/
 
 
-struct Inmate *createInmate(enum InmateType type);
+struct Inmate *createInmate(enum InmateType type);/*
+
+DESCRIPTION: createInmate() is used initialize a new inmate with its
+ associated base stats.
+
+ARGUMENTS: an InmateType enum associated with the Inmate to be initiated.
+
+PRECONDITIONS: The enum value is a valid inmate type.
+
+POSTCONDITIONS: Memory is allocated for a new Inmate struct.*/
 
 
 void inmateMove(struct UnitNode *inmate);/*

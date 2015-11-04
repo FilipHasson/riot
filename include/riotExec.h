@@ -18,11 +18,10 @@
 
 /* Data Types */
 
-enum InmateType {
-    /*
+enum InmateType {/*
 
-     InmateType is a mnemonic which can be used to equivocate inmate types with
-     the associated keypresses used to spawn them.*/
+ InmateType is a mnemonic which can be used to equivocate inmate types with
+ the associated keypresses used to spawn them.*/
 
     PROTAGONIST,
     HOMEBOY = 'h',
@@ -36,10 +35,9 @@ enum InmateType {
 };
 
 
-enum GuardType {
-    /*
+enum GuardType {/*
 
-     GuardType provides a mnemonic for guard unit types.*/
+ GuardType provides a mnemonic for guard unit types.*/
 
     GUARD,
     DOGS,
@@ -51,10 +49,9 @@ enum GuardType {
 };
 
 
-enum AI {
-    /*
+enum AI {/*
 
-     AI provides a mnemonic for guard AI profiles.*/
+ AI provides a mnemonic for guard AI profiles.*/
 
             PROX, //proximity
     AOE, //area of effect
@@ -62,25 +59,23 @@ enum AI {
 };
 
 
-enum Colour {
-    /*
+enum Colour {/*
 
-     Colour provides a mnemonic for the colours used to convey health values.*/
+ Colour provides a mnemonic for the colours used to convey health values.*/
 
-            GREEN,
+    GREEN,
     YELLOW,
     ORANGE,
     RED,
 };
 
 
-enum GameMode {
-    /*
+enum GameMode {/*
 
-     GameMode is a mnemonic which can be used to equivocate game modes with
-     the associated keypresses used to inititate them.*/
+ GameMode is a mnemonic which can be used to equivocate game modes with the
+ associated keypresses used to inititate them.*/
 
-            INIT,
+    INIT,
     MENU,
     NEW = 'n',
     CONTINUE = 'c',

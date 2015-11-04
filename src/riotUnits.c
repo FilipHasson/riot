@@ -43,7 +43,7 @@ bool isEmpty(struct UnitList *list) {
 }
 
 
-struct UnitNode *getNext(struct UnitNode *list){
+struct UnitNode *getNext(struct UnitNode *list) {
     return list ? list->next : NULL;
 }
 
@@ -124,7 +124,7 @@ struct UnitNode *pop(struct UnitList *stack) {
 }
 
 
-void rmUnit(struct UnitNode* target) {
+void rmUnit(struct UnitNode *target) {
     free(target->unit);
     free(target);
     return;

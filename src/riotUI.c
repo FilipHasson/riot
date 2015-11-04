@@ -1,6 +1,6 @@
 #include "riotUI.h"
 
-void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface) {
+void uiSet(enum GameMode gameMode, struct Interface *win) {
 
     int y, x;
 
@@ -17,29 +17,32 @@ void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface) {
             if ((x < SIZE_X) || (y < SIZE_Y)) quit("Terminal size too small");
 
             /* Set window positions*/
-            gameInterface->header = newwin(HEADER, SIZE_X, 0, 0);
-            gameInterface->main = newwin(MAIN, SIZE_X, HEADER + 1, 0);
-            gameInterface->footer = newwin(SIZE_Y, FOOTER, HEADER + MAIN + 1, 0);
-            gameInterface->menu = newwin(SIZE_Y, SIZE_X, 0, 0);
+            win->header = newwin(HEADER, SIZE_X, 0, 0);
+            win->main = newwin(MAIN, SIZE_X, HEADER + 1, 0);
+            win->footer = newwin(SIZE_Y, FOOTER, HEADER + MAIN + 1, 0);
+            win->menu = newwin(SIZE_Y, SIZE_X, 0, 0);
             break;
 
         case MENU:
-            wrefresh(gameInterface->menu);
+            wrefresh(win->menu);
             break;
 
         case NEW:
         case CONTINUE:
+            break;
+
+
         case PLAY:
-            wrefresh(gameInterface->header);
-            wrefresh(gameInterface->main);
-            wrefresh(gameInterface->footer);
+            wrefresh(win->header);
+            wrefresh(win->main);
+            wrefresh(win->footer);
             break;
 
         case EXIT:
-            if (gameInterface->header) delwin(gameInterface->header);
-            if (gameInterface->main) delwin(gameInterface->main);
-            if (gameInterface->footer) delwin(gameInterface->footer);
-            if (gameInterface->menu) delwin(gameInterface->menu);
+            if (win->header) delwin(win->header);
+            if (win->main) delwin(win->main);
+            if (win->footer) delwin(win->footer);
+            if (win->menu) delwin(win->menu);
             endwin();
             break;
 
@@ -51,13 +54,14 @@ void uiSet(enum GameMode gameMode, struct GameInterface *gameInterface) {
     return;
 }
 
-enum GameMode menuMain(struct GameInterface *gameInterface) {
+enum GameMode menuMain(struct Interface *gameInterface) {
 
     enum GameMode gameMode;
     WINDOW *menu = gameInterface->menu;
 
     int y = 3;
 
+    wclear(menu);
     box(menu, 0, 0);
     mvwaddstr(menu, y++, 21, "8888888b. 8888888 .d88888b.88888888888");
     mvwaddstr(menu, y++, 21, "888   Y88b  888  d88P   Y88b   888");
@@ -85,21 +89,44 @@ enum GameMode menuMain(struct GameInterface *gameInterface) {
     return gameMode;
 }
 
-int continueMenu(struct GameInterface *gameInterface) {
+
+short menuContinue(struct Interface *gameInterface, struct MapList *levels) {
 
     WINDOW *menu = gameInterface->menu;
+    char select;
+    struct Map* level = levels->first;
+    int y = 3;
+
 
     wclear(menu);
     box(menu, 0, 0);
+
+    wclear(menu);
+    box(menu, 0, 0);
+
+    mvwaddstr(menu, y+=3, 21, "LEVEL SELECT");
+    mvwhline(menu, y += 2, 21, ACS_HLINE, 37);
+    y+=3;
+
+
+    for(int i = 1; i < 10 && level;i++){
+        mvwprintw(menu, y++, 21, "[%d] %s",i,level->name);
+        level = level->next;
+    }
+
+    mvwaddstr(menu, y++, 21, "[b]ack");
+
+
+    wrefresh(menu);
+
+    do {
+        select =  wgetch(menu);
+    } while (select >= '1' && select > levels->count && select != 'b');
 
 
     return 0;
 }
 
 void menuNew() {
-    return;
-}
-
-void menuContinue() {
     return;
 }
