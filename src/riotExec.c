@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv) {
 
-    struct MapList* mapList;
+    struct MapList *mapList;
     enum GameMode gameMode;
     struct Interface gameInterface;
     mapList = parseMap(argv[1] ? argv[1] : NULL);
@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
     uiSet(INIT, &gameInterface);
 
 
-   do {
+    do {
 
         gameMode = menuMain(&gameInterface);
         uiSet(gameMode, &gameInterface);

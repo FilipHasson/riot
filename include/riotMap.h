@@ -4,7 +4,7 @@
 #include "riotExec.h"
 
 #define NAME_LEN 25 //needs to be revised
-
+#define PATH_MAX 4096
 
 /* Data Types */
 
@@ -19,6 +19,7 @@ struct Map {/*
  containing the path.*/
 
     char name[NAME_LEN];
+    char location[PATH_MAX];
     bool hidden;
     char overlay[SIZE_Y][SIZE_X]; //walls, scenery, etc.
     struct Path *path; //a list containing the path tiles

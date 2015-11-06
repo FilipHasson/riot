@@ -10,5 +10,7 @@
 
 void printInmates(struct UnitList *list);
 void printGuards(struct UnitList *list);
+void unitsTest(void);
+void mapsTest(char* loadDir);
 
 #endif //RIOT_TESTING

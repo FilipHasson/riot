@@ -94,7 +94,7 @@ short menuContinue(struct Interface *gameInterface, struct MapList *levels) {
 
     WINDOW *menu = gameInterface->menu;
     char select;
-    struct Map* level = levels->first;
+    struct Map *level = levels->first;
     int y = 3;
 
 
@@ -104,13 +104,13 @@ short menuContinue(struct Interface *gameInterface, struct MapList *levels) {
     wclear(menu);
     box(menu, 0, 0);
 
-    mvwaddstr(menu, y+=3, 21, "LEVEL SELECT");
+    mvwaddstr(menu, y += 3, 21, "LEVEL SELECT");
     mvwhline(menu, y += 2, 21, ACS_HLINE, 37);
-    y+=3;
+    y += 3;
 
 
-    for(int i = 1; i < 10 && level;i++){
-        mvwprintw(menu, y++, 21, "[%d] %s",i,level->name);
+    for (int i = 1; i < 10 && level; i++) {
+        mvwprintw(menu, y++, 21, "[%d] %s", i, level->name);
         level = level->next;
     }
 
@@ -120,7 +120,7 @@ short menuContinue(struct Interface *gameInterface, struct MapList *levels) {
     wrefresh(menu);
 
     do {
-        select =  wgetch(menu);
+        select = wgetch(menu);
     } while (select >= '1' && select > levels->count && select != 'b');
 
 

@@ -2,16 +2,10 @@
 
 struct MapList *parseMap(char *loadDir) {
 
-    /* Map Placeholder Test Values */
+    return NULL;
 
-    struct MapList *list = malloc(sizeof(struct MapList));
-    list->first = malloc(sizeof(struct Map));
-    strcpy(list->first->name,"Detention");
-    list->first->path = NULL;
-    list->first->next = NULL;
-    list->count = 1;
-    return list;
 }
+
 
 void checkArgs(int argc, char **argv) {
 

@@ -16,7 +16,7 @@ TEST_OBJ = riotTesting.o riotMap.o riotUI.o riotUnits.o
 default: riotLink testLink
 
 compile: 
-	$(CC) $(CFLAGS) $(LDFLAGS) -c $(SRC) $(INCLUDES)
+	$(CC) $(CFLAGS) -c $(SRC) $(INCLUDES)
 
 riotLink: compile
 	$(CC) -o $(BINDIR)/riot $(RIOT_OBJ) $(LDFLAGS)

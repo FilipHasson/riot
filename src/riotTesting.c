@@ -1,8 +1,30 @@
+#include <dirent.h>
+#include <unistd.h>
 #include "riotTesting.h"
 
 
 int main(int argc, char **argv) {
 
+    if (argc == 1) {
+        printf("No testing parameters provided. Exiting");
+        exit(-1);
+    }
+
+    for (int i = 0; i < argc; i++) {
+
+        if (!strcmp(argv[1], "-units")) unitsTest();
+        else if (!strcmp(argv[1], "-map")) mapsTest(argv[2]);
+
+    }
+
+
+    printf("Testing done.\n");
+    return 0;
+
+}
+
+
+void unitsTest(void) {
     struct UnitList *inmates, *guards;
 
     inmates = createList();
@@ -23,6 +45,38 @@ int main(int argc, char **argv) {
 
     destroyList(inmates);
     destroyList(guards);
+
+    return;
+}
+
+
+void mapsTest(char *loadDir) {
+
+    struct MapList *mapList;
+    struct Map* current;
+    DIR *directory;
+    struct dirent *entry;
+
+    mapList = malloc(sizeof(struct MapList));
+    current = malloc(sizeof(struct Map));
+    if(!loadDir) loadDir = getcwd(loadDir,PATH_MAX);
+    directory = opendir(loadDir);
+
+    mapList->count=0;
+    current = mapList->first;
+    current->next = NULL;
+
+    if (directory) {
+        while ((entry = readdir(directory))){
+//            current=malloc(sizeof(struct Map));
+//            sprintf(current->location,"%s/%s",loadDir,entry->d_name);
+//            current=current->next;
+            mapList->count++;
+        }
+        closedir(directory);
+    }
+
+    return;
 }
 
 
@@ -80,6 +134,7 @@ void printInmate(struct Inmate *inmate) {
     return;
 }
 
+
 void printGuard(struct Guard *guard) {
 
     int i = 0;
@@ -128,5 +183,6 @@ void printGuard(struct Guard *guard) {
 
     return;
 }
+
 
 void quit(char *message) { }
