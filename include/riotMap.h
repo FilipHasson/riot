@@ -6,12 +6,14 @@
 #define NAME_LEN 25 //needs to be revised
 #define PATH_MAX 4096
 
+
 /* Data Types */
 
 struct MapList {
     struct Map *first;
     short count;
 };
+
 
 struct Map {/*
 
@@ -59,5 +61,7 @@ ARGUMENTS: either a custom path containing the desired map files, or NULL in
 
 POSTCONDITIONS: A Map struct is returned containing the map elements and
  tower placements.*/
+
+int getFilename(char *filename, char *ext);
 
 #endif //RIOT_MAP

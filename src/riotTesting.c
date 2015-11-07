@@ -6,17 +6,20 @@
 int main(int argc, char **argv) {
 
     if (argc == 1) {
-        printf("No testing parameters provided. Exiting");
+        testingHelp();
+        printf("\nExiting.");
         exit(-1);
     }
 
-    for (int i = 0; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
 
-        if (!strcmp(argv[1], "-units")) unitsTest();
-        else if (!strcmp(argv[1], "-map")) mapsTest(argv[2]);
+        if (argv[i][0] != '-')continue; //only process flags
+
+        if (!strcmp(argv[i], "-units")) unitsTest();
+        else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
+        else printf("Unknown command (%s)\n",argv[i]);
 
     }
-
 
     printf("Testing done.\n");
     return 0;
@@ -50,32 +53,71 @@ void unitsTest(void) {
 }
 
 
-void mapsTest(char *loadDir) {
+void mapTest(char *loadDir) {
 
     struct MapList *mapList;
-    struct Map* current;
+    struct Map *current;
     DIR *directory;
     struct dirent *entry;
+    bool useCwd = false;
 
+    /* Create a new mapList to store map file details */
     mapList = malloc(sizeof(struct MapList));
-    current = malloc(sizeof(struct Map));
-    if(!loadDir) loadDir = getcwd(loadDir,PATH_MAX);
-    directory = opendir(loadDir);
-
-    mapList->count=0;
+    mapList->first = malloc(sizeof(struct Map));
+    mapList->count = 0;
     current = mapList->first;
-    current->next = NULL;
 
-    if (directory) {
-        while ((entry = readdir(directory))){
-//            current=malloc(sizeof(struct Map));
-//            sprintf(current->location,"%s/%s",loadDir,entry->d_name);
-//            current=current->next;
-            mapList->count++;
-        }
-        closedir(directory);
+    /* Use map directory passed as argument if provided, else cwd */
+    if (!loadDir) {
+        loadDir = getcwd(loadDir, PATH_MAX);
+        useCwd = true;
     }
 
+    directory = opendir(loadDir);
+
+    /* Iterate through files in loadDir */
+    while ((entry = readdir(directory))) {
+
+        /* Add files with .riot extension to mapList */
+        if (getFilename(entry->d_name, "riot")) {
+            mapList->count++;
+
+            /* Determine hidden status */
+            current->hidden = entry->d_name[0]=='_';
+
+            /* Determine absolute path */
+            snprintf(current->location, PATH_MAX, "%s/%s",
+                     loadDir, entry->d_name);
+
+            /* Determine level name (from file name) */
+            strcpy(current->name,strtok(entry->d_name,".riot"));
+
+            /* Copy map array from file */
+            //TODO
+
+            /* Determine path */
+            //TODO
+
+            /* Move to next element of mapList */
+            current->next = malloc(sizeof(struct Map));
+            current = current->next;
+        }
+    }
+
+    /* Clean up memory */
+    closedir(directory);
+    if (useCwd) free(loadDir); //getcwd calls malloc, if used must free loadDir
+
+    /* Terminate if no map files where found */
+    if (!mapList->count) {
+        free(mapList->first);
+        free(mapList);
+        quit("No map files found");
+    }
+
+    /* Clean up memory */
+    free(mapList->first);
+    free(mapList);
     return;
 }
 
@@ -184,5 +226,16 @@ void printGuard(struct Guard *guard) {
     return;
 }
 
+void testingHelp() {
+    printf(
+            "Usage:\ttest [FLAG]... [OPTION]\n\n"
+                    "Flags:"
+                    "\t'-map' tests file parsing"
+                    "(defaults to cwd, optional absolute path as arg)\n"
+                    "\t'-unit' tests unit creation and deletion\n"
+    );
+}
 
-void quit(char *message) { }
+void quit(char *message) {
+    printf("ERROR: %s\n", message);
+}
