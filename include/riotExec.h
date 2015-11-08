@@ -9,8 +9,10 @@
 
 /* Macro Constants */
 
-#define SIZE_X 80
-#define SIZE_Y 24
+#define MAX_COLS 80
+#define MAX_ROWS 24
+#define MAP_COLS 73
+#define MAP_ROWS 15
 #define HEADER 3
 #define FOOTER 4
 #define MAIN 16

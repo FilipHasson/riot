@@ -10,12 +10,13 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
             curs_set(FALSE); // hide cursor
             /* Verify terminal dimensions */
             getmaxyx(stdscr, y, x);
-            if ((x < SIZE_X) || (y < SIZE_Y)) quit("Terminal size too small");
+            if ((x < MAX_COLS) || (y < MAX_ROWS))
+                quit("Terminal size too small");
             /* Set window positions*/
-            win->header = newwin(HEADER, SIZE_X, 0, 0);
-            win->main = newwin(MAIN, SIZE_X, HEADER + 1, 0);
-            win->footer = newwin(SIZE_Y, FOOTER, HEADER + MAIN + 1, 0);
-            win->menu = newwin(SIZE_Y, SIZE_X, 0, 0);
+            win->header = newwin(HEADER, MAX_COLS, 0, 0);
+            win->main = newwin(MAIN, MAX_COLS, HEADER + 1, 0);
+            win->footer = newwin(MAX_ROWS, FOOTER, HEADER + MAIN + 1, 0);
+            win->menu = newwin(MAX_ROWS, MAX_COLS, 0, 0);
             break;
         case MENU:
             wrefresh(win->menu);
@@ -78,67 +79,73 @@ enum GameMode menuMain(struct Interface *gameInterface) {
 }
 
 
-short menuContinue(struct Interface *gameInterface, struct MapList *levels) {
+short menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
 
     WINDOW *menu = gameInterface->menu;
+    struct Map *current, *last;
     char select;
-    struct Map *level = levels->first;
     int y = 3;
 
-
     wclear(menu);
     box(menu, 0, 0);
 
     wclear(menu);
     box(menu, 0, 0);
 
-    mvwaddstr(menu, y += 3, 21, "LEVEL SELECT");
+    mvwaddstr(menu, y, 21, "LEVEL SELECT");
     mvwhline(menu, y += 2, 21, ACS_HLINE, 37);
-    y += 3;
+    y += 2;
 
+    mvwprintw(menu, y++, 21, "[0] %s", mapList->level[0].name);
 
-    //TODO: Need to figure out a way to indicate level order
-    for (int i = 1; i < 10 && level; i++) {
-        mvwprintw(menu, y++, 21, "[%d]%s", i,
-                  level->hidden && !level->beaten ? "?" : level->name);
-        level = level->next;
+    for (int i = 0; i < mapList->count - 1; i++) {
+        current = &mapList->level[i + 1];
+        last = &mapList->level[i];
+
+        if (!current->hidden) {
+            mvwprintw(menu, y + i, 21, "[%c] %s",
+                      last->beaten ? i + 1 + '0' : '-', current->name);
+        } else if (current->hidden && last->beaten) {
+            mvwprintw(menu, y + i, 21, "[%i] %s", i + 1, current->name);
+        } else y--;
+
     }
 
-    mvwaddstr(menu, y++, 21, "[b]ack");
+    mvwaddstr(menu, MAX_ROWS - 4, 21, "[b]ack");
     wrefresh(menu);
     do {
         select = wgetch(menu);
-    } while (select >= '1' && select > levels->count && select != 'b');
+    } while (select >= '1' && select > mapList->count && select != 'b');
     return 0;
 }
 
 
-enum GameMode gameTest (struct Interface *gameInterface){
+enum GameMode gameTest(struct Interface *gameInterface) {
     enum GameMode gameMode;
     WINDOW *header = gameInterface->header;
     WINDOW *mwin = gameInterface->main;
     WINDOW *footer = gameInterface->footer;
     WINDOW *menu = gameInterface->menu;
-    int y=3;
+    int y = 3;
     wclear(menu);
     wclear(footer);
     wclear(header);
     wclear(mwin);
-    box(header,0,0);
-    box(mwin,0,0);
-    box(footer,0,0);
-    mvwaddch(header,0,0,ACS_ULCORNER);
-    mvwaddstr(header,0,1,"riot");
-    mvwaddch (header,2,0,ACS_LTEE);
-    mvwaddch (header,2,SIZE_X-1,ACS_RTEE);
+    box(header, 0, 0);
+    box(mwin, 0, 0);
+    box(footer, 0, 0);
+    mvwaddch(header, 0, 0, ACS_ULCORNER);
+    mvwaddstr(header, 0, 1, "riot");
+    mvwaddch (header, 2, 0, ACS_LTEE);
+    mvwaddch (header, 2, MAP_COLS - 1, ACS_RTEE);
 
-    mvwaddch(mwin,0,0,'A');
+    mvwaddch(mwin, 0, 0, 'A');
 
     wrefresh(menu);
     wrefresh(header);
     wrefresh(mwin);
     wrefresh(footer);
-        gameMode = PLAY;
+    gameMode = PLAY;
 
     getch();
     return (gameMode);

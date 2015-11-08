@@ -15,6 +15,7 @@ struct MapList *parseMap(char *loadDir) {
     struct dirent *entry;
 
     char filePath[PATH_MAX];
+    short levelNo;
     bool useCwd = false;
     bool firstRun = true;
 
@@ -23,9 +24,7 @@ struct MapList *parseMap(char *loadDir) {
 
     /* Create a new mapList to store map file details */
     mapList = malloc(sizeof(struct MapList));
-    mapList->first = malloc(sizeof(struct Map));
     mapList->count = 0;
-    current = mapList->first;
 
     /* Use map directory passed as argument if provided, else cwd */
     if (!loadDir) {
@@ -40,39 +39,39 @@ struct MapList *parseMap(char *loadDir) {
 
         sprintf(filePath, "%s/%s", loadDir, entry->d_name);
 
-        /* Skip if not .riot file */
+        /* Skip if not .riot# file */
         if (regexec(&riotExt, entry->d_name, 0, NULL, 0)) continue;
         if (!(file = fopen(filePath, "r"))) continue;
+
+        /* Determine level number (from file name) */
+        levelNo = (short) (atoi(&entry->d_name[strlen(entry->d_name) - 1]));
+        current = &mapList->level[levelNo];
 
         /* Ensure that map size is sufficient */
         fseek(file, 0, SEEK_END);
         if (ftell(file) < MAP_SIZE) continue;
         fseek(file, 0, SEEK_SET);
 
-        /* Move to next element of mapList */
-        if(!firstRun) {
-            current->next = malloc(sizeof(struct Map));
-            current = current->next;
-        }
-
-        /* Determine level name (from file name) */
+        /* Commit level name (from file name) */
         if (entry->d_name[0] == '_') {
             current->hidden = true;
-            memmove(current->name,entry->d_name+1,strlen(entry->d_name)-6);
+            memmove(current->name, entry->d_name,
+                    strlen(entry->d_name) - 7);
         } else {
             current->hidden = false;
-            memmove(current->name,entry->d_name,strlen(entry->d_name)-5);
+            memmove(current->name, entry->d_name, strlen(entry->d_name) - 6);
         }
         current->beaten = false;
 
         /* Copy map elements to array */
-        for (int i = 0; i < 16; i++) fgets(current->overlay[i], SIZE_X, file);
+        for (int i = 0; i < MAP_ROWS; i++) {
+            fgets(current->overlay[i], MAP_COLS, file);
+            fseek(file, 1, SEEK_CUR);
+        }
 
-
-        /* Determine path */
+        /* Determine map path */
         //TODO
 
-        current->next = NULL;
         mapList->count++;
         firstRun = false;
     }
@@ -82,18 +81,23 @@ struct MapList *parseMap(char *loadDir) {
     if (useCwd) free(loadDir); //getcwd calls malloc, if used must free loadDir
 
     /* Terminate if no map files where found */
-    if (!mapList->count) {
-        free(mapList->first);
-        free(mapList);
+    if (firstRun) {
         quit("No map files found");
     }
+
+//    /* Terminate on level ordering inconsistency */
+//    for (int i = MAX_LEVELS; i > 1; i--) {
+//        if (strlen(mapList->level[i].name) &&
+//            !strlen(mapList->level[i - 1].name))
+//            quit("Inconsistent map file numbering");
+//    }
 
     return mapList;
 }
 
 
 int getFilename(char *filename, char *ext) {
-    const char* dotPos = strrchr(filename, '.');
+    const char *dotPos = strrchr(filename, '.');
     if (dotPos)
         return !strncmp(++dotPos, ext, strlen(ext));
     return 0;

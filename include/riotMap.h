@@ -3,19 +3,14 @@
 
 #include "riotExec.h"
 
-#define NAME_LEN 25 //TODO revise
+#define NAME_LEN 35
 #define PATH_MAX 4096
-#define MAP_SIZE 1168 //TODO confirm
-#define REGEX_EXT ".+(.riot)$"
+#define MAP_SIZE 1168
+#define MAX_LEVELS 10
+#define REGEX_EXT ".+(.riot)[0-9]$"
 
 
 /* Data Types */
-
-struct MapList {
-    struct Map *first;
-    short count;
-};
-
 
 struct Map {/*
 
@@ -25,9 +20,14 @@ struct Map {/*
     char name[NAME_LEN];
     bool hidden;
     bool beaten;
-    char overlay[SIZE_Y][SIZE_X]; //walls, scenery, etc.
+    char overlay[MAP_ROWS][MAP_COLS]; //walls, scenery, etc.
     struct Path *path; //a list containing the path tiles
-    struct Map *next;
+};
+
+
+struct MapList {
+    struct Map level[MAX_LEVELS];
+    short count;
 };
 
 

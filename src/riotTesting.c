@@ -1,6 +1,3 @@
-#include <dirent.h>
-#include <unistd.h>
-#include <regex.h>
 #include "riotTesting.h"
 
 
@@ -19,7 +16,6 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[i], "-units")) unitsTest();
         else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
         else printf("Unknown command (%s)\n", argv[i]);
-
     }
 
     printf("Testing done.\n");
@@ -55,13 +51,27 @@ void unitsTest(void) {
 
 
 void mapTest(char *loadDir) {
-    struct MapList* testList = parseMap(loadDir);
-    struct Map* current = testList->first;
+    struct MapList *testList = parseMap(loadDir);
+    struct Map *current;
 
-    do{
-        printf("%s\n",current->name);
-        current = current->next;
-    }while(current);
+    printf("Riot Levels Found %d:\n\n", testList->count);
+
+    for (int i = 0; i < testList->count; i++) {
+        current = &testList->level[i];
+        printf("LEVEL %d: \n\n", i);
+
+        printf("Name: %s\n", current->name);
+        printf("Hidden: %d\n", current->hidden);
+        printf("Beaten: %d\n", current->beaten);
+        printf("\n");
+
+        printf("Layout:\n");
+        for (int j = 0; j < MAP_ROWS; j++) {
+            printf("%s\n", current->overlay[j]);
+        }
+        printf("\n\n");
+
+    }
     return;
 
 }

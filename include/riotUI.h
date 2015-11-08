@@ -41,7 +41,7 @@ DESCRIPTION: menuMain() will present the user with the main menu.
 ARGUMENTS: the Interface struct containing the targer ncurses WINDOWs.*/
 
 
-short menuContinue(struct Interface *gameInterface, struct MapList *levels);
+short menuContinue(struct Interface *gameInterface, struct MapList *mapList);
 
 void inmateUpdate(enum Colour, char inmateType, short from, short to);
 
