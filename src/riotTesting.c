@@ -1,5 +1,6 @@
 #include <dirent.h>
 #include <unistd.h>
+#include <regex.h>
 #include "riotTesting.h"
 
 
@@ -17,7 +18,7 @@ int main(int argc, char **argv) {
 
         if (!strcmp(argv[i], "-units")) unitsTest();
         else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
-        else printf("Unknown command (%s)\n",argv[i]);
+        else printf("Unknown command (%s)\n", argv[i]);
 
     }
 
@@ -54,71 +55,7 @@ void unitsTest(void) {
 
 
 void mapTest(char *loadDir) {
-
-    struct MapList *mapList;
-    struct Map *current;
-    DIR *directory;
-    struct dirent *entry;
-    bool useCwd = false;
-
-    /* Create a new mapList to store map file details */
-    mapList = malloc(sizeof(struct MapList));
-    mapList->first = malloc(sizeof(struct Map));
-    mapList->count = 0;
-    current = mapList->first;
-
-    /* Use map directory passed as argument if provided, else cwd */
-    if (!loadDir) {
-        loadDir = getcwd(loadDir, PATH_MAX);
-        useCwd = true;
-    }
-
-    directory = opendir(loadDir);
-
-    /* Iterate through files in loadDir */
-    while ((entry = readdir(directory))) {
-
-        /* Add files with .riot extension to mapList */
-        if (getFilename(entry->d_name, "riot")) {
-            mapList->count++;
-
-            /* Determine hidden status */
-            current->hidden = entry->d_name[0]=='_';
-
-            /* Determine absolute path */
-            snprintf(current->location, PATH_MAX, "%s/%s",
-                     loadDir, entry->d_name);
-
-            /* Determine level name (from file name) */
-            strcpy(current->name,strtok(entry->d_name,".riot"));
-
-            /* Copy map array from file */
-            //TODO
-
-            /* Determine path */
-            //TODO
-
-            /* Move to next element of mapList */
-            current->next = malloc(sizeof(struct Map));
-            current = current->next;
-        }
-    }
-
-    /* Clean up memory */
-    closedir(directory);
-    if (useCwd) free(loadDir); //getcwd calls malloc, if used must free loadDir
-
-    /* Terminate if no map files where found */
-    if (!mapList->count) {
-        free(mapList->first);
-        free(mapList);
-        quit("No map files found");
-    }
-
-    /* Clean up memory */
-    free(mapList->first);
-    free(mapList);
-    return;
+    parseMap(loadDir);
 }
 
 

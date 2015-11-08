@@ -3,8 +3,10 @@
 
 #include "riotExec.h"
 
-#define NAME_LEN 25 //needs to be revised
+#define NAME_LEN 25 //TODO revise
 #define PATH_MAX 4096
+#define MAP_SIZE 1168 //TODO confirm
+#define REGEX_EXT ".+(.riot)$"
 
 
 /* Data Types */
@@ -21,7 +23,6 @@ struct Map {/*
  containing the path.*/
 
     char name[NAME_LEN];
-    char location[PATH_MAX];
     bool hidden;
     char overlay[SIZE_Y][SIZE_X]; //walls, scenery, etc.
     struct Path *path; //a list containing the path tiles
