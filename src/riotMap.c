@@ -16,11 +16,10 @@ struct MapList *parseMap(char *loadDir) {
 
     char filePath[PATH_MAX];
     bool useCwd = false;
-
+    bool firstRun = true;
 
     /* Compile regex */
     regcomp(&riotExt, REGEX_EXT, REG_NOSUB | REG_EXTENDED);
-
 
     /* Create a new mapList to store map file details */
     mapList = malloc(sizeof(struct MapList));
@@ -50,14 +49,21 @@ struct MapList *parseMap(char *loadDir) {
         if (ftell(file) < MAP_SIZE) continue;
         fseek(file, 0, SEEK_SET);
 
+        /* Move to next element of mapList */
+        if(!firstRun) {
+            current->next = malloc(sizeof(struct Map));
+            current = current->next;
+        }
+
         /* Determine level name (from file name) */
         if (entry->d_name[0] == '_') {
             current->hidden = true;
-            strcpy(current->name, strtok(entry->d_name + 1, ".riot"));
+            memmove(current->name,entry->d_name+1,strlen(entry->d_name)-6);
         } else {
             current->hidden = false;
-            strcpy(current->name, strtok(entry->d_name, ".riot"));
+            memmove(current->name,entry->d_name,strlen(entry->d_name)-5);
         }
+        current->beaten = false;
 
         /* Copy map elements to array */
         for (int i = 0; i < 16; i++) fgets(current->overlay[i], SIZE_X, file);
@@ -66,17 +72,14 @@ struct MapList *parseMap(char *loadDir) {
         /* Determine path */
         //TODO
 
-        /* Move to next element of mapList */
-        current->next = malloc(sizeof(struct Map));
-        current = current->next;
+        current->next = NULL;
         mapList->count++;
+        firstRun = false;
     }
-
 
     /* Clean up memory */
     closedir(directory);
     if (useCwd) free(loadDir); //getcwd calls malloc, if used must free loadDir
-
 
     /* Terminate if no map files where found */
     if (!mapList->count) {
@@ -95,6 +98,7 @@ int getFilename(char *filename, char *ext) {
         return !strncmp(++dotPos, ext, strlen(ext));
     return 0;
 }
+
 
 void checkArgs(int argc, char **argv) {
 

@@ -24,6 +24,7 @@ struct Map {/*
 
     char name[NAME_LEN];
     bool hidden;
+    bool beaten;
     char overlay[SIZE_Y][SIZE_X]; //walls, scenery, etc.
     struct Path *path; //a list containing the path tiles
     struct Map *next;

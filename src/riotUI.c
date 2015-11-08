@@ -97,8 +97,10 @@ short menuContinue(struct Interface *gameInterface, struct MapList *levels) {
     y += 3;
 
 
+    //TODO: Need to figure out a way to indicate level order
     for (int i = 1; i < 10 && level; i++) {
-        mvwprintw(menu, y++, 21, "[%d] %s", i, level->name);
+        mvwprintw(menu, y++, 21, "[%d]%s", i,
+                  level->hidden && !level->beaten ? "?" : level->name);
         level = level->next;
     }
 

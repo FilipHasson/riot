@@ -55,7 +55,15 @@ void unitsTest(void) {
 
 
 void mapTest(char *loadDir) {
-    parseMap(loadDir);
+    struct MapList* testList = parseMap(loadDir);
+    struct Map* current = testList->first;
+
+    do{
+        printf("%s\n",current->name);
+        current = current->next;
+    }while(current);
+    return;
+
 }
 
 
