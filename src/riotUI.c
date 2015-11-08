@@ -1,43 +1,33 @@
 #include "riotUI.h"
 
+
 void uiSet(enum GameMode gameMode, struct Interface *win) {
-
     int y, x;
-
     switch (gameMode) {
-
         case INIT:
-
             initscr();
             noecho(); // hide keypresses
             curs_set(FALSE); // hide cursor
-
             /* Verify terminal dimensions */
             getmaxyx(stdscr, y, x);
             if ((x < SIZE_X) || (y < SIZE_Y)) quit("Terminal size too small");
-
             /* Set window positions*/
             win->header = newwin(HEADER, SIZE_X, 0, 0);
             win->main = newwin(MAIN, SIZE_X, HEADER + 1, 0);
             win->footer = newwin(SIZE_Y, FOOTER, HEADER + MAIN + 1, 0);
             win->menu = newwin(SIZE_Y, SIZE_X, 0, 0);
             break;
-
         case MENU:
             wrefresh(win->menu);
             break;
-
         case NEW:
         case CONTINUE:
             break;
-
-
         case PLAY:
             wrefresh(win->header);
             wrefresh(win->main);
             wrefresh(win->footer);
             break;
-
         case EXIT:
             if (win->header) delwin(win->header);
             if (win->main) delwin(win->main);
@@ -45,12 +35,10 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
             if (win->menu) delwin(win->menu);
             endwin();
             break;
-
         default:
             quit("Invalid game mode initialized");
             break;
     }
-
     return;
 }
 
@@ -115,16 +103,43 @@ short menuContinue(struct Interface *gameInterface, struct MapList *levels) {
     }
 
     mvwaddstr(menu, y++, 21, "[b]ack");
-
-
     wrefresh(menu);
-
     do {
         select = wgetch(menu);
     } while (select >= '1' && select > levels->count && select != 'b');
-
-
     return 0;
+}
+
+
+enum GameMode gameTest (struct Interface *gameInterface){
+    enum GameMode gameMode;
+    WINDOW *header = gameInterface->header;
+    WINDOW *mwin = gameInterface->main;
+    WINDOW *footer = gameInterface->footer;
+    WINDOW *menu = gameInterface->menu;
+    int y=3;
+    wclear(menu);
+    wclear(footer);
+    wclear(header);
+    wclear(mwin);
+    box(header,0,0);
+    box(mwin,0,0);
+    box(footer,0,0);
+    mvwaddch(header,0,0,ACS_ULCORNER);
+    mvwaddstr(header,0,1,"riot");
+    mvwaddch (header,2,0,ACS_LTEE);
+    mvwaddch (header,2,SIZE_X-1,ACS_RTEE);
+
+    mvwaddch(mwin,0,0,'A');
+
+    wrefresh(menu);
+    wrefresh(header);
+    wrefresh(mwin);
+    wrefresh(footer);
+        gameMode = PLAY;
+
+    getch();
+    return (gameMode);
 }
 
 void menuNew() {

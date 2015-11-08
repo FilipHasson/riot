@@ -49,5 +49,8 @@ void inmateRemove(short position);
 
 void guardUpdate(bool isAttacking, short position);
 
+/*This is Filip trying to figure out his shit, 
+try not to worry about it for now :D*/
+enum GameMode gameTest ();
 
 #endif //RIOT_UI

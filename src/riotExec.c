@@ -3,6 +3,7 @@
 
 int main(int argc, char **argv) {
 
+
     struct MapList *mapList;
     enum GameMode gameMode;
     struct Interface gameInterface;
@@ -10,16 +11,14 @@ int main(int argc, char **argv) {
 
 
     uiSet(INIT, &gameInterface);
-
-
     do {
 
         gameMode = menuMain(&gameInterface);
         uiSet(gameMode, &gameInterface);
-
         switch (gameMode) {
             case NEW:
-//                newGame();
+                gameMode = gameTest(&gameInterface);
+//  0              newGame();
                 break;
 
             case CONTINUE:
