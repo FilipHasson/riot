@@ -14,8 +14,8 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
                 quit("Terminal size too small");
             /* Set window positions*/
             win->header = newwin(HEADER, MAX_COLS, 0, 0);
-            win->main = newwin(MAIN, MAX_COLS, HEADER + 1, 0);
-            win->footer = newwin(MAX_ROWS, FOOTER, HEADER + MAIN + 1, 0);
+            win->main = newwin(MAIN, MAX_COLS, HEADER, 0);
+            win->footer = newwin(FOOTER, MAX_COLS, HEADER + MAIN, 0);
             win->menu = newwin(MAX_ROWS, MAX_COLS, 0, 0);
             break;
         case MENU:
@@ -132,14 +132,22 @@ enum GameMode gameTest(struct Interface *gameInterface) {
     wclear(header);
     wclear(mwin);
     box(header, 0, 0);
-    box(mwin, 0, 0);
+
+
     box(footer, 0, 0);
+    mvwaddch(footer,0,0,ACS_LTEE);
+    mvwaddch(footer,0,MAX_COLS-1,ACS_RTEE);
+
+    for (y=0;y<MAX_ROWS;y++){
+        mvwaddch(mwin,y,0,ACS_VLINE);
+        mvwaddch(mwin,y,MAX_COLS-1,ACS_VLINE);
+
+    }
+
     mvwaddch(header, 0, 0, ACS_ULCORNER);
     mvwaddstr(header, 0, 1, "riot");
     mvwaddch (header, 2, 0, ACS_LTEE);
-    mvwaddch (header, 2, MAP_COLS - 1, ACS_RTEE);
-
-    mvwaddch(mwin, 0, 0, 'A');
+    mvwaddch (header, 2, MAX_COLS - 1, ACS_RTEE);
 
     wrefresh(menu);
     wrefresh(header);

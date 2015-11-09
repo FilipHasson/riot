@@ -15,7 +15,7 @@
 #define MAP_ROWS 15
 #define HEADER 3
 #define FOOTER 4
-#define MAIN 16
+#define MAIN 1
 
 
 /* Data Types */
