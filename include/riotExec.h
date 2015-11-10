@@ -5,10 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <math.h>
 
 
 /* Macro Constants */
-
 #define MAX_COLS 80
 #define MAX_ROWS 24
 #define MAP_COLS 73
