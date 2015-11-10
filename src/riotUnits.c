@@ -1,5 +1,6 @@
 #include "riotUnits.h"
-
+//Rowsize needs to be adjusted based on the rowsize(X size) of the map
+#define ROWSIZE 5
 
 struct UnitList *createList(void) {
 
@@ -141,63 +142,63 @@ struct Inmate *createInmate(enum InmateType type) {
     switch (type) {
 
         case PROTAGONIST:
-            unit->health[0] = unit->health[1] = 5;
+            unit->currentHealth = unit->maxHealth = 5;
             unit->speed = 2;
             unit->rep = 0;
             unit->panic = 0;
             break;
 
         case HOMEBOY:
-            unit->health[0] = unit->health[1] = 10;
+            unit->currentHealth = unit->maxHealth = 10;
             unit->speed = 4;
             unit->rep = 5;
             unit->panic = 2;
             break;
 
         case BRUISER:
-            unit->health[0] = unit->health[1] = 16;
+            unit->currentHealth = unit->maxHealth = 16;
             unit->speed = 4;
             unit->rep = 15;
             unit->panic = 6;
             break;
 
         case LUNATIC:
-            unit->health[0] = unit->health[1] = 16;
+            unit->currentHealth = unit->maxHealth = 16;
             unit->speed = 6;
             unit->rep = 10;
             unit->panic = 8;
             break;
 
         case FATTY:
-            unit->health[0] = unit->health[1] = 40;
+            unit->currentHealth = unit->maxHealth = 40;
             unit->speed = 2;
             unit->rep = 10;
             unit->panic = 4;
             break;
 
         case SPEEDY:
-            unit->health[0] = unit->health[1] = 10;
+            unit->currentHealth = unit->maxHealth = 10;
             unit->speed = 8;
             unit->rep = 20;
             unit->panic = 2;
-            break;
+            break;	
 
         case CUTIE:
-            unit->health[0] = unit->health[1] = 20;
+            unit->currentHealth = unit->maxHealth = 20;
             unit->speed = 4;
             unit->rep = 20;
             unit->panic = 1;
             break;
 
         case ATTORNEY:
-            unit->health[0] = unit->health[1] = 30;
+            unit->currentHealth = unit->maxHealth = 30;
             unit->speed = 5;
             unit->rep = 30;
             unit->panic = 2;
             break;
 
         case DOCTOR:
-            unit->health[0] = unit->health[1] = 10;
+            unit->currentHealth = unit->maxHealth = 10;
             unit->speed = 5;
             unit->rep = 40;
             unit->panic = 2;
@@ -278,50 +279,61 @@ struct Guard *createGuard(enum GuardType type) {
     return unit;
 }
 
-///*Move inmate every turn by its speed*/
-//void inmateMove(struct UnitNode *inmate) {
-//
+// /*Move inmate every turn by its speed*/
+// void inmateMove(struct UnitNode *inmate) {
+
 //    int prevPos;
 //    struct UnitNode * nextInmate = inmate;
 //    while(nextInmate->next != NULL) {
 //        prevPos = inmate->unit->position;
-//        /*The idea here is that the position changes every turn
-//          by a fraction of the maximum speed, meaning a unit with
-//          speed 8 (highest speed) will move one unit every turn
-//          and a unit with speed 4 will move one unit every 2 turns
-//          ,the position is typecasted to an int that way the
-//           decimal place is truncated, meaning the position will
-//          be redrawn if a units position changes by a whole unit*/
 //        inmate->position = inmate->pos + inmate->speed/8;
 //        /* inmateRedraw(int previousPosition, int currentPosition, char type) is
 //           a function which should be located inside the UI source file*/
-//
+
 //        //inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
 //        nextInmate = nextInmate->next;
 //    }
-//}
-///*Compare the positions of every inmate, and the positions of attack of every guard
-//  if the units pos matches the area of attack of the guard than subtract its
-//  health by the guards damage*/
-//void guardAttack(struct UnitNode *guard, struct UnitNode *inmate) {
-//    int i;
-//    int range;
-//    struct InmateNode * nextInmate;
-//    struct GuardNode * nextGuard;
-//
-//    nextGuard = guard;
-//    nextInmate = inmate;
-//    while(nextGuard->next != NULL) {
-//        /*Get the unit range*/
-//        range = sizeof(nextGuard->range)/sizeof(short);
-//        while(nextInmate->next != NULL) {
-//            for (i=0; i<range; i++) {
-//                if (nextGuard->range[i] == nextInmate->pos) {
-//                    nextInmate->hpCur = nextInmate->hpCur - nextGuard->damage;
-//                }
-//            }
-//            nextInmate = nextInmate->next;
-//        }
-//        nextGuard = nextGuard->next;
-//    }
-//}
+// }
+/*Compare the positions of every inmate, and the positions of attack of every guard
+ if the units pos matches the area of attack of the guard than subtract its
+ health by the guards damage*/
+void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
+   struct UnitNode * nextInmate;
+   struct UnitNode * nextGuard;
+
+   nextGuard = getHead(guardList);
+   nextInmate = getHead(inmateList);
+
+   while(getNext(nextGuard) != NULL) {
+       while(getNext(nextInmate) != NULL) {
+           if (inRange(ROWSIZE,nextInmate,nextGuard)) {
+               dealDamage(nextInmate,nextGuard);
+           }
+           nextInmate = getNext(nextInmate);
+       }
+       nextGuard = getNext(nextGuard);
+   }
+}
+
+void dealDamage(struct UnitNode * inmateNode,struct UnitNode * guardNode){
+	((struct Inmate*)inmateNode->unit)->currentHealth = ((struct Inmate*)inmateNode->unit)->currentHealth - ((struct Guard*)guardNode->unit)->damage;
+}
+bool inRange(int rowSize,struct UnitNode *inmate,struct UnitNode *guard){
+    int inmatePosition;
+    int guardPosition;
+    int range;
+	int xDifference;
+	int yDifference;
+	int totalDifference; 
+
+    inmatePosition = ((struct Inmate*)inmate->unit)->position;
+    guardPosition = ((struct Guard*)guard->unit)->position;
+    range = ((struct Guard*)guard->unit)->range;
+
+	yDifference = (((inmatePosition-1)/rowSize)+1)-(((guardPosition-1)/rowSize)+1);
+	xDifference = (guardPosition+(yDifference*rowSize))-inmatePosition;
+
+	totalDifference = xDifference+yDifference;
+
+	return range >= totalDifference;
+}

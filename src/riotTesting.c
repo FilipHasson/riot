@@ -121,8 +121,8 @@ void printInmate(struct Inmate *inmate) {
     }
 
     printf("pos:\t%d\n", inmate->position);
-    printf("curHP:\t%d\n", inmate->health[0]);
-    printf("maxHP:\t%d\n", inmate->health[1]);
+    printf("curHP:\t%d\n", inmate->currentHealth);
+    printf("maxHP:\t%d\n", inmate->maxHealth);
     printf("speed:\t%d\n", inmate->speed);
     printf("rep:\t%d\n", inmate->rep);
     printf("panic:\t%d\n", inmate->panic);

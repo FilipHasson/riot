@@ -33,7 +33,8 @@ struct Inmate {/*
 
     char type;
     short position;
-    unsigned short health[2];
+    unsigned short currentHealth;
+    unsigned short maxHealth;
     unsigned short speed;
     unsigned short rep;
     unsigned short panic;
@@ -194,11 +195,15 @@ void inmateMove(struct UnitNode *inmate);/*
  DESCRIPTION: Move inmate every turn by its speed.*/
 
 
-void guardAttack(struct UnitNode *guard, struct UnitNode *inmate);/*
+void guardAttack(struct UnitList * guardList, struct UnitList *inmateList);/*
 
  DESCRIPTION: Compares the positions of every inmate, and the positions of
  attack of every guard if the units position matches the area of attack of
  the guard than subtract its health by the guards damage*/
 
+bool inRange(int rowSize,struct UnitNode *inmate,struct UnitNode *guard);
 
+void dealDamage(struct UnitNode * inmateNode,struct UnitNode * guardNode);
+
+void removeHealth(struct Inmate *inmate,int damage,int rowSize);
 #endif //RIOT_UNITS
