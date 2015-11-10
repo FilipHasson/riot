@@ -8,7 +8,6 @@ int main(int argc, char **argv) {
         printf("\nExiting.");
         exit(-1);
     }
-
     for (int i = 1; i < argc; i++) {
 
         if (argv[i][0] != '-')continue; //only process flags
@@ -23,19 +22,37 @@ int main(int argc, char **argv) {
 
 }
 
+/*Testing is being done with respect to a 10x10 map grid, where the first position
+ (1,1) = 1 and the last position (10,10) = 100, to change this edit MAPSIZE inside riotTesting.h
+ to the maximum map position and ROWSIZE inside riotUnits.c to how long the rows are */
 
 void unitsTest(void) {
     struct UnitList *inmates, *guards;
-
+    struct Inmate * inmateUnit;
+    struct Guard * guardUnit;
     inmates = createList();
     guards = createList();
 
+    guardUnit = createGuard(DOGS);
+    guardUnit->position = (rand()%MAPSIZE)+1;
+    enqueue(guards,guardUnit);
+    printf("Adding a guard to the list (%d)\n", guards->count);
+    printf("Guard position is: %d\n", guardUnit->position);
+    putchar('\n');
+
+    srand(time(NULL));
 
     for (int i = 0; i < TRIALS; i++) {
-        enqueue(inmates, createInmate(HOMEBOY));
+        inmateUnit = createInmate(HOMEBOY);
+        inmateUnit->position = (rand()%90)+1;
+        enqueue(inmates, inmateUnit);
         printf("Adding an inmate to the list (%d)\n", inmates->count);
+        printf("Inmate position is: %d\n", inmateUnit->position);
     }
+
     putchar('\n');
+
+    guardAttack(guards,inmates);
 
     while (inmates->count) {
         rmUnit(dequeue(inmates));

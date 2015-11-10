@@ -1,6 +1,6 @@
 #include "riotUnits.h"
 //Rowsize needs to be adjusted based on the rowsize(X size) of the map
-#define ROWSIZE 5
+#define ROWSIZE 10
 
 struct UnitList *createList(void) {
 
@@ -304,19 +304,30 @@ void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
    nextGuard = getHead(guardList);
    nextInmate = getHead(inmateList);
 
-   while(getNext(nextGuard) != NULL) {
-       while(getNext(nextInmate) != NULL) {
+   printf("Guard Attack has begun.\n\n");
+
+    do{
+       do {
            if (inRange(ROWSIZE,nextInmate,nextGuard)) {
-               dealDamage(nextInmate,nextGuard);
+             dealDamage(nextInmate,nextGuard);
            }
            nextInmate = getNext(nextInmate);
-       }
+       } while(getNext(nextInmate) != NULL);
        nextGuard = getNext(nextGuard);
-   }
+   } while(getNext(nextGuard) != NULL);
 }
 
 void dealDamage(struct UnitNode * inmateNode,struct UnitNode * guardNode){
+    printf("#####Inmate attacked#####\n");
+    printf("Inmate Position: %d\n",((struct Inmate*)inmateNode->unit)->position);
+    printf("Guard Position: %d\n",((struct Guard*)guardNode->unit)->position);
+    printf("Health before attack: %d\n",((struct Inmate*)inmateNode->unit)->currentHealth);
+    printf("Damage dealt by guard: %d\n",((struct Guard*)guardNode->unit)->damage);
 	((struct Inmate*)inmateNode->unit)->currentHealth = ((struct Inmate*)inmateNode->unit)->currentHealth - ((struct Guard*)guardNode->unit)->damage;
+
+    printf("Health after attack: %d\n",((struct Inmate*)inmateNode->unit)->currentHealth);
+    printf("########################\n");
+    printf("\n");
 }
 bool inRange(int rowSize,struct UnitNode *inmate,struct UnitNode *guard){
     int inmatePosition;
@@ -332,8 +343,18 @@ bool inRange(int rowSize,struct UnitNode *inmate,struct UnitNode *guard){
 
 	yDifference = (((inmatePosition-1)/rowSize)+1)-(((guardPosition-1)/rowSize)+1);
 	xDifference = (guardPosition+(yDifference*rowSize))-inmatePosition;
-
-	totalDifference = xDifference+yDifference;
+    yDifference = abs(yDifference);
+    xDifference = abs(xDifference);
+    totalDifference = xDifference+yDifference;
+    printf("#####Calculating Range#####\n");
+    printf("Unit position: %d\n",inmatePosition);
+    printf("Guard position: %d\n",guardPosition);
+    printf("Y Difference: %d\n",yDifference);
+    printf("X Difference: %d\n",xDifference);
+    printf("Total Difference: %d\n",totalDifference);
+    printf("Range of the Guard: %d\n",range);
+    printf("############################\n");
+    printf("\n");
 
 	return range >= totalDifference;
 }

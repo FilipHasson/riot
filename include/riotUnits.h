@@ -194,16 +194,26 @@ void inmateMove(struct UnitNode *inmate);/*
 
  DESCRIPTION: Move inmate every turn by its speed.*/
 
-
 void guardAttack(struct UnitList * guardList, struct UnitList *inmateList);/*
 
- DESCRIPTION: Compares the positions of every inmate, and the positions of
- attack of every guard if the units position matches the area of attack of
- the guard than subtract its health by the guards damage*/
+DESCRIPTION: Has every guard attack an inmate within its range.
 
-bool inRange(int rowSize,struct UnitNode *inmate,struct UnitNode *guard);
+ARGUMENTS: The list of guards (UnitList * guardList).
+           The list of inmates (UnitList * inmateList). */
 
-void dealDamage(struct UnitNode * inmateNode,struct UnitNode * guardNode);
+bool inRange(int rowSize,struct UnitNode *inmate,struct UnitNode *guard);/*
 
-void removeHealth(struct Inmate *inmate,int damage,int rowSize);
+DESCRIPTION: Returns a boolean based on if the inmate is within the guards range
+
+ARGUMENTS: Size of the the map path horizontally (int rowSize).
+           Inmate that is being checked if within range of guard(UnitNode *inmate).
+           Guard that is comparing with the inmate position.*/
+
+void dealDamage(struct UnitNode * inmateNode,struct UnitNode * guardNode);/*
+
+DESCRIPTION: Decrements the inmates health by the guards damage during an attack
+
+ARGUMENTS: Inmate that is being dealt damage (struct UnitNode *inmateNode).
+           Guard that is dealing damage (struct UnitNode *guardNode).*/
+
 #endif //RIOT_UNITS
