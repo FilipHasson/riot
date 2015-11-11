@@ -1,11 +1,27 @@
-# Readme
+## Synopsis
 
-## Program Overview
+introduction to the project
 
-## Compiling the Program
+## Code Example
 
-## Running the Program
+code library/what each file will do
 
-## Known Limitations
+## Motivation
+
+why the projects exists
+
+## Installation
+
+code examples/command line
+
+## Tests
+
+tests and test examples (short version)
 
 ## Contributors
+
+list of students with emails/id's
+
+## License
+
+short example of license
