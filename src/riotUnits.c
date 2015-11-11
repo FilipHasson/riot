@@ -279,21 +279,25 @@ struct Guard *createGuard(enum GuardType type) {
     return unit;
 }
 
-// /*Move inmate every turn by its speed*/
-// void inmateMove(struct UnitNode *inmate) {
+/*Moves the units through the map and calls 'inmateRedraw to draw/erase the
+ units*/
+void inmateMove(struct UnitList *inmateList) {
+	struct UnitNode * nextInmate;
+   	int prevPos;
 
-//    int prevPos;
-//    struct UnitNode * nextInmate = inmate;
-//    while(nextInmate->next != NULL) {
-//        prevPos = inmate->unit->position;
-//        inmate->position = inmate->pos + inmate->speed/8;
-//        /* inmateRedraw(int previousPosition, int currentPosition, char type) is
-//           a function which should be located inside the UI source file*/
+   	nextInmate = getHead(inmateList);
+   	do {
+    	prevPos = nextInmate->unit->position;
+        nextInmate->unit->position = nextInmate->unit->position + localInmate->unit->(speed/8);
+       /* inmateRedraw(int previousPosition, int currentPosition, char type), need
+       this function to draw redraw units onto the screen. UI source perhaps?
 
-//        //inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
-//        nextInmate = nextInmate->next;
-//    }
-// }
+       /*inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
+       essentially what is going to be called*/
+
+        nextInmate = getNext(nextInmate);
+   	} while(getNext(nextInmate) != NULL); 
+}
 /*Compare the positions of every inmate, and the positions of attack of every guard
  if the units pos matches the area of attack of the guard than subtract its
  health by the guards damage*/
