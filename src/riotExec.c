@@ -2,7 +2,6 @@
 
 
 int main(int argc, char **argv) {
-
     struct MapList *mapList;
     enum GameMode gameMode;
     struct Interface gameInterface;
