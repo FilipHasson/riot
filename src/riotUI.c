@@ -2,33 +2,44 @@
 
 
 void uiSet(enum GameMode gameMode, struct Interface *win) {
+
     int y, x;
+
     switch (gameMode) {
+
         case INIT:
+
             initscr();
             noecho(); // hide keypresses
             curs_set(FALSE); // hide cursor
+
             /* Verify terminal dimensions */
             getmaxyx(stdscr, y, x);
             if ((x < MAX_COLS) || (y < MAX_ROWS))
                 quit("Terminal size too small");
+
             /* Set window positions*/
             win->header = newwin(HEADER, MAX_COLS, 0, 0);
             win->main = newwin(MAIN, MAX_COLS, HEADER + 1, 0);
             win->footer = newwin(MAX_ROWS, FOOTER, HEADER + MAIN + 1, 0);
             win->menu = newwin(MAX_ROWS, MAX_COLS, 0, 0);
             break;
+
         case MENU:
             wrefresh(win->menu);
             break;
+
         case NEW:
+
         case CONTINUE:
             break;
+
         case PLAY:
             wrefresh(win->header);
             wrefresh(win->main);
             wrefresh(win->footer);
             break;
+
         case EXIT:
             if (win->header) delwin(win->header);
             if (win->main) delwin(win->main);
@@ -36,6 +47,7 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
             if (win->menu) delwin(win->menu);
             endwin();
             break;
+
         default:
             quit("Invalid game mode initialized");
             break;
@@ -85,38 +97,46 @@ short menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     struct Map *current, *last;
     char select;
     int y = 3;
+    bool unlocked[MAX_LEVELS];
 
     wclear(menu);
     box(menu, 0, 0);
 
-    wclear(menu);
-    box(menu, 0, 0);
-
+    /* Print header information */
     mvwaddstr(menu, y, 21, "LEVEL SELECT");
     mvwhline(menu, y += 2, 21, ACS_HLINE, 37);
     y += 2;
 
-    mvwprintw(menu, y++, 21, "[0] %s", mapList->level[0].name);
+    /* Always print first level */
+    mvwprintw(menu, y, 21, "[0] %s", mapList->level[0].name);
+    unlocked[0]=true;
 
-    for (int i = 0; i < mapList->count - 1; i++) {
-        current = &mapList->level[i + 1];
-        last = &mapList->level[i];
+    /* Print additional levels */
+    for (int i = 1; i < mapList->count; i++) {
+        current = &mapList->level[i];
+        last = &mapList->level[i-1];
 
         if (!current->hidden) {
             mvwprintw(menu, y + i, 21, "[%c] %s",
-                      last->beaten ? i + 1 + '0' : '-', current->name);
+                      last->beaten ? i + '0' : '-', current->name);
         } else if (current->hidden && last->beaten) {
-            mvwprintw(menu, y + i, 21, "[%i] %s", i + 1, current->name);
+            mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
         } else y--;
 
+        /* Set unlocked state */
+        unlocked[i]=current->beaten;
     }
-
     mvwaddstr(menu, MAX_ROWS - 4, 21, "[b]ack");
     wrefresh(menu);
+
+    /* Get user input */
     do {
         select = wgetch(menu);
-    } while (select >= '1' && select > mapList->count && select != 'b');
-    return 0;
+        if(select == 'b') return -1;
+        if(select < 0 || select > MAX_LEVELS) continue;
+    } while (!unlocked[select]);
+
+    return (short)(select-'0');
 }
 
 

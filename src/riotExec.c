@@ -3,22 +3,23 @@
 
 int main(int argc, char **argv) {
 
-
     struct MapList *mapList;
     enum GameMode gameMode;
     struct Interface gameInterface;
     mapList = parseMap(argv[1] ? argv[1] : NULL);
 
-
     uiSet(INIT, &gameInterface);
+
+    /* Begin main game loop */
     do {
 
         gameMode = menuMain(&gameInterface);
         uiSet(gameMode, &gameInterface);
+
         switch (gameMode) {
             case NEW:
                 gameMode = gameTest(&gameInterface);
-//  0              newGame();
+//                newGame();
                 break;
 
             case CONTINUE:
