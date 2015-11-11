@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 
         switch (gameMode) {
             case NEW:
-                gameMode = gameTest(&gameInterface);
+                gameMode = gameTest(&gameInterface, mapList,0);
 //                newGame();
                 break;
 

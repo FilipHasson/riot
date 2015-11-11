@@ -140,12 +140,27 @@ short menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
 }
 
 
-enum GameMode gameTest(struct Interface *gameInterface) {
+void drawMap (WINDOW *mwin,struct Map*map){
+    int x;
+    int y;
+    for (x=1;x<MAP_COLS+1;x++){
+        for(y=1;y<MAP_ROWS;y++){
+            mvwaddch (mwin,y,x,map->overlay[y-1][x-1]);
+        }
+    }
+}
+/*
+void updateUnitQuene (){
+
+}
+*/
+enum GameMode gameTest(struct Interface *gameInterface,struct MapList *mapList,int level) {
     enum GameMode gameMode;
     WINDOW *header = gameInterface->header;
     WINDOW *mwin = gameInterface->main;
     WINDOW *footer = gameInterface->footer;
     WINDOW *menu = gameInterface->menu;
+    struct Map *m=&mapList->level[level];
     int y = 3;
     wclear(menu);
     wclear(footer);
@@ -168,6 +183,8 @@ enum GameMode gameTest(struct Interface *gameInterface) {
     mvwaddstr(header, 0, 1, "riot");
     mvwaddch (header, 2, 0, ACS_LTEE);
     mvwaddch (header, 2, MAX_COLS - 1, ACS_RTEE);
+
+    drawMap(mwin,m);
 
     wrefresh(menu);
     wrefresh(header);

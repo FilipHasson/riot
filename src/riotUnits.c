@@ -286,7 +286,7 @@ void inmateMove(struct UnitList *inmateList) {
    	int prevPos;
 
    	nextInmate = getHead(inmateList);
-   	do {
+  /* 	do {
     	prevPos = nextInmate->unit->position;
         nextInmate->unit->position = nextInmate->unit->position + localInmate->unit->(speed/8);
        /* inmateRedraw(int previousPosition, int currentPosition, char type), need
@@ -295,8 +295,8 @@ void inmateMove(struct UnitList *inmateList) {
        /*inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
        essentially what is going to be called*/
 
-        nextInmate = getNext(nextInmate);
-   	} while(getNext(nextInmate) != NULL); 
+/*        nextInmate = getNext(nextInmate);
+   	} while(getNext(nextInmate) != NULL); */
 }
 /*Compare the positions of every inmate, and the positions of attack of every guard
  if the units pos matches the area of attack of the guard than subtract its
