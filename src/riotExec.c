@@ -1,6 +1,5 @@
 #include "riotUI.h"
 
-
 int main(int argc, char **argv) {
     struct MapList *mapList;
     enum GameMode gameMode;
@@ -17,8 +16,7 @@ int main(int argc, char **argv) {
 
         switch (gameMode) {
             case NEW:
-                gameMode = gameTest(&gameInterface, mapList,0);
-//                newGame();
+                drawLevel(&gameInterface, mapList, 0);
                 break;
 
             case CONTINUE:

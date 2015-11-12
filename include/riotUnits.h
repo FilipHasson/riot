@@ -3,7 +3,6 @@
 
 #include "riotExec.h"
 
-
 /* Data Types */
 
 struct UnitList {/*
@@ -162,6 +161,7 @@ POSTCONDITIONS: The back UnitNode is either removed from the passed UnitList
 
 struct Inmate *createInmate(enum InmateType type);
 
+
 struct Guard *createGuard(enum GuardType type);
 
 
@@ -192,18 +192,19 @@ POSTCONDITIONS: Memory is allocated for a new Inmate struct.*/
 
 void inmateMove(struct UnitList *inmateList);/*
 
- DESCRIPTION: Move inmate every turn by its speed/8.
+DESCRIPTION: Move inmate every turn by its speed/8.
 
- ARGUEMNTS: The list of inmates (UnitList * inmateList). */
+ARGUEMNTS: The list of inmates (UnitList * inmateList). */
+
 
 void guardAttack(struct UnitList * guardList, struct UnitList *inmateList);/*
 
 DESCRIPTION: Has every guard attack an inmate within its range.
 
-ARGUMENTS: The list of guards (UnitList * guardList).
-           The list of inmates (UnitList * inmateList). */
+ARGUMENTS: The list of guards and the list of inmates */
 
-bool inRange(int rowSize,struct UnitNode *inmate,struct UnitNode *guard);/*
+
+bool inRange(struct UnitNode *inmate,struct UnitNode *guard);/*
 
 DESCRIPTION: Returns a boolean based on if the inmate is within the guards range
 
@@ -211,11 +212,21 @@ ARGUMENTS: Size of the the map path horizontally (int rowSize).
            Inmate that is being checked if within range of guard(UnitNode *inmate).
            Guard that is comparing with the inmate position.*/
 
+
 void dealDamage(struct UnitNode * inmateNode,struct UnitNode * guardNode);/*
 
 DESCRIPTION: Decrements the inmates health by the guards damage during an attack
 
 ARGUMENTS: Inmate that is being dealt damage (struct UnitNode *inmateNode).
            Guard that is dealing damage (struct UnitNode *guardNode).*/
+
+
+struct Path * getPath(struct Map map);
+//TODO
+
+
+struct UnitList * getGuardList(struct Map map);
+//TODO
+
 
 #endif //RIOT_UNITS

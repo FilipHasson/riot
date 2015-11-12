@@ -5,8 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <math.h>
 
 
 /* Macro Constants */
@@ -56,7 +54,7 @@ enum AI {/*
 
  AI provides a mnemonic for guard AI profiles.*/
 
-            PROX, //proximity
+    PROX, //proximity
     AOE, //area of effect
     END, //closest to end
 };
@@ -80,10 +78,11 @@ enum GameMode {/*
 
     INIT,
     MENU,
+    PLAY,
     NEW = 'n',
     CONTINUE = 'c',
-    PLAY,
-    EXIT = 'e'
+    EXIT = 'e',
+    _GAME_MODE_LIMIT,
 };
 
 

@@ -21,7 +21,6 @@ struct Map {/*
     bool hidden;
     bool beaten;
     char overlay[MAP_ROWS][MAP_COLS]; //walls, scenery, etc.
-    struct Path *path; //a list containing the path tiles
 };
 
 

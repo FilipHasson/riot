@@ -51,6 +51,7 @@ void guardUpdate(bool isAttacking, short position);
 
 /*This is Filip trying to figure out his shit, 
 try not to worry about it for now :D*/
-enum GameMode gameTest (struct Interface *gameInterface,struct MapList *mapList,int level);
+enum GameMode drawLevel(struct Interface *gi,
+    struct MapList *ml, int lvl);
 void drawMap (WINDOW *mWin, struct Map*map);
 #endif //RIOT_UI

@@ -1,6 +1,5 @@
 #include "riotTesting.h"
 
-
 int main(int argc, char **argv) {
 
     if (argc == 1) {
@@ -22,20 +21,17 @@ int main(int argc, char **argv) {
 
 }
 
-/*Testing is being done with respect to a 10x10 map grid, where the first position
- (1,1) = 1 and the last position (10,10) = 100, to change this edit MAPSIZE inside riotTesting.h
- to the maximum map position and ROWSIZE inside riotUnits.c to how long the rows are */
 
 void unitsTest(void) {
     struct UnitList *inmates, *guards;
-    struct Inmate * inmateUnit;
-    struct Guard * guardUnit;
+    struct Inmate *inmateUnit;
+    struct Guard *guardUnit;
     inmates = createList();
     guards = createList();
 
     guardUnit = createGuard(DOGS);
-    guardUnit->position = (rand()%MAPSIZE)+1;
-    enqueue(guards,guardUnit);
+    guardUnit->position = (rand() % MAPSIZE) + 1;
+    enqueue(guards, guardUnit);
     printf("Adding a guard to the list (%d)\n", guards->count);
     printf("Guard position is: %d\n", guardUnit->position);
     putchar('\n');
@@ -44,7 +40,7 @@ void unitsTest(void) {
 
     for (int i = 0; i < TRIALS; i++) {
         inmateUnit = createInmate(HOMEBOY);
-        inmateUnit->position = (rand()%90)+1;
+        inmateUnit->position = (rand() % 90) + 1;
         enqueue(inmates, inmateUnit);
         printf("Adding an inmate to the list (%d)\n", inmates->count);
         printf("Inmate position is: %d\n", inmateUnit->position);
@@ -52,7 +48,7 @@ void unitsTest(void) {
 
     putchar('\n');
 
-    guardAttack(guards,inmates);
+    guardAttack(guards, inmates);
 
     while (inmates->count) {
         rmUnit(dequeue(inmates));
@@ -198,15 +194,17 @@ void printGuard(struct Guard *guard) {
     return;
 }
 
+
 void testingHelp() {
     printf(
-            "Usage:\ttest [FLAG]... [OPTION]\n\n"
-                    "Flags:"
-                    "\t'-map' tests file parsing"
-                    "(defaults to cwd, optional absolute path as arg)\n"
-                    "\t'-unit' tests unit creation and deletion\n"
+        "Usage:\ttest [FLAG]... [OPTION]\n\n"
+            "Flags:"
+            "\t'-map' tests file parsing"
+            "(defaults to cwd, optional absolute path as arg)\n"
+            "\t'-unit' tests unit creation and deletion\n"
     );
 }
+
 
 void quit(char *message) {
     printf("ERROR: %s\n", message);

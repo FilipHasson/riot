@@ -33,10 +33,9 @@ struct MapList *parseMap(char *loadDir) {
     }
 
     /* Attempt to iterate through files in loadDir */
-    directory = opendir(loadDir);
+    if((directory = opendir(loadDir)))
 
     while ((entry = readdir(directory))) {
-
         sprintf(filePath, "%s/%s", loadDir, entry->d_name);
 
         /* Skip if not .riot# file */
@@ -56,7 +55,7 @@ struct MapList *parseMap(char *loadDir) {
         if (entry->d_name[0] == '_') {
             current->hidden = true;
             memmove(current->name, entry->d_name,
-                    strlen(entry->d_name) - 7);
+                strlen(entry->d_name) - 7);
         } else {
             current->hidden = false;
             memmove(current->name, entry->d_name, strlen(entry->d_name) - 6);
@@ -69,15 +68,13 @@ struct MapList *parseMap(char *loadDir) {
             fseek(file, 1, SEEK_CUR);
         }
 
-        /* Determine map path */
-        //TODO
-
         mapList->count++;
         firstRun = false;
     }
 
     /* Clean up memory */
     closedir(directory);
+    regfree(&riotExt);
     if (useCwd) free(loadDir); //getcwd calls malloc, if used must free loadDir
 
     /* Terminate if no map files where found */

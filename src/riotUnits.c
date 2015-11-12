@@ -1,6 +1,7 @@
+#include <riotMap.h>
 #include "riotUnits.h"
-//Rowsize needs to be adjusted based on the rowsize(X size) of the map
-#define ROWSIZE 10
+#include <time.h>
+#include <math.h>
 
 struct UnitList *createList(void) {
 
@@ -63,6 +64,7 @@ short getLength(struct UnitList *listIn) {
     return listIn ? listIn->count : (short) -1;
 }
 
+
 struct UnitNode *enqueue(struct UnitList *queue, void *unit) {
 
     struct UnitNode *newNode = malloc(sizeof(struct UnitNode));
@@ -99,12 +101,12 @@ struct UnitNode *dequeue(struct UnitList *queue) {
         queue->tail = tempNode;
     }
 
-    if (queue->head) {
+    if (queue->head)
         queue->head->prev = NULL;
-    }
 
     return request;
 }
+
 
 struct UnitNode *pop(struct UnitList *stack) {
 
@@ -117,9 +119,8 @@ struct UnitNode *pop(struct UnitList *stack) {
         stack->head = tempNode;
     }
 
-    if (stack->head) {
+    if (stack->head)
         stack->head->prev = NULL;
-    }
 
     return request;
 }
@@ -181,7 +182,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 8;
             unit->rep = 20;
             unit->panic = 2;
-            break;	
+            break;
 
         case CUTIE:
             unit->currentHealth = unit->maxHealth = 20;
@@ -279,86 +280,107 @@ struct Guard *createGuard(enum GuardType type) {
     return unit;
 }
 
+
 /*Moves the units through the map and calls 'inmateRedraw to draw/erase the
  units*/
-void inmateMove(struct UnitList *inmateList) {
-	struct UnitNode * nextInmate;
-   	int prevPos;
+//void inmateMove(struct UnitList *inmateList) {
+//    struct UnitNode *nextInmate;
+//    int prevPos;
+//
+//    nextInmate = getHead(inmateList);
+//
+//    do {
+//        prevPos = nextInmate->unit->position;
+//        nextInmate->unit->position =
+//            nextInmate->unit->position + localInmate->unit->(speed / 8);
+//        //inmateRedraw(int previousPosition, int currentPosition, char type),
+//        // need this function to draw redraw units onto the screen. UI
+//        //source perhaps?
+//        // inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
+//        //essentially what is going to be called
+//        nextInmate = getNext(nextInmate);
+//
+//    } while (getNext(nextInmate) != NULL);
+//}
 
-   	nextInmate = getHead(inmateList);
-  /* 	do {
-    	prevPos = nextInmate->unit->position;
-        nextInmate->unit->position = nextInmate->unit->position + localInmate->unit->(speed/8);
-       /* inmateRedraw(int previousPosition, int currentPosition, char type), need
-       this function to draw redraw units onto the screen. UI source perhaps?
 
-       /*inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
-       essentially what is going to be called*/
-
-/*        nextInmate = getNext(nextInmate);
-   	} while(getNext(nextInmate) != NULL); */
-}
-/*Compare the positions of every inmate, and the positions of attack of every guard
- if the units pos matches the area of attack of the guard than subtract its
- health by the guards damage*/
 void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
-   struct UnitNode * nextInmate;
-   struct UnitNode * nextGuard;
+    struct UnitNode *nextInmate;
+    struct UnitNode *nextGuard;
 
-   nextGuard = getHead(guardList);
-   nextInmate = getHead(inmateList);
+    nextGuard = getHead(guardList);
+    nextInmate = getHead(inmateList);
 
-   printf("Guard Attack has begun.\n\n");
+    printf("Guard Attack has begun.\n\n");
 
-    do{
-       do {
-           if (inRange(ROWSIZE,nextInmate,nextGuard)) {
-             dealDamage(nextInmate,nextGuard);
-           }
-           nextInmate = getNext(nextInmate);
-       } while(getNext(nextInmate) != NULL);
-       nextGuard = getNext(nextGuard);
-   } while(getNext(nextGuard) != NULL);
+    do {
+        do {
+            if (inRange(nextInmate, nextGuard))
+                dealDamage(nextInmate, nextGuard);
+            nextInmate = getNext(nextInmate);
+        } while (getNext(nextInmate) != NULL);
+        nextGuard = getNext(nextGuard);
+    } while (getNext(nextGuard) != NULL);
 }
 
-void dealDamage(struct UnitNode * inmateNode,struct UnitNode * guardNode){
-    printf("#####Inmate attacked#####\n");
-    printf("Inmate Position: %d\n",((struct Inmate*)inmateNode->unit)->position);
-    printf("Guard Position: %d\n",((struct Guard*)guardNode->unit)->position);
-    printf("Health before attack: %d\n",((struct Inmate*)inmateNode->unit)->currentHealth);
-    printf("Damage dealt by guard: %d\n",((struct Guard*)guardNode->unit)->damage);
-	((struct Inmate*)inmateNode->unit)->currentHealth = ((struct Inmate*)inmateNode->unit)->currentHealth - ((struct Guard*)guardNode->unit)->damage;
 
-    printf("Health after attack: %d\n",((struct Inmate*)inmateNode->unit)->currentHealth);
+void dealDamage(struct UnitNode *inmateNode, struct UnitNode *guardNode) {
+    printf("#####Inmate attacked#####\n");
+    printf("Inmate Position: %d\n",
+        ((struct Inmate *) inmateNode->unit)->position);
+    printf("Guard Position: %d\n",
+        ((struct Guard *) guardNode->unit)->position);
+    printf("Health before attack: %d\n",
+        ((struct Inmate *) inmateNode->unit)->currentHealth);
+    printf("Damage dealt by guard: %d\n",
+        ((struct Guard *) guardNode->unit)->damage);
+    ((struct Inmate *) inmateNode->unit)->currentHealth =
+        ((struct Inmate *) inmateNode->unit)->currentHealth -
+            ((struct Guard *) guardNode->unit)->damage;
+
+    printf("Health after attack: %d\n",
+        ((struct Inmate *) inmateNode->unit)->currentHealth);
     printf("########################\n");
     printf("\n");
 }
-bool inRange(int rowSize,struct UnitNode *inmate,struct UnitNode *guard){
+
+
+bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
     int inmatePosition;
     int guardPosition;
     int range;
-	int xDifference;
-	int yDifference;
-	int totalDifference; 
+    int xDifference;
+    int yDifference;
+    int totalDifference;
 
-    inmatePosition = ((struct Inmate*)inmate->unit)->position;
-    guardPosition = ((struct Guard*)guard->unit)->position;
-    range = ((struct Guard*)guard->unit)->range;
+    inmatePosition = ((struct Inmate *) inmate->unit)->position;
+    guardPosition = ((struct Guard *) guard->unit)->position;
+    range = ((struct Guard *) guard->unit)->range;
 
-	yDifference = (((inmatePosition-1)/rowSize)+1)-(((guardPosition-1)/rowSize)+1);
-	xDifference = (guardPosition+(yDifference*rowSize))-inmatePosition;
+    yDifference = (((inmatePosition - 1) / MAX_COLS) + 1) -
+        -
+            (((guardPosition - 1) / MAX_COLS) + 1);
+    xDifference = (guardPosition + (yDifference * MAX_COLS)) - inmatePosition;
     yDifference = abs(yDifference);
     xDifference = abs(xDifference);
-    totalDifference = xDifference+yDifference;
+    totalDifference = xDifference + yDifference;
     printf("#####Calculating Range#####\n");
-    printf("Unit position: %d\n",inmatePosition);
-    printf("Guard position: %d\n",guardPosition);
-    printf("Y Difference: %d\n",yDifference);
-    printf("X Difference: %d\n",xDifference);
-    printf("Total Difference: %d\n",totalDifference);
-    printf("Range of the Guard: %d\n",range);
+    printf("Unit position: %d\n", inmatePosition);
+    printf("Guard position: %d\n", guardPosition);
+    printf("Y Difference: %d\n", yDifference);
+    printf("X Difference: %d\n", xDifference);
+    printf("Total Difference: %d\n", totalDifference);
+    printf("Range of the Guard: %d\n", range);
     printf("############################\n");
     printf("\n");
 
-	return range >= totalDifference;
+    return range >= totalDifference;
 }
+
+
+struct Path * getPath(struct Map map);
+//TODO
+
+
+struct UnitList * getGuardList(struct Map map);
+//TODO
