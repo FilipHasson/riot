@@ -1,3 +1,4 @@
+#include <time.h>
 #include "riotTesting.h"
 
 int main(int argc, char **argv) {

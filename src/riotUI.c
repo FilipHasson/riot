@@ -1,5 +1,6 @@
 #include "riotUI.h"
 
+
 void uiSet(enum GameMode gameMode, struct Interface *win) {
 
     int y, x;
@@ -7,7 +8,6 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
     switch (gameMode) {
 
         case INIT:
-
             initscr();
             noecho(); // hide keypresses
             curs_set(FALSE); // hide cursor
@@ -19,7 +19,7 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
 
             /* Set window positions*/
             win->header = newwin(HEADER, MAX_COLS, 0, 0);
-            win->main = newwin(MAIN, MAX_COLS, HEADER, 0);
+            win->body = newwin(MAIN, MAX_COLS, HEADER, 0);
             win->footer = newwin(FOOTER, MAX_COLS, HEADER + MAIN, 0);
             win->menu = newwin(MAX_ROWS, MAX_COLS, 0, 0);
             break;
@@ -29,19 +29,13 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
             break;
 
         case NEW:
-
         case CONTINUE:
-            break;
-
         case PLAY:
-            wrefresh(win->header);
-            wrefresh(win->main);
-            wrefresh(win->footer);
             break;
 
         case EXIT:
             if (win->header) delwin(win->header);
-            if (win->main) delwin(win->main);
+            if (win->body) delwin(win->body);
             if (win->footer) delwin(win->footer);
             if (win->menu) delwin(win->menu);
             endwin();
@@ -53,7 +47,6 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
     }
     return;
 }
-
 
 enum GameMode menuMain(struct Interface *gameInterface) {
 
@@ -139,39 +132,42 @@ short menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
 }
 
 
-enum GameMode drawLevel(struct Interface *gi, struct MapList *ml, int lvl) {
+void drawLevel(struct Interface *win, struct MapList *ml, int lvl) {
 
-    enum GameMode gameMode;
-
-    WINDOW *header = gi->header;
-    WINDOW *main = gi->main;
-    WINDOW *footer = gi->footer;
     struct Map *m = &ml->level[lvl];
     int y;
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
-        mvwprintw (main, y, 0, m->overlay[y]);
+        mvwprintw (win->body, y, 0, m->overlay[y]);
+    wrefresh(win->body);
 
     /* Draw window borders around windows */
-    box(header, 0, 0);
-    box(footer, 0, 0);
-    mvwaddch(footer, 0, 0, ACS_LTEE);
-    mvwaddch(footer, 0, MAX_COLS - 1, ACS_RTEE);
+    box(win->header, 0, 0);
+    box(win->footer, 0, 0);
+    mvwaddch(win->footer, 0, 0, ACS_LTEE);
+    mvwaddch(win->footer, 0, MAX_COLS - 1, ACS_RTEE);
+    mvwaddch(win->header, 0, 0, ACS_ULCORNER);
+    mvwaddstr(win->header, 0, 1, "riot");
+    mvwaddch (win->header, 2, 0, ACS_LTEE);
+    mvwaddch (win->header, 2, MAX_COLS - 1, ACS_RTEE);
     for (y = 0; y < MAX_ROWS; y++) {
-        mvwaddch(main, y, 0, ACS_VLINE);
-        mvwaddch(main, y, MAX_COLS - 1, ACS_VLINE);
+        mvwaddch(win->body, y, 0, ACS_VLINE);
+        mvwaddch(win->body, y, MAX_COLS - 1, ACS_VLINE);
     }
-    mvwaddch(header, 0, 0, ACS_ULCORNER);
-    mvwaddstr(header, 0, 1, "riot");
-    mvwaddch (header, 2, 0, ACS_LTEE);
-    mvwaddch (header, 2, MAX_COLS - 1, ACS_RTEE);
 
-    wrefresh(main);
-    wrefresh(header);
-    wrefresh(main);
-    wrefresh(footer);
+    /* Draw Queue */
+    //TODO
 
-    getchar();
-    return (gameMode);
+    /* Refesh windows */
+    wrefresh(win->body);
+    wrefresh(win->header);
+    wrefresh(win->body);
+    wrefresh(win->footer);
+
+    //TODO
+
+    getchar(); //temporary
+
+    return;
 }

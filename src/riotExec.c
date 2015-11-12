@@ -5,22 +5,26 @@ int main(int argc, char **argv) {
     enum GameMode gameMode;
     struct Interface gameInterface;
     mapList = parseMap(argv[1] ? argv[1] : NULL);
+    short levelSelect;
 
     uiSet(INIT, &gameInterface);
 
-    /* Begin main game loop */
+    /* Begin body game loop */
     do {
 
+        uiSet(MENU, &gameInterface);
         gameMode = menuMain(&gameInterface);
         uiSet(gameMode, &gameInterface);
 
         switch (gameMode) {
             case NEW:
+
                 drawLevel(&gameInterface, mapList, 0);
                 break;
 
             case CONTINUE:
-                menuContinue(&gameInterface, mapList);
+                levelSelect = menuContinue(&gameInterface, mapList);
+                drawLevel(&gameInterface, mapList, levelSelect);
                 break;
 
             default:

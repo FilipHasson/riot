@@ -8,7 +8,7 @@
 
 struct Interface {
     WINDOW *menu;
-    WINDOW *main;
+    WINDOW *body;
     WINDOW *header;
     WINDOW *footer;
 };
@@ -36,7 +36,7 @@ POSTCONDITIONS: Memory may either be allocated or deallocated for ncurses
 
 enum GameMode menuMain(struct Interface *);/*
 
-DESCRIPTION: menuMain() will present the user with the main menu.
+DESCRIPTION: menuMain() will present the user with the body menu.
 
 ARGUMENTS: the Interface struct containing the targer ncurses WINDOWs.*/
 
@@ -51,7 +51,7 @@ void guardUpdate(bool isAttacking, short position);
 
 /*This is Filip trying to figure out his shit, 
 try not to worry about it for now :D*/
-enum GameMode drawLevel(struct Interface *gi,
+void drawLevel(struct Interface *win,
     struct MapList *ml, int lvl);
 void drawMap (WINDOW *mWin, struct Map*map);
 #endif //RIOT_UI
