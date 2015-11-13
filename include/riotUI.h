@@ -54,9 +54,50 @@ try not to worry about it for now :D*/
 void drawLevel(struct Interface *win,
     struct MapList *ml, short rep, short panic, int lvl);
 void drawMap (WINDOW *mWin, struct Map*map);
-char * getLevelName (int level);
-void redrawUnit(char unitType, int health, int currentPosition, int newPosition);
-void drawUnit(char unitType,int health, int position);
-void eraseUnit(int position);
-void drawTile(char type, int position);
+
+
+char * getLevelName (int level);/*
+
+DESCRIPTION: Gets name of level
+
+ARGUMENTS: integer value of what level (0-7)*/
+
+void redrawUnit(struct Interface * win, char unitType, int health, int currentPosition, int newPosition);/*
+
+DESCRIPTION: Function to redraw units on the screen
+
+ARGUMENTS: A pointer to the interface window, unit to be drawn, integer health value, curreent position and position to be mmoved to
+
+POSTCONDITION: Ensures that the unit given is drawn at the given newPostiion*/
+
+void drawUnit(struct Interface * win, char unitType,int health, int position);/*
+
+DESCRIPTION: Draws a unit to a given position on the screen
+
+ARGUMENTS: A pointer to the interface window, unit to be drawn, integer health value, integer value to draw at
+
+POSTCONDITION:*/
+
+void eraseUnit(struct Interface * win, int position);/*
+
+DESCRIPTION: Erases a unit off the screen and restores tile
+
+ARGUMENTS: Pointer to the interface window and position as an integer value
+
+POSTCONDITION: Ensures the given position displays an aseterisk */
+
+void drawTile(struct Interface * win, char type, int position);/*
+
+DESCRIPTION: Draws a tile to the screen 
+ 
+ARGUMENTS: take pointer to interface window, haracter to be drawn, and a position as an integer value
+
+POSTCONDITION: Ensures the character given is displayed at the position given */
+
+int * getCoordinate(int position);/*
+
+DESCRIPTION: Takes the position and converts it into a 2 dimensional coordinate
+
+ARGUMENTS: a position as a single integer value */
+
 #endif //RIOT_UI

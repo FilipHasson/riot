@@ -143,7 +143,7 @@ void drawLevel(struct Interface *win, struct MapList *ml, short rep, short panic
     mvwprintw (win->header, 1, MAX_COLS-11, "Rep:%d",rep); // Display Rep
 
     /* Draw Footer */ 
-    mvwprintw (win->footer, 1, 1, "INMATES");
+    mvwprintw (win->footer, 1, 1, "INMATES"); 
     mvwprintw (win->footer, 1, 15, "[h]omeboy(10)\t[b]ruiser(16)\t[l]unatic(16)\t[f]atty(60)");
     mvwprintw (win->footer, 2, 15, "[s]peedy(10)\t[c]utie(20)\t[a]ttorney[30]\t[d]octer(10)");
 
@@ -186,36 +186,58 @@ void drawLevel(struct Interface *win, struct MapList *ml, short rep, short panic
 char * getLevelName (int level) {
     switch(level) {
         case 0:
-            return "Detention (Classroom)";
+            return "Detention (Classroom)"; //Tutorial level
         case 1:
-            return "The Drunk Tank";
+            return "The Drunk Tank"; // Level 1
         case 2:
-            return "Minimum Security Facility";
+            return "Minimum Security Facility"; // Level 2
         case 3:
-            return "Tijuana Lockup";
+            return "Tijuana Lockup"; // Level 3
         case 4:
-            return "Medium Security Lockup";
+            return "Medium Security Lockup"; // Level 4
         case 5:
-            return "Supermax";
+            return "Supermax"; // Level 5
         case 6:
-            return "Guantanamo";
+            return "Guantanamo"; // Level 6
         default:
-            return 0;
-    }
+            return 0; //Returns "0" if level is not found
+        }
 }
 
-void redrawUnit(char unitType, int health, int currentPosition, int newPosition) {
+void redrawUnit(struct Interface * win, char unitType, int health, int currentPosition, int newPosition) {
+    int * currentCoordinates;
+    int * newCoordinates;
 
+    currentCoordinates = getCoordinate(currentPosition);
+    mvwaddch(win->body, currentCoordinates[0],currentCoordinates[1], '*');
+
+    newCoordinates = getCoordinate(newPosition);
+    mvwaddch(win->body, newCoordinates[0],newCoordinates[1], unitType);
 }
 
-void drawUnit(char unitType,int health, int position) {
-
+void drawUnit(struct Interface * win, char unitType,int health, int position) {
+    int * coordinates;
+    coordinates = getCoordinate(position);
+    mvwaddch(win->body, coordinates[0],coordinates[1], unitType);
  }
 
-void eraseUnit(int position) {
-
+void eraseUnit(struct Interface * win, int position) {
+    int * coordinates;
+    coordinates = getCoordinate(position);
+    mvwaddch(win->body, coordinates[0],coordinates[1], '*');
 }
 
-void drawTile(char type, int position) {
-    
+void drawTile(struct Interface * win, char type, int position) {
+    int * coordinates;
+    coordinates = getCoordinate(position);
+    mvwaddch(win->body, coordinates[0],coordinates[1], type);
+}
+
+int * getCoordinate(int position) {
+    static int coordinates[2];
+
+    coordinates[0] = ((position-1)/MAX_ROWS);    //Gives you the row, where the lowest row is 0
+    coordinates[1] = position - (coordinates[0] * MAX_ROWS);      //Gives you x
+
+    return coordinates;
 }
