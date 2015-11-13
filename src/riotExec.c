@@ -19,12 +19,12 @@ int main(int argc, char **argv) {
         switch (gameMode) {
             case NEW:
 
-                drawLevel(&gameInterface, mapList, 0);
+                drawLevel(&gameInterface, mapList,12,100, levelSelect);
                 break;
 
             case CONTINUE:
                 levelSelect = menuContinue(&gameInterface, mapList);
-                drawLevel(&gameInterface, mapList, levelSelect);
+                drawLevel(&gameInterface, mapList,12,100, levelSelect);
                 break;
 
             default:

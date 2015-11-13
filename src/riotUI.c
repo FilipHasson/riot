@@ -1,5 +1,5 @@
 #include "riotUI.h"
-
+#include "riotUnits.h"
 
 void uiSet(enum GameMode gameMode, struct Interface *win) {
 
@@ -132,10 +132,21 @@ short menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
 }
 
 
-void drawLevel(struct Interface *win, struct MapList *ml, int lvl) {
+void drawLevel(struct Interface *win, struct MapList *ml, short rep, short panic, int lvl) {
 
     struct Map *m = &ml->level[lvl];
     int y;
+
+    /* Draw Header */ 
+    mvwprintw (win->header, 1, 1, "Level %d:%s", lvl, getLevelName(lvl)); // Display Level
+    mvwprintw (win->header, 1, MAX_COLS-24, "Panic:%d%%",panic); // Display Panic
+    mvwprintw (win->header, 1, MAX_COLS-11, "Rep:%d",rep); // Display Rep
+
+    /* Draw Footer */ 
+    mvwprintw (win->footer, 1, 1, "INMATES");
+    mvwprintw (win->footer, 1, 15, "[h]omeboy(10)\t[b]ruiser(16)\t[l]unatic(16)\t[f]atty(60)");
+    mvwprintw (win->footer, 2, 15, "[s]peedy(10)\t[c]utie(20)\t[a]ttorney[30]\t[d]octer(10)");
+
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
@@ -159,7 +170,7 @@ void drawLevel(struct Interface *win, struct MapList *ml, int lvl) {
     /* Draw Queue */
     //TODO
 
-    /* Refesh windows */
+    /* Refresh windows */
     wrefresh(win->body);
     wrefresh(win->header);
     wrefresh(win->body);
@@ -170,4 +181,41 @@ void drawLevel(struct Interface *win, struct MapList *ml, int lvl) {
     getchar(); //temporary
 
     return;
+}
+
+char * getLevelName (int level) {
+    switch(level) {
+        case 0:
+            return "Detention (Classroom)";
+        case 1:
+            return "The Drunk Tank";
+        case 2:
+            return "Minimum Security Facility";
+        case 3:
+            return "Tijuana Lockup";
+        case 4:
+            return "Medium Security Lockup";
+        case 5:
+            return "Supermax";
+        case 6:
+            return "Guantanamo";
+        default:
+            return 0;
+    }
+}
+
+void redrawUnit(char unitType, int health, int currentPosition, int newPosition) {
+
+}
+
+void drawUnit(char unitType,int health, int position) {
+
+ }
+
+void eraseUnit(int position) {
+
+}
+
+void drawTile(char type, int position) {
+    
 }

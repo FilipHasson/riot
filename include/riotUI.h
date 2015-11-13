@@ -52,6 +52,11 @@ void guardUpdate(bool isAttacking, short position);
 /*This is Filip trying to figure out his shit, 
 try not to worry about it for now :D*/
 void drawLevel(struct Interface *win,
-    struct MapList *ml, int lvl);
+    struct MapList *ml, short rep, short panic, int lvl);
 void drawMap (WINDOW *mWin, struct Map*map);
+char * getLevelName (int level);
+void redrawUnit(char unitType, int health, int currentPosition, int newPosition);
+void drawUnit(char unitType,int health, int position);
+void eraseUnit(int position);
+void drawTile(char type, int position);
 #endif //RIOT_UI
