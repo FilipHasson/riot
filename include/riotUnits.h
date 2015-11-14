@@ -12,7 +12,7 @@ struct UnitList {/*
 
     struct UnitNode *head;
     struct UnitNode *tail;
-    short count;
+    int count;
 };
 
 
@@ -31,12 +31,12 @@ struct Inmate {/*
  Inmate stores the stats related to inmate units.*/
 
     char type;
-    short position;
-    unsigned short currentHealth;
-    unsigned short maxHealth;
-    unsigned short speed;
-    unsigned short rep;
-    unsigned short panic;
+    int position;
+    unsigned int currentHealth;
+    unsigned int maxHealth;
+    unsigned int speed;
+    unsigned int rep;
+    unsigned int panic;
 };
 
 
@@ -45,10 +45,10 @@ struct Guard {/*
  Inmate stores the stats related to guard units.*/
 
     char type;
-    short position;
-    unsigned short damage;
-    unsigned short range;
-    unsigned short cooldown;
+    int position;
+    unsigned int damage;
+    unsigned int range;
+    unsigned int cooldown;
     enum AI ai;
 
 };
@@ -75,14 +75,14 @@ POSTCONDITIONS: Each node listed within the UnitList is destroyed and the
  memory used for it is returned to the calling OS.*/
 
 
-short getLength(struct UnitList *);/*
+int getLength(struct UnitList *);/*
 
 DESCRIPTION: getLength() is used to get the number of nodes containted within
  a UnitList.
 
 ARGUMENTS: The UnitList to be examined.
 
-POSTCONDITIONS: Will return a short value corresponding to the number of
+POSTCONDITIONS: Will return a int value corresponding to the number of
  UnitNodes contained withing the UnitList*/
 
 

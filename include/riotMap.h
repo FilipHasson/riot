@@ -5,9 +5,13 @@
 
 #define NAME_LEN 35
 #define PATH_MAX 4096
-#define MAP_SIZE 1168
+#define LINE_MAX 72
+#define MAP_SIZE 1545
 #define MAX_LEVELS 10
-#define REGEX_EXT ".+(.riot)[0-9]$"
+#define INMATE_TYPES 10
+#define DELIMITER ";"
+#define TEXT_OFFSET 7
+#define REGEX_EXT "(\\.)?[0-9](.riot)$"
 
 
 /* Data Types */
@@ -18,15 +22,19 @@ struct Map {/*
  containing the path.*/
 
     char name[NAME_LEN];
+    int levelNo;
     bool hidden;
     bool beaten;
-    char overlay[MAP_ROWS][MAP_COLS]; //walls, scenery, etc.
+    char overlay[MAP_ROWS][90]; //walls, scenery, etc.
+    char inmates[INMATE_TYPES];
+    int panicMax;
+    int repMax;
 };
 
 
 struct MapList {
     struct Map level[MAX_LEVELS];
-    short count;
+    int count;
 };
 
 
@@ -35,7 +43,7 @@ struct Path {/*
  Path stores the game path as a list of TileNodes.*/
 
     struct TileNode *first;
-    unsigned short count;
+    unsigned int count;
 };
 
 
@@ -44,7 +52,7 @@ struct TileNode {/*
  TileNode contains the location of the map on the board, along with a the
  character representation of the tile.*/
 
-    short location;
+    int location;
     char type;
     struct Tile *next;
 };
@@ -62,6 +70,7 @@ ARGUMENTS: either a custom path containing the desired map files, or NULL in
 
 POSTCONDITIONS: A Map struct is returned containing the map elements and
  tower placements.*/
+
 
 int getFilename(char *filename, char *ext);
 

@@ -14,10 +14,10 @@ struct MapList *parseMap(char *loadDir) {
     struct Map *current;
     struct dirent *entry;
 
-    char filePath[PATH_MAX];
-    short levelNo;
+    char path[PATH_MAX], line[LINE_MAX];
     bool useCwd = false;
     bool firstRun = true;
+    int i = 0;
 
     /* Compile regex */
     regcomp(&riotExt, REGEX_EXT, REG_NOSUB | REG_EXTENDED);
@@ -33,44 +33,60 @@ struct MapList *parseMap(char *loadDir) {
     }
 
     /* Attempt to iterate through files in loadDir */
-    if((directory = opendir(loadDir)))
+    if ((directory = opendir(loadDir)))
 
-    while ((entry = readdir(directory))) {
-        sprintf(filePath, "%s/%s", loadDir, entry->d_name);
+        while ((entry = readdir(directory))) {
+            sprintf(path, "%s/%s", loadDir, entry->d_name);
 
-        /* Skip if not .riot# file */
-        if (regexec(&riotExt, entry->d_name, 0, NULL, 0)) continue;
-        if (!(file = fopen(filePath, "r"))) continue;
+            /* Skip if not readable .riot# file */
+            if (regexec(&riotExt, entry->d_name, 0, NULL, 0)) continue;
+            if (!(file = fopen(path, "r"))) continue;
+            fseek(file, 0, SEEK_END);
+            if (ftell(file) < MAP_SIZE) continue;
 
-        /* Determine level number (from file name) */
-        levelNo = (short) (atoi(&entry->d_name[strlen(entry->d_name) - 1]));
-        current = &mapList->level[levelNo];
+            /* Determine level number and hidden status from filename*/
+            if(entry->d_name[0]=='.') {
+                current = &mapList->level[entry->d_name[1]-'0'];
+                current->levelNo = entry->d_name[1]-'0';
+                current->hidden=false;
+            } else{
+                current = &mapList->level[entry->d_name[0]-'0'];
+                current->levelNo = entry->d_name[0]-'0';
+                current->hidden=true;
+            }
 
-        /* Ensure that map size is sufficient */
-        fseek(file, 0, SEEK_END);
-        if (ftell(file) < MAP_SIZE) continue;
-        fseek(file, 0, SEEK_SET);
+            /* Assign beaten status */
+            current->beaten = false;
 
-        /* Commit level name (from file name) */
-        if (entry->d_name[0] == '_') {
-            current->hidden = true;
-            memmove(current->name, entry->d_name,
-                strlen(entry->d_name) - 7);
-        } else {
-            current->hidden = false;
-            memmove(current->name, entry->d_name, strlen(entry->d_name) - 6);
+            /* Determine level name*/
+            rewind(file);
+            fgets(line,LINE_MAX,file);
+            strncpy(current->name,strtok(line,DELIMITER),LINE_MAX);
+
+            /* Determine starting rep */
+            current->repMax=atoi(strtok(NULL,DELIMITER));
+
+            /* Determine panic threshold */
+            current->panicMax=atoi(strtok(NULL,DELIMITER));
+
+            /* Determine level inmates*/
+            strncpy(current->inmates,strtok(NULL,"\n"),INMATE_TYPES);
+
+            /* Copy map elements to array */
+            rewind(file);
+            while (fgetc(file) != '\n');
+            while (fgetc(file) != '\n');
+            for (i = 0; i < MAP_ROWS; i++) {
+                fseek(file, 6, SEEK_CUR);
+                int j = 0;
+                while (j <= LINE_MAX) current->overlay[i][j++] = fgetc(file);
+                fseek(file, 2, SEEK_CUR);
+            }
+
+            fclose(file);
+            mapList->count++;
+            firstRun = false;
         }
-        current->beaten = false;
-
-        /* Copy map elements to array */
-        for (int i = 0; i < MAP_ROWS; i++) {
-            fgets(current->overlay[i], MAP_COLS, file);
-            fseek(file, 1, SEEK_CUR);
-        }
-
-        mapList->count++;
-        firstRun = false;
-    }
 
     /* Clean up memory */
     closedir(directory);

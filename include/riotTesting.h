@@ -10,9 +10,17 @@
 #define MAPSIZE 100
 
 void printInmates(struct UnitList *list);
+
+
 void printGuards(struct UnitList *list);
+
+
 void unitsTest(void);
+
+
 void mapTest(char *loadDir);
+
+
 void testingHelp();
 
 #endif //RIOT_TESTING

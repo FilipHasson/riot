@@ -1,11 +1,10 @@
 #include "riotUI.h"
-
 int main(int argc, char **argv) {
     struct MapList *mapList;
     enum GameMode gameMode;
     struct Interface gameInterface;
     mapList = parseMap(argv[1] ? argv[1] : NULL);
-    short levelSelect;
+    int levelSelect;
 
     uiSet(INIT, &gameInterface);
 
@@ -19,12 +18,12 @@ int main(int argc, char **argv) {
         switch (gameMode) {
             case NEW:
 
-                drawLevel(&gameInterface, mapList,12,100, levelSelect);
+                drawLevel(&gameInterface, &mapList->level[0]);
                 break;
 
             case CONTINUE:
                 levelSelect = menuContinue(&gameInterface, mapList);
-                drawLevel(&gameInterface, mapList,12,100, levelSelect);
+                drawLevel(&gameInterface,  &mapList->level[levelSelect]);
                 break;
 
             default:

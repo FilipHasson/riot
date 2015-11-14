@@ -1,7 +1,5 @@
 #include <riotMap.h>
 #include "riotUnits.h"
-#include <time.h>
-#include <math.h>
 
 struct UnitList *createList(void) {
 
@@ -60,8 +58,8 @@ struct UnitNode *getTail(struct UnitList *listIn) {
 }
 
 
-short getLength(struct UnitList *listIn) {
-    return listIn ? listIn->count : (short) -1;
+int getLength(struct UnitList *listIn) {
+    return listIn ? listIn->count : (int) -1;
 }
 
 
@@ -378,9 +376,9 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
 }
 
 
-struct Path * getPath(struct Map map);
+struct Path *getPath(struct Map map);
 //TODO
 
 
-struct UnitList * getGuardList(struct Map map);
+struct UnitList *getGuardList(struct Map map);
 //TODO

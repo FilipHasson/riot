@@ -41,18 +41,18 @@ DESCRIPTION: menuMain() will present the user with the body menu.
 ARGUMENTS: the Interface struct containing the targer ncurses WINDOWs.*/
 
 
-short menuContinue(struct Interface *gameInterface, struct MapList *mapList);
+int menuContinue(struct Interface *gameInterface, struct MapList *mapList);
 
-void inmateUpdate(enum Colour, char inmateType, short from, short to);
 
-void inmateRemove(short position);
+void inmateUpdate(enum Colour, char inmateType, int from, int to);
 
-void guardUpdate(bool isAttacking, short position);
 
-/*This is Filip trying to figure out his shit, 
-try not to worry about it for now :D*/
-void drawLevel(struct Interface *win,
-    struct MapList *ml, short rep, short panic, int lvl);
+void inmateRemove(int position);
+
+
+void guardUpdate(bool isAttacking, int position);
+
+
 void drawMap (WINDOW *mWin, struct Map*map);
 
 
@@ -62,6 +62,7 @@ DESCRIPTION: Gets name of level
 
 ARGUMENTS: integer value of what level (0-7)*/
 
+
 void redrawUnit(struct Interface * win, char unitType, int health, int currentPosition, int newPosition);/*
 
 DESCRIPTION: Function to redraw units on the screen
@@ -69,6 +70,7 @@ DESCRIPTION: Function to redraw units on the screen
 ARGUMENTS: A pointer to the interface window, unit to be drawn, integer health value, curreent position and position to be mmoved to
 
 POSTCONDITION: Ensures that the unit given is drawn at the given newPostiion*/
+
 
 void drawUnit(struct Interface * win, char unitType,int health, int position);/*
 
@@ -78,6 +80,7 @@ ARGUMENTS: A pointer to the interface window, unit to be drawn, integer health v
 
 POSTCONDITION:*/
 
+
 void eraseUnit(struct Interface * win, int position);/*
 
 DESCRIPTION: Erases a unit off the screen and restores tile
@@ -85,6 +88,7 @@ DESCRIPTION: Erases a unit off the screen and restores tile
 ARGUMENTS: Pointer to the interface window and position as an integer value
 
 POSTCONDITION: Ensures the given position displays an aseterisk */
+
 
 void drawTile(struct Interface * win, char type, int position);/*
 
@@ -94,10 +98,13 @@ ARGUMENTS: take pointer to interface window, haracter to be drawn, and a positio
 
 POSTCONDITION: Ensures the character given is displayed at the position given */
 
+
 int * getCoordinate(int position);/*
 
 DESCRIPTION: Takes the position and converts it into a 2 dimensional coordinate
 
 ARGUMENTS: a position as a single integer value */
 
+
+void drawLevel(struct Interface *win, struct Map* map);
 #endif //RIOT_UI

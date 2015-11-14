@@ -24,5 +24,8 @@ riotLink: compile
 testLink: compile
 	$(CC) -o $(BINDIR)/test $(TEST_OBJ) $(LDFLAGS)
 
+debug:
+	$(CC) $(CFLAGS) -c $(SRC) $(INCLUDES) -g -D_NOLOCKS
+
 clean:
 	rm -r -f *.o bin/*

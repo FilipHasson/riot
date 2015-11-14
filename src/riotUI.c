@@ -1,5 +1,4 @@
 #include "riotUI.h"
-#include "riotUnits.h"
 
 void uiSet(enum GameMode gameMode, struct Interface *win) {
 
@@ -31,6 +30,10 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
         case NEW:
         case CONTINUE:
         case PLAY:
+            wclear(win->body);
+            wclear(win->header);
+            wclear(win->footer);
+            wclear(win->menu);
             break;
 
         case EXIT:
@@ -50,7 +53,7 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
 
 enum GameMode menuMain(struct Interface *gameInterface) {
 
-    enum GameMode gameMode=_GAME_MODE_LIMIT;
+    enum GameMode gameMode = _GAME_MODE_LIMIT;
     WINDOW *menu = gameInterface->menu;
 
     int y = 3;
@@ -83,7 +86,7 @@ enum GameMode menuMain(struct Interface *gameInterface) {
 }
 
 
-short menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
+int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
 
     WINDOW *menu = gameInterface->menu;
     struct Map *current, *last;
@@ -107,13 +110,16 @@ short menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     for (int i = 1; i < mapList->count; i++) {
         current = &mapList->level[i];
         last = &mapList->level[i - 1];
-
+#ifndef _DEBUG
         if (!current->hidden) {
             mvwprintw(menu, y + i, 21, "[%c] %s",
                 last->beaten ? i + '0' : '-', current->name);
         } else if (current->hidden && last->beaten) {
             mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
         } else y--;
+#else
+        mvwprintw(menu, y + i, 21, "[%c] %s", i + '0',current->name);
+#endif
 
         /* Set unlocked state */
         unlocked[i] = current->beaten;
@@ -123,34 +129,42 @@ short menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
 
     /* Get user input */
     do {
-        select = (char)wgetch(menu);
+        select = (char) wgetch(menu);
         if (select == 'b') return -1;
-        if (select -'0' < 0 || select > MAX_LEVELS) continue;
-    } while (!unlocked[select-'0']);
+        if (select - '0' < 0 || select > MAX_LEVELS) continue;
+#ifndef _DEBUG
+    } while (!unlocked[select - '0']);
+#else
+    } while (false);
+#endif
 
-    return (short) (select - '0');
+    return (int) (select - '0');
 }
 
 
-void drawLevel(struct Interface *win, struct MapList *ml, short rep, short panic, int lvl) {
+void drawLevel(struct Interface *win, struct Map *map) {
 
-    struct Map *m = &ml->level[lvl];
     int y;
 
-    /* Draw Header */ 
-    mvwprintw (win->header, 1, 1, "Level %d:%s", lvl, getLevelName(lvl)); // Display Level
-    mvwprintw (win->header, 1, MAX_COLS-24, "Panic:%d%%",panic); // Display Panic
-    mvwprintw (win->header, 1, MAX_COLS-11, "Rep:%d",rep); // Display Rep
+    /* Draw Header */
+    mvwprintw(win->header, 1, 1, "Level %d: %s", map->levelNo,
+        map->name); // Display Level
+    mvwprintw(win->header, 1, MAX_COLS - 24, "Panic:%d%%",
+        map->panicMax); // Display Panic
+    mvwprintw(win->header, 1, MAX_COLS - 11, "Rep:%d",
+        map->repMax); // Display Rep
 
-    /* Draw Footer */ 
-    mvwprintw (win->footer, 1, 1, "INMATES"); 
-    mvwprintw (win->footer, 1, 15, "[h]omeboy(10)\t[b]ruiser(16)\t[l]unatic(16)\t[f]atty(60)");
-    mvwprintw (win->footer, 2, 15, "[s]peedy(10)\t[c]utie(20)\t[a]ttorney[30]\t[d]octer(10)");
+    /* Draw Footer */
+    mvwprintw(win->footer, 1, 1, "INMATES");
+//    mvwprintw(win->footer, 1, 15,
+//        "[h]omeboy(10)\t[b]ruiser(16)\t[l]unatic(16)\t[f]atty(60)");
+//    mvwprintw(win->footer, 2, 15,
+//        "[s]peedy(10)\t[c]utie(20)\t[a]ttorney[30]\t[d]octer(10)");
 
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
-        mvwprintw (win->body, y, 0, m->overlay[y]);
+        mvwprintw(win->body, y, 0, map->overlay[y]);
     wrefresh(win->body);
 
     /* Draw window borders around windows */
@@ -183,60 +197,41 @@ void drawLevel(struct Interface *win, struct MapList *ml, short rep, short panic
     return;
 }
 
-char * getLevelName (int level) {
-    switch(level) {
-        case 0:
-            return "Detention (Classroom)"; //Tutorial level
-        case 1:
-            return "The Drunk Tank"; // Level 1
-        case 2:
-            return "Minimum Security Facility"; // Level 2
-        case 3:
-            return "Tijuana Lockup"; // Level 3
-        case 4:
-            return "Medium Security Lockup"; // Level 4
-        case 5:
-            return "Supermax"; // Level 5
-        case 6:
-            return "Guantanamo"; // Level 6
-        default:
-            return 0; //Returns "0" if level is not found
-        }
-}
-
-void redrawUnit(struct Interface * win, char unitType, int health, int currentPosition, int newPosition) {
-    int * currentCoordinates;
-    int * newCoordinates;
+void redrawUnit(struct Interface *win, char unitType, int health,
+    int currentPosition, int newPosition) {
+    int *currentCoordinates;
+    int *newCoordinates;
 
     currentCoordinates = getCoordinate(currentPosition);
-    mvwaddch(win->body, currentCoordinates[0],currentCoordinates[1], '*');
+    mvwaddch(win->body, currentCoordinates[0], currentCoordinates[1], '*');
 
     newCoordinates = getCoordinate(newPosition);
-    mvwaddch(win->body, newCoordinates[0],newCoordinates[1], unitType);
+    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], unitType);
 }
 
-void drawUnit(struct Interface * win, char unitType,int health, int position) {
-    int * coordinates;
+void drawUnit(struct Interface *win, char unitType, int health, int position) {
+    int *coordinates;
     coordinates = getCoordinate(position);
-    mvwaddch(win->body, coordinates[0],coordinates[1], unitType);
- }
-
-void eraseUnit(struct Interface * win, int position) {
-    int * coordinates;
-    coordinates = getCoordinate(position);
-    mvwaddch(win->body, coordinates[0],coordinates[1], '*');
+    mvwaddch(win->body, coordinates[0], coordinates[1], unitType);
 }
 
-void drawTile(struct Interface * win, char type, int position) {
-    int * coordinates;
+void eraseUnit(struct Interface *win, int position) {
+    int *coordinates;
     coordinates = getCoordinate(position);
-    mvwaddch(win->body, coordinates[0],coordinates[1], type);
+    mvwaddch(win->body, coordinates[0], coordinates[1], '*');
 }
 
-int * getCoordinate(int position) {
+void drawTile(struct Interface *win, char type, int position) {
+    int *coordinates;
+    coordinates = getCoordinate(position);
+    mvwaddch(win->body, coordinates[0], coordinates[1], type);
+}
+
+int *getCoordinate(int position) {
     static int coordinates[2];
 
-    coordinates[0] = ((position-1)/MAX_ROWS);    //Gives you the row, where the lowest row is 0
+    coordinates[0] = ((position - 1) /
+        MAX_ROWS);    //Gives you the row, where the lowest row is 0
     coordinates[1] = position - (coordinates[0] * MAX_ROWS);      //Gives you x
 
     return coordinates;

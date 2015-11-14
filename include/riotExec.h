@@ -1,5 +1,6 @@
 #ifndef RIOT_EXEC
 #define RIOT_EXEC
+#define _DEBUG
 
 #include <ncurses.h>
 #include <stdio.h>

@@ -16,7 +16,7 @@ code examples/command line
 
 ## Tests
 
-tests and test examples (short version)
+tests and test examples (int version)
 
 ## Contributors
 
@@ -24,4 +24,4 @@ list of students with emails/id's
 
 ## License
 
-short example of license
+int example of license
