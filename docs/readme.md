@@ -1,6 +1,8 @@
 # Information
 Name: RIOT!
+
 Class: CIS*3250
+
 Instructor: David McCaughan
 
 ## Game Overview
@@ -14,8 +16,9 @@ RIOT! intends to switch the roles of a traditional tower defence game, placing t
 ## Guidelines Followed & Limitations
 
 * implemented in C
-* ran in a terminal window with a keyboard-based suedo-gui
-* Curses library used to 
+* ran in a terminal window with a keyboard-based psuedo-gui
+* Curses library used to graphically draw the game
+* to be run in an 80x24 character window (both menu and main screen will be contained here)
 
 ## Tests
 
@@ -27,12 +30,12 @@ RIOT! intends to switch the roles of a traditional tower defence game, placing t
 
 ## Contributors
 
-Jessy Williams
-Daniel Miller
-Filip Hasson
-Marc Santos
-Karol Zdebel
-Sanchitt Dhir
-Antonio Jajou
-Conner Keating
-Justin Galvez
+* Jessy Williams
+* Daniel Miller
+* Filip Hasson
+* Marc Santos
+* Karol Zdebel
+* Sanchitt Dhir
+* Antonio Jajou
+* Conner Keating
+* Justin Galvez
