@@ -1,4 +1,4 @@
-# **RIOT!**)
+# **RIOT!**
 Name: RIOT!
 
 Class: CIS*3250
