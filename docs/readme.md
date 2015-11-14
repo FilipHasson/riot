@@ -1,27 +1,38 @@
-## Synopsis
+# Information
+Name: RIOT!
+Class: CIS*3250
+Instructor: David McCaughan
 
-introduction to the project
+## Game Overview
 
-## Code Example
+:hammer:RIOT! is a reverse tower defence game set in a prison theme.
 
-code library/what each file will do
+It is a turn-based strategy game where the player is tasked with breaking out of correctional facilities by recruiting and deploying waves of inmates against statically positioned guards with the intention of generating panic and making their escape.
 
-## Motivation
+RIOT! intends to switch the roles of a traditional tower defence game, placing the user in control of what would conventionally be the enemy horde.
 
-why the projects exists
+## Guidelines Followed & Limitations
 
-## Installation
-
-code examples/command line
+* implemented in C
+* ran in a terminal window with a keyboard-based suedo-gui
+* Curses library used to 
 
 ## Tests
 
-tests and test examples (short version)
+<placeholder>
+
+## Installation and Running
+
+<placeholder>
 
 ## Contributors
 
-list of students with emails/id's
-
-## License
-
-short example of license
+Jessy Williams
+Daniel Miller
+Filip Hasson
+Marc Santos
+Karol Zdebel
+Sanchitt Dhir
+Antonio Jajou
+Conner Keating
+Justin Galvez
