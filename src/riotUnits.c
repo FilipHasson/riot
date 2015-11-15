@@ -386,7 +386,7 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
 void addToPath(struct Path *path, int location, char type) {
 	//initialize new tile to end of list
 	TileNode *newTile;
-	newTile -> location = &location;
+	newTile -> location = (&location);
 	newTile -> = &(type);
 	newTile -> next = NULL;
 
@@ -402,7 +402,6 @@ void addToPath(struct Path *path, int location, char type) {
 }
 
 struct Path *getPath(struct Map map) {
-	//[MAP_ROWS][90]
 	struct Path path;
 	int i, j, currentPos, xPos, yPos;
 	bool movedLeft = false;
