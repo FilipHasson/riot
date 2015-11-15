@@ -14,10 +14,11 @@ struct MapList *parseMap(char *loadDir) {
     struct Map *current;
     struct dirent *entry;
 
-    char path[PATH_MAX], line[LINE_MAX];
+    char path[PATH_MAX], line[MAX_COLS];
     bool useCwd = false;
     bool firstRun = true;
-    int i = 0;
+
+    int x,y;
 
     /* Compile regex */
     regcomp(&riotExt, REGEX_EXT, REG_NOSUB | REG_EXTENDED);
@@ -60,7 +61,7 @@ struct MapList *parseMap(char *loadDir) {
 
             /* Determine level name*/
             rewind(file);
-            fgets(line,LINE_MAX,file);
+            fgets(line,MAX_COLS,file);
             strncpy(current->name,strtok(line,DELIMITER),LINE_MAX);
 
             /* Determine starting rep */
@@ -76,11 +77,12 @@ struct MapList *parseMap(char *loadDir) {
             rewind(file);
             while (fgetc(file) != '\n');
             while (fgetc(file) != '\n');
-            for (i = 0; i < MAP_ROWS; i++) {
-                fseek(file, 6, SEEK_CUR);
-                int j = 0;
-                while (j <= LINE_MAX) current->overlay[i][j++] = fgetc(file);
-                fseek(file, 2, SEEK_CUR);
+//            fseek(file, 1, SEEK_CUR);
+            for ( y = 0; y < MAP_ROWS; y++) {
+                fseek(file, 7, SEEK_CUR);
+                for( x = 0; x < MAP_COLS-1; x++)
+                    current->overlay[y][x] = fgetc(file);
+                fseek(file, 3, SEEK_CUR);
             }
 
             fclose(file);

@@ -11,8 +11,8 @@
 /* Macro Constants */
 #define MAX_COLS 80
 #define MAX_ROWS 24
-#define MAP_COLS 73
-#define MAP_ROWS 15
+#define MAP_COLS 72
+#define MAP_ROWS 16
 #define HEADER 3
 #define FOOTER 4
 #define MAIN 17
