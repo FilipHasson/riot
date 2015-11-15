@@ -25,7 +25,7 @@ struct Map {/*
     int levelNo;
     bool hidden;
     bool beaten;
-    char overlay[MAP_ROWS][90]; //walls, scenery, etc.
+    char overlay[MAP_ROWS][MAP_COLS]; //walls, scenery, etc.
     char inmates[INMATE_TYPES];
     int panicMax;
     int repMax;
@@ -54,7 +54,7 @@ struct TileNode {/*
 
     int location;
     char type;
-    struct Tile *next;
+    struct TileNode *next;
 };
 
 

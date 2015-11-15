@@ -1,4 +1,5 @@
 #include <riotMap.h>
+#include <ctype.h>
 #include "riotUnits.h"
 
 struct UnitList *createList(void) {
@@ -384,9 +385,61 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
 }
 
 
-struct Path *getPath(struct Map map);
-//TODO
+struct Path *getPath(struct Map map){
+	int i,j, position;
+	char mapChar;
+	struct Path *path;
+	struct TileNode * insertNode;
 
+	path = (struct Path *)malloc(sizeof(struct Path));
+	path->count = 0;
 
-struct UnitList *getGuardList(struct Map map);
-//TODO
+	for (i=0;i<MAP_ROWS;i++){
+		for (j=0;j<MAP_COLS;j++){
+			position = (j*MAP_ROWS)+i;
+			mapChar = map.overlay[i][j];
+			if (isPathCharacter(mapChar) || isalpha(mapChar)){
+				pushToPath(createTileNode(position,map.overlay[i][j]),path);
+			}
+		}
+	}
+
+	return path;
+}
+
+bool isPathCharacter(char tileChar){
+	return tileChar == '.' || tileChar == '#' || tileChar == '$' || tileChar == '&' || tileChar == '%';
+}
+
+struct TileNode * createTileNode(int location, char type){
+	struct TileNode * tileNode;
+
+	tileNode = (struct TileNode *)malloc(sizeof(struct TileNode));
+
+	tileNode->next = NULL;
+	tileNode->location = location;
+	tileNode->type = type;
+
+	return tileNode;
+}
+
+void pushToPath(struct TileNode* insertNode, struct Path* path){
+	struct TileNode * nextNode;
+
+	if (path->count > 0){
+		nextNode = path->first;
+	}
+	else{
+		path->first = insertNode;
+		path->count++;
+	}
+
+	while (nextNode->next != NULL){
+		nextNode = nextNode->next;
+	}
+
+	nextNode->next = insertNode;
+}
+/*struct UnitList *getGuardList(struct Map map){
+
+}*/

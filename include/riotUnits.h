@@ -230,5 +230,10 @@ struct Path * getPath(struct Map map);
 struct UnitList * getGuardList(struct Map map);
 //TODO
 
+bool isPathCharacter(char tileChar);
+
+struct TileNode * createTileNode(int location, char type);
+
+void pushToPath(struct TileNode* insertNode, struct Path* path);
 
 #endif //RIOT_UNITS
