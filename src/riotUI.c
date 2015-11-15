@@ -164,7 +164,7 @@ void drawLevel(struct Interface *win, struct Map *map) {
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
-        mvwprintw(win->body, y, 0, map->overlay[y]);
+        mvwaddstr(win->body, y, 0, map->overlay[y]);
     wrefresh(win->body);
 
     /* Draw window borders around windows */
