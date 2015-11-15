@@ -383,9 +383,162 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
     return range >= totalDifference;
 }
 
+void addToPath(struct Path *path, int location, char type) {
+	//initialize new tile to end of list
+	TileNode *newTile;
+	newTile -> location = &location;
+	newTile -> = &(type);
+	newTile -> next = NULL;
 
-struct Path *getPath(struct Map map);
-//TODO
+	TileNode *head;
+	head = path -> first;
+	//iterate through all tiles
+	while (head -> next != NULL) {
+		head = head -> next;
+	}
+	//add tile to end of path linked list
+	head -> next = newTile;
+	path -> count = &(path -> count) + 1;
+}
+
+struct Path *getPath(struct Map map) {
+	//[MAP_ROWS][90]
+	struct Path path;
+	int i, j, currentPos, xPos, yPos;
+	bool movedLeft = false;
+	bool movedRight = false;
+	bool movedUp = false;	
+	bool movedDown = false;
+	char type = NULL;
+
+	//search whole map for starting point $
+	for (i  = 0; i < MAP_ROWS; i++) {
+		for (j = 0 j < 90; j++) {
+			if (map.overlay[i][j] == '$') {        
+				//rows are 90 elements long, so 90*row + the jth element of row                  
+				path.first = currentPos = i*90+j;
+				yPos = i;
+				xPos = j;
+			}
+		}
+	}
+
+	//loop until current position is on a & (end point)	
+	while(mvinch(yPos, xPos) != '&') {
+		//check to see what direction the path will go
+		//& = end; # = door; % = obstacle
+		//cannot move down if you just moved up
+		if (!movedUp) {
+			if (mvinch(yPos+1, xPos) == '.' || mvinch(yPos+1, xPos) == '#' || mvinch(yPos+1, xPos) == '%' || mvinch(yPos+1, xPos) == '&') {
+				type = mvinch(yPos+1, xPos);
+				//move down
+				yPos++;
+				currentPos+=90;
+				movedUp = false;
+				movedDown = true;
+				movedLeft = false;
+				movedRight = false;
+				switch (type) {
+					case '.':
+						addToPath(*path, currentPos, '.');
+						break;
+					case '#':
+						addToPath(*path, currentPos, '#');
+						break;
+					case '%':
+						addToPath(*path, currentPos, '#');
+						break;
+					case '&':
+						addToPath(*path, currentPos, '&');
+						break;
+				}			
+			}
+		}
+		//cannot move up if you just moved down
+		if (!movedDown) {  
+			if (mvinch(yPos-1, xPos) == '.' || mvinch(yPos-1, xPos) == '#' || mvinch(yPos-1, xPos) == '%' || mvinch(yPos+1, xPos) == '&') {
+				type = mvinch(yPos-1, xPos);
+				//move up
+				yPos--;
+				currentPos-=90;
+				movedUp = true;
+				movedDown = false;
+				movedLeft = false;
+				movedRight = false;
+				switch (type) {
+					case '.':
+						addToPath(*path, currentPos, '.');
+						break;
+					case '#':
+						addToPath(*path, currentPos, '#');
+						break;
+					case '%':
+						addToPath(*path, currentPos, '#');
+						break;
+					case '&':
+						addToPath(*path, currentPos, '&');
+						break;
+				}	
+			}
+		}
+		//cannot move right if you just moved left
+		if (movedLeft) {
+			if (mvinch(yPos, xPos+1) == '.' || mvinch(yPos, xPos+1) == '#' || mvinch(yPos, xPos+1) == '%' || mvinch(yPos+1, xPos) == '&') {
+				type = mvinch(yPos, xPos+1);
+				//move right
+				xPos++;
+				currentPos++;
+				movedUp = false;
+				movedDown = false;
+				movedLeft = false;
+				movedRight = true;
+				switch (type) {
+					case '.':
+						addToPath(*path, currentPos, '.');
+						break;
+					case '#':
+						addToPath(*path, currentPos, '#');
+						break;
+					case '%':
+						addToPath(*path, currentPos, '#');
+						break;
+					case '&':
+						addToPath(*path, currentPos, '&');
+						break;
+				}	
+			}
+		}
+		//cannot move left if you just moved right
+		if (!movedRight){
+			if (mvinch(yPos-1, xPos) == '.' || mvinch(yPos-1, xPos) == '#' || mvinch(yPos-1, xPos) == '%' || mvinch(yPos+1, xPos) == '&') {
+				type = mvinch(yPos, xPos-1);
+				//move left
+				xPos--;
+				currentPos--;
+				movedUp = false;
+				movedDown = false;
+				movedLeft = true;
+				movedRight = false;
+				switch (type) {
+					case '.':
+						addToPath(*path, currentPos, '.');
+						break;
+					case '#':
+						addToPath(*path, currentPos, '#');
+						break;
+					case '%':
+						addToPath(*path, currentPos, '#');
+						break;
+					case '&':
+						addToPath(*path, currentPos, '&');
+						break;
+				}	
+			}
+		}		
+	}
+	return path;
+}
+
 
 
 struct UnitList *getGuardList(struct Map map);
