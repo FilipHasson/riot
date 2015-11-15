@@ -281,25 +281,30 @@ struct Guard *createGuard(enum GuardType type) {
 
 /*Moves the units through the map and calls 'inmateRedraw to draw/erase the
  units*/
-//void inmateMove(struct UnitList *inmateList) {
-//    struct UnitNode *nextInmate;
-//    int prevPos;
-//
-//    nextInmate = getHead(inmateList);
-//
-//    do {
-//        prevPos = nextInmate->unit->position;
-//        nextInmate->unit->position =
-//            nextInmate->unit->position + localInmate->unit->(speed / 8);
-//        //inmateRedraw(int previousPosition, int currentPosition, char type),
-//        // need this function to draw redraw units onto the screen. UI
-//        //source perhaps?
-//        // inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
-//        //essentially what is going to be called
-//        nextInmate = getNext(nextInmate);
-//
-//    } while (getNext(nextInmate) != NULL);
-//}
+void inmateMove(struct UnitList *inmateList, struct Path *path) {
+   struct UnitNode *nextInmate;
+   struct TileNode *nextTile;
+   int prevPos;
+
+   nextInmate = getHead(inmateList);
+   printf("Checking to move units");
+   do {
+       prevPos = ((struct Inmate *) nextInmate->unit)->position;
+       ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + ((struct Inmate *) nextInmate->unit)->speed/8; 
+       if (prevPos == prevPos + 1) {
+         printf("Unit Moved");
+         ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *)nextTile)->location;
+       }
+       //Not quite complete but right idea, talk to UI sunday.
+       //inmateRedraw(int previousPosition, int currentPosition, char type),
+       // need this function to draw redraw units onto the screen. UI
+       //source perhaps?
+       // inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
+       //essentially what is going to be called
+       nextInmate = getNext(nextInmate);
+
+   } while (getNext(nextInmate) != NULL);
+}
 
 
 void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {

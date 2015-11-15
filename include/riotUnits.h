@@ -190,11 +190,12 @@ PRECONDITIONS: The enum value is a valid inmate type.
 POSTCONDITIONS: Memory is allocated for a new Inmate struct.*/
 
 
-void inmateMove(struct UnitList *inmateList);/*
+void inmateMove(struct UnitList *inmateList, struct Path *path);/*
 
 DESCRIPTION: Move inmate every turn by its speed/8.
 
-ARGUEMNTS: The list of inmates (UnitList * inmateList). */
+ARGUMENTS: The list of inmates (UnitList * inmateList).
+           The path of the map (Path *path.) */
 
 
 void guardAttack(struct UnitList * guardList, struct UnitList *inmateList);/*
