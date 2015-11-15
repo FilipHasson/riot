@@ -97,6 +97,7 @@ PRECONDITIONS: The position is within the size of the list.
 
 POSTCONDITIONS: Will return TRUE is empty, otherwide FALSE.*/
 
+struct TileNode *getTile(struct Path *);
 
 struct UnitNode *getHead(struct UnitList *);/*
 

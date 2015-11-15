@@ -42,6 +42,9 @@ bool isEmpty(struct UnitList *list) {
 
 }
 
+struct TileNode *getTile(struct Path *path) {
+	return path ? path->first : NULL;
+}
 
 struct UnitNode *getNext(struct UnitNode *list) {
     return list ? list->next : NULL;
@@ -286,16 +289,16 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
    struct TileNode *nextTile;
    int prevPos;
 
+   nextTile = getTile(path);
    nextInmate = getHead(inmateList);
    printf("Checking to move units");
    do {
        prevPos = ((struct Inmate *) nextInmate->unit)->position;
        ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + ((struct Inmate *) nextInmate->unit)->speed/8; 
-       if (prevPos == prevPos + 1) {
+       if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1) {
          printf("Unit Moved");
          ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *)nextTile)->location;
        }
-       //Not quite complete but right idea, talk to UI sunday.
        //inmateRedraw(int previousPosition, int currentPosition, char type),
        // need this function to draw redraw units onto the screen. UI
        //source perhaps?
