@@ -389,7 +389,6 @@ struct Path *getPath(struct Map map){
 	int i,j, position;
 	char mapChar;
 	struct Path *path;
-	struct TileNode * insertNode;
 
 	path = (struct Path *)malloc(sizeof(struct Path));
 	path->count = 0;

@@ -222,9 +222,21 @@ DESCRIPTION: Decrements the inmates health by the guards damage during an attack
 ARGUMENTS: Inmate that is being dealt damage (struct UnitNode *inmateNode).
            Guard that is dealing damage (struct UnitNode *guardNode).*/
 
+void addToPath(struct Path *path, int location, char type);/*
 
-struct Path * getPath(struct Map map);
-//TODO
+DESCRIPTION: Adds an additional tile to the path
+
+ARGUMENTS: The path which the tile is being added to
+           The location(position) of where the tile will be located
+           The type of tile that is going to be added*/
+
+struct Path * getPath(struct Map map);/*
+
+DESCRIPTION: Retreieves infromation from the given map and stores this data into a path structure.
+             Returns said path structure.
+
+ARGUMENTS: The map that will be parsed.*/
+
 
 
 struct UnitList * getGuardList(struct Map map);
