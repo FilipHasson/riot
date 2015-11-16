@@ -281,6 +281,23 @@ struct Guard *createGuard(enum GuardType type) {
 
     return unit;
 }
+/*Need to pass in interface?*/
+void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, struct Path *path) {
+    struct UnitNode *nextInmate;
+    //struct UnitNode *nextGuard;
+    int simulate = 0;
+    int prevPos = 0;
+
+    nextInmate = getHead(inmateList);
+    while (simulate < 10) {
+        prevPos = ((struct Inmate *) nextInmate->unit)->position;
+        //drawUnit(win, nextInmate->unit, path, prevPos);
+        inmateMove(inmateList, path);
+        //drawUnit();
+        guardAttack(guardList, inmateList);
+        printf("here");
+    }
+}
 
 
 /*Moves the units through the map and calls 'inmateRedraw to draw/erase the
@@ -333,7 +350,7 @@ void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
 
 void dealDamage(struct UnitNode *inmateNode, struct UnitNode *guardNode) {
     printf("#####Inmate attacked#####\n");
-    printf("Inmate Position: %d\n",
+    printf("Inmate Position: %f\n",
         ((struct Inmate *) inmateNode->unit)->position);
     printf("Guard Position: %d\n",
         ((struct Guard *) guardNode->unit)->position);
@@ -395,7 +412,7 @@ struct Path *getPath(struct Map map){
 
 	for (i=0;i<MAP_ROWS;i++){
 		for (j=0;j<MAP_COLS;j++){
-			position = (j*MAP_ROWS)+i;
+			position = (i*MAP_COLS)+j;
 			mapChar = map.overlay[i][j];
 			if (isPathCharacter(mapChar) || isalpha(mapChar)){
 				pushToPath(createTileNode(position,map.overlay[i][j]),path);
@@ -407,11 +424,11 @@ struct Path *getPath(struct Map map){
 }
 
 bool isPathCharacter(char tileChar){
-	return tileChar == '.' || tileChar == '#' || tileChar == '$' || tileChar == '&' || tileChar == '%';
+	return (tileChar == '.' || tileChar == '#' || tileChar == '$' || tileChar == '&' || tileChar == '%');
 }
 
 struct TileNode * createTileNode(int location, char type){
-	struct TileNode * tileNode;
+	struct TileNode * tileNode = NULL;
 
 	tileNode = (struct TileNode *)malloc(sizeof(struct TileNode));
 
@@ -421,23 +438,39 @@ struct TileNode * createTileNode(int location, char type){
 
 	return tileNode;
 }
-
-void pushToPath(struct TileNode* insertNode, struct Path* path){
-	struct TileNode * nextNode;
+void destroyPath(struct Path * path){
+	struct TileNode * nextNode = NULL;
 
 	if (path->count > 0){
 		nextNode = path->first;
+	}
+
+	for (int i=0 ;i< path->count;i++){
+		while (nextNode->next != NULL){
+			nextNode = nextNode->next;
+			free(nextNode);
+			path->count--;
+		}	
+	}
+	free(path);
+}
+void pushToPath(struct TileNode* insertNode, struct Path* path){
+	struct TileNode * nextNode = NULL;
+
+	if (path->count > 0){
+		nextNode = path->first;
+
+		while (nextNode->next != NULL){
+			nextNode = nextNode->next;
+		}
+
+		nextNode->next = insertNode;
+		path->count++;
 	}
 	else{
 		path->first = insertNode;
 		path->count++;
 	}
-
-	while (nextNode->next != NULL){
-		nextNode = nextNode->next;
-	}
-
-	nextNode->next = insertNode;
 }
 /*struct UnitList *getGuardList(struct Map map){
 

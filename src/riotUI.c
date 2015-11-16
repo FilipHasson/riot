@@ -166,8 +166,9 @@ void drawLevel(struct Interface *win, struct Map *map) {
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
-        mvwprintw(win->body, y, 0, map->overlay[y]);
+        mvwaddstr(win->body, y, 0, map->overlay[y]);
     wrefresh(win->body);
+
 
     /* Draw window borders around windows */
     box(win->header, 0, 0);
@@ -184,30 +185,51 @@ void drawLevel(struct Interface *win, struct Map *map) {
     }
 
     /* Draw Queue */
-    //TODO
-
+    mvwaddstr(win->body,4,MAX_COLS-6,"QUEUE");
+    mvwaddch(win->body,5,MAX_COLS-6,ACS_ULCORNER);
+    mvwaddch(win->body,5,MAX_COLS-2,ACS_URCORNER);
+    mvwaddch(win->body,11,MAX_COLS-6,ACS_LLCORNER);
+    mvwaddch(win->body,11,MAX_COLS-2,ACS_LRCORNER);
+    mvwaddch(win->body,6,MAX_COLS-3,'.');
+    for(y=1;y<6;y++)
+        mvwprintw(win->body,5+y,MAX_COLS-5,"%d",y);
+    for (y=0;y <3 ;y++){
+        mvwaddch(win->body,5,MAX_COLS-5+y,ACS_HLINE);
+        mvwaddch(win->body,11,MAX_COLS-5+y,ACS_HLINE);
+    }
+    for(y=0;y<5;y++){
+        mvwaddch(win->body,6+y,MAX_COLS-6,ACS_VLINE);
+        mvwaddch(win->body,6+y,MAX_COLS-2,ACS_VLINE);
+    }
     /* Refresh windows */
     wrefresh(win->body);
     wrefresh(win->header);
     wrefresh(win->body);
     wrefresh(win->footer);
-
     //TODO
-
     getchar(); //temporary
-
     return;
 }
 
+<<<<<<< HEAD
 void redrawUnit(struct Interface *win, char unitType, int health, int currentPosition, int newPosition) {
+=======
+void drawQueue (struct Interface *win){
+
+}
+
+
+void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition) {
+    /*
+>>>>>>> 77b28c03c9fe488f3b8c4f5bb71ee18d39de026a
     int *currentCoordinates;
     int *newCoordinates;
 
-    currentCoordinates = getCoordinate(currentPosition);
+    currentCoordinates = getCoordinate(oldPosition);
     mvwaddch(win->body, currentCoordinates[0], currentCoordinates[1], '*');
 
     newCoordinates = getCoordinate(newPosition);
-    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], unitType);
+    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], unitType);*/
 }
 
 void drawUnit(struct Interface *win, char unitType, int health, int position) {

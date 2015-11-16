@@ -1,6 +1,19 @@
 #include <time.h>
 #include "riotTesting.h"
 
+static void printPath(struct Path * path){
+    struct TileNode * nextNode;
+    
+    nextNode = path->first;
+    printf("\n\n#### PRINTING PATH ####\n\n");
+    for (int i=0;i<path->count;i++){
+        printf("Location: %d\n",nextNode->location);
+        printf("Type: %c\n",nextNode->type);
+        nextNode = nextNode->next;
+    }
+    printf("\n########################\n");
+}
+
 int main(int argc, char **argv) {
 
     if (argc == 1) {
@@ -44,7 +57,7 @@ void unitsTest(void) {
         inmateUnit->position = (rand() % 90) + 1;
         enqueue(inmates, inmateUnit);
         printf("Adding an inmate to the list (%d)\n", inmates->count);
-        printf("Inmate position is: %d\n", inmateUnit->position);
+        printf("Inmate position is: %f\n", inmateUnit->position);
     }
 
     putchar('\n');
@@ -67,11 +80,12 @@ void unitsTest(void) {
 void mapTest(char *loadDir) {
     struct MapList *testList = parseMap(loadDir);
     struct Map *current;
-
+    struct Path * path;
     printf("Riot Levels Found %d:\n\n", testList->count);
 
     for (int i = 0; i < testList->count; i++) {
         current = &testList->level[i];
+        path = getPath(*current);
         printf("LEVEL %d: \n\n", i);
 
         printf("Name: %s\n", current->name);
@@ -83,13 +97,16 @@ void mapTest(char *loadDir) {
         for (int j = 0; j < MAP_ROWS; j++) {
             printf("%s\n", current->overlay[j]);
         }
+
+        printPath(path);
         printf("\n\n");
 
+        destroyPath(path); 
     }
+
     return;
 
 }
-
 
 void printInmate(struct Inmate *inmate) {
 
@@ -134,7 +151,7 @@ void printInmate(struct Inmate *inmate) {
             break;
     }
 
-    printf("pos:\t%d\n", inmate->position);
+    printf("pos:\t%f\n", inmate->position);
     printf("curHP:\t%d\n", inmate->currentHealth);
     printf("maxHP:\t%d\n", inmate->maxHealth);
     printf("speed:\t%d\n", inmate->speed);
