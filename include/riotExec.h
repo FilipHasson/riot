@@ -67,8 +67,8 @@ enum Colour {/*
 
     GREEN,
     YELLOW,
-    ORANGE,
     RED,
+    PURPLE,
 };
 
 

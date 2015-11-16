@@ -9,6 +9,7 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
 
         case INIT:
             initscr();
+            start_color();
             noecho(); // hide keypresses
             curs_set(FALSE); // hide cursor
 
@@ -155,21 +156,6 @@ void drawLevel(struct Interface *win, struct Map *map) {
     mvwprintw(win->header, 1, MAX_COLS - 11, "Rep:%d",
         map->repMax); // Display Rep
 
-    /* Draw Footer */
-    mvwprintw(win->footer, 1, 1, "INMATES");
-    drawFooterInmates(win,map->inmates);
-//    mvwprintw(win->footer, 1, 15,
-//        "[h]omeboy(10)\t[b]ruiser(16)\t[l]unatic(16)\t[f]atty(60)");
-//    mvwprintw(win->footer, 2, 15,
-//        "[s]peedy(10)\t[c]utie(20)\t[a]ttorney[30]\t[d]octer(10)");
-
-
-    /* Draw the game map */
-    for (y = 0; y < MAP_ROWS; y++)
-        mvwaddstr(win->body, y, 0, map->overlay[y]);
-    wrefresh(win->body);
-
-
     /* Draw window borders around windows */
     box(win->header, 0, 0);
     box(win->footer, 0, 0);
@@ -180,6 +166,26 @@ void drawLevel(struct Interface *win, struct Map *map) {
     mvwaddch (win->header, 2, 0, ACS_LTEE);
     mvwaddch (win->header, 2, MAX_COLS - 1, ACS_RTEE);
     for (y = 0; y < MAX_ROWS; y++) {
+        mvwaddch(win->body, y, 0, ACS_VLINE);
+        mvwaddch(win->body, y, MAX_COLS - 1, ACS_VLINE);
+    }
+
+    /* creates pause with text output*/
+    mvwprintw (win->body, 7,10,"Placeholder text motherfucker.....");//temp
+    wrefresh(win->body);
+    wrefresh(win->header);
+    wrefresh(win->footer);
+    getchar();
+
+    /* Draw Footer */
+    mvwprintw(win->footer, 1, 1, "INMATES");
+    drawFooterInmates(win,map->inmates);
+
+    /* Draw the game map */
+    for (y = 0; y < MAP_ROWS; y++)
+        mvwaddstr(win->body, y, 0, map->overlay[y]);
+    wrefresh(win->body);
+        for (y = 0; y < MAX_ROWS; y++) {
         mvwaddch(win->body, y, 0, ACS_VLINE);
         mvwaddch(win->body, y, MAX_COLS - 1, ACS_VLINE);
     }
@@ -212,15 +218,14 @@ void drawLevel(struct Interface *win, struct Map *map) {
 }
 
 void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition) {
-    /*
     int *currentCoordinates;
     int *newCoordinates;
 
     currentCoordinates = getCoordinate(oldPosition);
     mvwaddch(win->body, currentCoordinates[0], currentCoordinates[1], '*');
 
-    newCoordinates = getCoordinate(newPosition);
-    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], unitType);*/
+    newCoordinates = getCoordinate(inmate->position);
+    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], inmate->type);
 }
 
 void drawUnit(struct Interface *win, char unitType, int health, int position) {
