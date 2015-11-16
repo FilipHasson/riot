@@ -107,7 +107,8 @@ DESCRIPTION: Takes the position and converts it into a 2 dimensional coordinate
 
 ARGUMENTS: a position as a single integer value */
 
-
+void drawInmateSelection (struct Interface *win, struct Map *map);
+ 
 void drawLevel(struct Interface *win, struct Map* map);
 
 void drawFooterInmates(struct Interface * win, char * inmates);

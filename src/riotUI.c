@@ -143,6 +143,9 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     return (int) (select - '0');
 }
 
+void drawInmateSelection (struct Interface *win, struct Map *map) {
+    
+}
 
 void drawLevel(struct Interface *win, struct Map *map) {
 
