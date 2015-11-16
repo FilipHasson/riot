@@ -1,4 +1,5 @@
 #include <time.h>
+#include <ncurses.h>
 #include "riotTesting.h"
 
 static void printPath(struct Path *path){
@@ -23,6 +24,27 @@ static void printGuardList(struct UnitList *guardList){
     }*/
 }
 
+static void colorTest (){
+    initscr();
+    start_color();
+    init_pair(GREEN, GREEN, COLOR_BLACK);
+    init_pair(YELLOW, YELLOW, COLOR_BLACK);
+    init_pair(RED, RED, COLOR_BLACK);
+    init_pair(PURPLE, PURPLE, COLOR_BLACK);
+
+    attron (COLOR_PAIR(GREEN));
+    mvprintw(0,0,"Green test");
+    attron (COLOR_PAIR(YELLOW));
+    mvprintw(1,0,"Yellow test");
+    attron (COLOR_PAIR(RED));
+    mvprintw(2,0,"Red test");
+    attron (COLOR_PAIR(PURPLE));
+    mvprintw(3,0,"Purple test");
+    refresh();
+    getchar();
+    endwin();
+}
+
 int main(int argc, char **argv) {
 
     if (argc == 1) {
@@ -37,12 +59,12 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[i], "-units")) unitsTest();
         else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
         else if (!strcmp(argv[i], "-unitmove")) unitsMove(argv[2] ? argv[2] : NULL);
+        else if (!strcmp(argv[i], "-color")) colorTest();
         else printf("Unknown command (%s)\n", argv[i]);
     }
 
     printf("Testing done.\n");
     return 0;
-
 }
 
 void unitsMove(char *loadDir) {

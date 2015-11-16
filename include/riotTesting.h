@@ -9,6 +9,7 @@
 #define TRIALS 10
 #define MAPSIZE 100
 
+
 void printInmates(struct UnitList *list);
 
 
