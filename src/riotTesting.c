@@ -28,7 +28,6 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[i], "-units")) unitsTest();
         else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
         else if (!strcmp(argv[i], "-unitmove")) unitsMove(argv[2] ? argv[2] : NULL);
-
         else printf("Unknown command (%s)\n", argv[i]);
     }
 
