@@ -157,14 +157,18 @@ ARGUMENTS: The list to be modified.
 POSTCONDITIONS: The back UnitNode is either removed from the passed UnitList
  and its pointer is returned, else NULL is returned.*/
 
+struct Inmate *createInmate(enum InmateType type);/*
 
-/* Function Prototypes */
+DESCRIPTION: Creates an inmate and initializes it
 
-struct Inmate *createInmate(enum InmateType type);
+ARGUMENTS: The inmate type to be assigned to the inmate that is being created (enum InmateType type);
+*/
+struct Guard *createGuard(enum GuardType type);/*
 
+DESCRIPTION: Creates a guard and initializes it
 
-struct Guard *createGuard(enum GuardType type);
-
+ARGUMENTS: The guard type to be assigned to the guard that is being created (enum GuardType type);
+*/
 
 void rmUnit(struct UnitNode* target);/*
 
@@ -237,15 +241,37 @@ DESCRIPTION: Retreieves infromation from the given map and stores this data into
 
 ARGUMENTS: The map that will be parsed.*/
 
+struct UnitList * getGuardList(struct Map map);/*
 
+DESCRIPTION: 
 
-struct UnitList * getGuardList(struct Map map);
-//TODO
+ARGUMENTS: 
+*/
+bool isPathCharacter(char tileChar);/*
 
-bool isPathCharacter(char tileChar);
+DESCRIPTION: Returns a boolean based on whether the character is a path character. 
 
-struct TileNode * createTileNode(int location, char type);
+ARGUMENTS: Character to be checked.
+*/
+struct TileNode * createTileNode(int location, char type);/*
 
-void pushToPath(struct TileNode* insertNode, struct Path* path);
+DESCRIPTION: Creates a tile node and initializes it.
+
+ARGUMENTS: Location of the tile node (int location).
+           Character type of the tile node (char type).
+*/
+void destroyPath(struct Path * path);/*
+
+DESCRIPTION: Destroys the path and all the contents of the path.
+
+ARGUMENTS: Path to be destroyed (struct Path *path).
+*/
+void pushToPath(struct TileNode* insertNode, struct Path* path);/*
+
+DESCRIPTION: Pushes a tile node to the back of the path list.
+
+ARGUMENTS: Tile Node to be pushes (struct TileNode* insertNode).
+           Path that the tile node is pushed into (struct Path* path).
+*/
 
 #endif //RIOT_UNITS

@@ -395,7 +395,7 @@ struct Path *getPath(struct Map map){
 
 	for (i=0;i<MAP_ROWS;i++){
 		for (j=0;j<MAP_COLS;j++){
-			position = (j*MAP_ROWS)+i;
+			position = (i*MAP_COLS)+j;
 			mapChar = map.overlay[i][j];
 			if (isPathCharacter(mapChar) || isalpha(mapChar)){
 				pushToPath(createTileNode(position,map.overlay[i][j]),path);
@@ -407,11 +407,11 @@ struct Path *getPath(struct Map map){
 }
 
 bool isPathCharacter(char tileChar){
-	return tileChar == '.' || tileChar == '#' || tileChar == '$' || tileChar == '&' || tileChar == '%';
+	return (tileChar == '.' || tileChar == '#' || tileChar == '$' || tileChar == '&' || tileChar == '%');
 }
 
 struct TileNode * createTileNode(int location, char type){
-	struct TileNode * tileNode;
+	struct TileNode * tileNode = NULL;
 
 	tileNode = (struct TileNode *)malloc(sizeof(struct TileNode));
 
@@ -421,23 +421,39 @@ struct TileNode * createTileNode(int location, char type){
 
 	return tileNode;
 }
-
-void pushToPath(struct TileNode* insertNode, struct Path* path){
-	struct TileNode * nextNode;
+void destroyPath(struct Path * path){
+	struct TileNode * nextNode = NULL;
 
 	if (path->count > 0){
 		nextNode = path->first;
+	}
+
+	for (int i=0 ;i< path->count;i++){
+		while (nextNode->next != NULL){
+			nextNode = nextNode->next;
+			free(nextNode);
+			path->count--;
+		}	
+	}
+	free(path);
+}
+void pushToPath(struct TileNode* insertNode, struct Path* path){
+	struct TileNode * nextNode = NULL;
+
+	if (path->count > 0){
+		nextNode = path->first;
+
+		while (nextNode->next != NULL){
+			nextNode = nextNode->next;
+		}
+
+		nextNode->next = insertNode;
+		path->count++;
 	}
 	else{
 		path->first = insertNode;
 		path->count++;
 	}
-
-	while (nextNode->next != NULL){
-		nextNode = nextNode->next;
-	}
-
-	nextNode->next = insertNode;
 }
 /*struct UnitList *getGuardList(struct Map map){
 
