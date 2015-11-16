@@ -274,4 +274,23 @@ ARGUMENTS: Tile Node to be pushes (struct TileNode* insertNode).
            Path that the tile node is pushed into (struct Path* path).
 */
 
+struct UnitNode * createGuardNode(char type, int position);/*
+
+DESCRIPTION: Creates a unit node with a guard as a unit and initializes its variables.
+
+ARGUMENTS: Character which represents the guard (char type).
+           Position of the guard (int position).
+*/
+
+struct UnitList *getGuardList(struct Map map);/*
+
+DESCRIPTION: Creates a guard list based on all the guard characters found in the map struct.
+
+ARGUMENTS: Map struct to be searched (struct Map map).
+*/
+struct Path *pathSolve(struct Map map,struct Path* path,int prevChecked[],int count,int currentPosition);
+
+
+bool beenChecked(int prevChecked[],int position);
+
 #endif //RIOT_UNITS
