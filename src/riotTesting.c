@@ -1,7 +1,7 @@
 #include <time.h>
 #include "riotTesting.h"
 
-static void printPath(struct Path *path){
+static void printPath(struct Path * path){
     struct TileNode * nextNode;
     
     nextNode = path->first;
@@ -12,15 +12,6 @@ static void printPath(struct Path *path){
         nextNode = nextNode->next;
     }
     printf("\n########################\n");
-}
-
-static void printGuardList(struct UnitList *guardList){
-    struct UnitNode * nextNode;
-
-    nextNode = getTail(guardList);
-   /* for (int i=0;i<guardList->count;i++){
-        printGuard(guard);
-    }*/
 }
 
 int main(int argc, char **argv) {
@@ -126,14 +117,13 @@ void unitsTest(void) {
 void mapTest(char *loadDir) {
     struct MapList *testList = parseMap(loadDir);
     struct Map *current;
-    struct Path *path;
-    struct UnitList *guardList;
+    struct Path * path;
     printf("Riot Levels Found %d:\n\n", testList->count);
 
-    for (int i = 0; i < testList->count; i++) {
+    for (int i = 0; i<testList->count; i++) {
         current = &testList->level[i];
         path = getPath(*current);
-        //guardList = getGuardList(*current);
+
         printf("LEVEL %d: \n\n", i);
 
         printf("Name: %s\n", current->name);
@@ -146,7 +136,9 @@ void mapTest(char *loadDir) {
             printf("%s\n", current->overlay[j]);
         }
 
-        printPath(path);
+
+        printf("Path size: %d",path->count);
+        //printPath(path);
         printf("\n\n");
 
         destroyPath(path); 

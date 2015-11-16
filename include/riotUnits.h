@@ -292,9 +292,22 @@ DESCRIPTION: Creates a guard list based on all the guard characters found in the
 
 ARGUMENTS: Map struct to be searched (struct Map map).
 */
-struct Path *pathSolve(struct Map map,struct Path* path,int prevChecked[],int count,int currentPosition);
+struct Path *pathSolve(struct Map map,struct Path *path,int prevChecked[],int count,int currentPosition);/*
 
+DESCRIPTION: Recursive function which creates an ordered path struct.
 
-bool beenChecked(int prevChecked[],int position);
+ARGUMENTS: Map struct to be searched (struct Map map).
+           Path struct to be created(struct Path *path).
+           Previously checked positions(int prevChecked[]).
+           Number of the tile that has been added to the path(int count).
+           Current position being searched in the map struct(int currentPosition).
 
+*/
+bool beenChecked(int prevChecked[],int position);/*
+
+DESCRIPTION: Checks whether the position exists in the previously checked array.
+
+ARGUMENTS: Array of all positions previously checked (int prevChecked[]).
+           Position to be compared against the previously checked positions.
+*/
 #endif //RIOT_UNITS
