@@ -65,10 +65,10 @@ enum Colour {/*
 
  Colour provides a mnemonic for the colours used to convey health values.*/
 
-    GREEN = 10,
-    YELLOW = 11,
-    RED = 9,
-    PURPLE = 5,
+    GREEN,
+    YELLOW,
+    RED,
+    PURPLE,
 };
 
 
