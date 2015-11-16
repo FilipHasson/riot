@@ -8,7 +8,7 @@ static void printPath(struct Path * path){
     nextNode = path->first;
     printf("\n\n#### PRINTING PATH ####\n\n");
     for (int i=0;i<path->count;i++){
-        printf("Location: %d\n",nextNode->location);
+        printf("Location: %d  :",nextNode->location);
         printf("Type: %c\n",nextNode->type);
         nextNode = nextNode->next;
     }
@@ -68,9 +68,9 @@ void unitsMove(char *loadDir) {
     printf("Riot Levels Found %d:\n\n", testList->count);
     inmates = createList();
 
-    current = &testList->level[0];
+    current = &testList->level[8];
     path = getPath(*current);
-    printf("LEVEL %d: \n\n", 0);
+    printf("LEVEL %d: \n\n", 8);
 
     for (int j = 0; j < MAP_ROWS; j++) {
         printf("%s\n", current->overlay[j]);
