@@ -309,12 +309,14 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
 
    nextTile = getTile(path);
    nextInmate = getHead(inmateList);
-   printf("Checking to move units");
+   printf("Checking to move units\n");
    do {
        printf("Unit position: %f\n", ((struct Inmate *) nextInmate->unit)->position);
        prevPos = ((struct Inmate *) nextInmate->unit)->position;
        printf("PrevPos: %d\n", prevPos);
-       ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + ((struct Inmate *) nextInmate->unit)->speed/8;
+       printf("Units Speed: %d\n", ((struct Inmate *) nextInmate->unit)->speed);
+       printf("Units Speed/8: %f\n", (float)((struct Inmate *) nextInmate->unit)->speed/8);
+       ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + (float)((struct Inmate *) nextInmate->unit)->speed/8;
        printf("New Unit Position: %f\n", ((struct Inmate *) nextInmate->unit)->position); 
        if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1) {
            printf("Unit Moved");

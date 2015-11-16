@@ -61,8 +61,11 @@ void unitsMove(char *loadDir) {
     printf("Adding an inmate to the list (%d)\n", inmates->count);
     printf("Inmate position is: %f\n", inmateUnit->position);
 
-
-    //inmateMove();
+    for (int i = 0; i < 2; ++i)
+    {
+        /* code */
+    inmateMove(inmates, path);
+    }
     putchar('\n') ;
 
     while (inmates->count) {
