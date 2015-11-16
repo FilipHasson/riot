@@ -1,7 +1,8 @@
 #include <time.h>
+#include <ncurses.h>
 #include "riotTesting.h"
 
-static void printPath(struct Path *path){
+static void printPath(struct Path * path){
     struct TileNode * nextNode;
     
     nextNode = path->first;
@@ -14,13 +15,25 @@ static void printPath(struct Path *path){
     printf("\n########################\n");
 }
 
-static void printGuardList(struct UnitList *guardList){
-    struct UnitNode * nextNode;
+static void colorTest (){
+    initscr();
+    start_color();
+    init_pair(GREEN, GREEN, COLOR_BLACK);
+    init_pair(YELLOW, YELLOW, COLOR_BLACK);
+    init_pair(RED, RED, COLOR_BLACK);
+    init_pair(PURPLE, PURPLE, COLOR_BLACK);
 
-    nextNode = getTail(guardList);
-   /* for (int i=0;i<guardList->count;i++){
-        printGuard(guard);
-    }*/
+    attron (COLOR_PAIR(GREEN));
+    mvprintw(0,0,"Green test");
+    attron (COLOR_PAIR(YELLOW));
+    mvprintw(1,0,"Yellow test");
+    attron (COLOR_PAIR(RED));
+    mvprintw(2,0,"Red test");
+    attron (COLOR_PAIR(PURPLE));
+    mvprintw(3,0,"Purple test");
+    refresh();
+    getchar();
+    endwin();
 }
 
 int main(int argc, char **argv) {
@@ -37,6 +50,7 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[i], "-units")) unitsTest();
         else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
         else if (!strcmp(argv[i], "-unitmove")) unitsMove(argv[2] ? argv[2] : NULL);
+        else if (!strcmp(argv[i], "-color")) colorTest();
         else printf("Unknown command (%s)\n", argv[i]);
     }
 
@@ -53,11 +67,10 @@ void unitsMove(char *loadDir) {
     struct Path * path;
     printf("Riot Levels Found %d:\n\n", testList->count);
     inmates = createList();
-    int riotNum = 0;
 
-    current = &testList->level[riotNum];
+    current = &testList->level[0];
     path = getPath(*current);
-    printf("LEVEL %d: \n\n", riotNum);
+    printf("LEVEL %d: \n\n", 0);
 
     for (int j = 0; j < MAP_ROWS; j++) {
         printf("%s\n", current->overlay[j]);
@@ -71,8 +84,11 @@ void unitsMove(char *loadDir) {
     printf("Adding an inmate to the list (%d)\n", inmates->count);
     printf("Inmate position is: %f\n", inmateUnit->position);
 
-
-    //inmateMove();
+    for (int i = 0; i < 2; ++i)
+    {
+        /* code */
+    inmateMove(inmates, path);
+    }
     putchar('\n') ;
 
     while (inmates->count) {
@@ -127,14 +143,12 @@ void unitsTest(void) {
 void mapTest(char *loadDir) {
     struct MapList *testList = parseMap(loadDir);
     struct Map *current;
-    struct Path *path;
-    struct UnitList *guardList;
+    struct Path * path;
     printf("Riot Levels Found %d:\n\n", testList->count);
 
     for (int i = 0; i < testList->count; i++) {
         current = &testList->level[i];
         path = getPath(*current);
-        //guardList = getGuardList(*current);
         printf("LEVEL %d: \n\n", i);
 
         printf("Name: %s\n", current->name);

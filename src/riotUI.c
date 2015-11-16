@@ -186,7 +186,7 @@ void drawLevel(struct Interface *win, struct Map *map) {
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
-        mvwaddstr(win->body, y, 0, map->overlay[y]);
+        mvwaddstr(win->body, y, 1, map->overlay[y]);
     wrefresh(win->body);
         for (y = 0; y < MAX_ROWS; y++) {
         mvwaddch(win->body, y, 0, ACS_VLINE);
@@ -223,6 +223,11 @@ void drawLevel(struct Interface *win, struct Map *map) {
 void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition) {
     int *currentCoordinates;
     int *newCoordinates;
+
+    init_pair(GREEN, GREEN, COLOR_BLACK);
+    init_pair(YELLOW, YELLOW, COLOR_BLACK);
+    init_pair(RED, RED, COLOR_BLACK);
+    init_pair(PURPLE, PURPLE, COLOR_BLACK);
 
     currentCoordinates = getCoordinate(oldPosition);
     mvwaddch(win->body, currentCoordinates[0], currentCoordinates[1], '*');
@@ -294,7 +299,7 @@ char * getInmateName(char ch) {
         case 'd':
         return "[d]octor(10)";
         default:
-        return "FUUUUUUCK";
+        return "FAIL";
     }
 }
 
