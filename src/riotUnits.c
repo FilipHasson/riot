@@ -291,10 +291,10 @@ void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, stru
     nextInmate = getHead(inmateList);
     while (simulate < 10) {
         prevPos = ((struct Inmate *) nextInmate->unit)->position;
-        //drawUnit(win, nextInmate->unit, path, prevPos);
         inmateMove(inmateList, path);
-        //drawUnit();
+        //drawUnit(win, nextInmate->unit, path, prevPos); (draw new position)
         guardAttack(guardList, inmateList);
+        //drawUnit(); (new colour)
         printf("here");
     }
 }
