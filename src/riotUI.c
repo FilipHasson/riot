@@ -1,4 +1,5 @@
 #include "riotUI.h"
+#include "string.h"
 
 void uiSet(enum GameMode gameMode, struct Interface *win) {
 
@@ -156,6 +157,7 @@ void drawLevel(struct Interface *win, struct Map *map) {
 
     /* Draw Footer */
     mvwprintw(win->footer, 1, 1, "INMATES");
+    drawFooterInmates(win,map->inmates);
 //    mvwprintw(win->footer, 1, 15,
 //        "[h]omeboy(10)\t[b]ruiser(16)\t[l]unatic(16)\t[f]atty(60)");
 //    mvwprintw(win->footer, 2, 15,
@@ -209,6 +211,9 @@ void drawLevel(struct Interface *win, struct Map *map) {
     return;
 }
 
+<<<<<<< HEAD
+void redrawUnit(struct Interface *win, char unitType, int health, int currentPosition, int newPosition) {
+=======
 void drawQueue (struct Interface *win){
 
 }
@@ -216,6 +221,7 @@ void drawQueue (struct Interface *win){
 
 void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition) {
     /*
+>>>>>>> 77b28c03c9fe488f3b8c4f5bb71ee18d39de026a
     int *currentCoordinates;
     int *newCoordinates;
 
@@ -253,3 +259,44 @@ int *getCoordinate(int position) {
 
     return coordinates;
 }
+
+void drawFooterInmates(struct Interface * win, char * inmates) {
+    char output[100];
+    strcpy(output,"");
+    int i;
+
+    for (i=0; i<strlen(inmates)-1;i++) {
+        strcat(output, getInmateName(inmates[i]));
+        strcat(output, "\t");
+        if (i==3) {
+            mvwaddstr(win->footer,1,10,output);
+            strcpy(output,"");
+        }       
+    }
+    mvwaddstr(win->footer, 2, 10, output);
+}
+
+char * getInmateName(char ch) {
+    switch (ch) {
+        case 'h':
+        return "[h]omeboy(10)";
+        case 'b':
+        return "[b]ruiser(16)";
+        case 'l':
+        return "[l]unatic(16)";            
+        case 'f':
+        return "[f]fatty(60)";
+        case 's':
+        return "[s]peedy(10)";
+        case 'c':
+        return "[c]utie(20)";
+        case 'a':
+        return "[a]ttorney(30)";
+        case 'd':
+        return "[d]octor(10)";
+        default:
+        return "FUUUUUUCK";
+    }
+}
+
+
