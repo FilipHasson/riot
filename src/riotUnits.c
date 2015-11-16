@@ -281,6 +281,23 @@ struct Guard *createGuard(enum GuardType type) {
 
     return unit;
 }
+/*Need to pass in interface?*/
+void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, struct Path *path) {
+    struct UnitNode *nextInmate;
+    //struct UnitNode *nextGuard;
+    int simulate = 0;
+    int prevPos = 0;
+
+    nextInmate = getHead(inmateList);
+    while (simulate < 10) {
+        prevPos = ((struct Inmate *) nextInmate->unit)->position;
+        inmateMove(inmateList, path);
+        //drawUnit(win, nextInmate->unit, path, prevPos); (draw new position)
+        guardAttack(guardList, inmateList);
+        //drawUnit(); (new colour)
+        printf("here");
+    }
+}
 
 
 /*Moves the units through the map and calls 'inmateRedraw to draw/erase the
@@ -294,11 +311,15 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
    nextInmate = getHead(inmateList);
    printf("Checking to move units");
    do {
+       printf("Unit position: %f\n", ((struct Inmate *) nextInmate->unit)->position);
        prevPos = ((struct Inmate *) nextInmate->unit)->position;
-       ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + ((struct Inmate *) nextInmate->unit)->speed/8; 
+       printf("PrevPos: %d\n", prevPos);
+       ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + ((struct Inmate *) nextInmate->unit)->speed/8;
+       printf("New Unit Position: %f\n", ((struct Inmate *) nextInmate->unit)->position); 
        if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1) {
-         printf("Unit Moved");
-         ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *)nextTile)->location;
+           printf("Unit Moved");
+           ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *)nextTile)->location;
+           printf("Unit moved position%f\n", ((struct Inmate *) nextInmate->unit)->position);
        }
        //inmateRedraw(int previousPosition, int currentPosition, char type),
        // need this function to draw redraw units onto the screen. UI
@@ -333,7 +354,7 @@ void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
 
 void dealDamage(struct UnitNode *inmateNode, struct UnitNode *guardNode) {
     printf("#####Inmate attacked#####\n");
-    printf("Inmate Position: %d\n",
+    printf("Inmate Position: %f\n",
         ((struct Inmate *) inmateNode->unit)->position);
     printf("Guard Position: %d\n",
         ((struct Guard *) guardNode->unit)->position);

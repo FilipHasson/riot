@@ -1,13 +1,11 @@
-# **RIOT!**
-Name: RIOT!
+# Information
 
-Class: CIS*3250
+* **Name**: RIOT!
+* **Class**: CIS3250
+* **Instructor**: David McCaughan
+* **Version**: 0.1
+* **Date**: November 20, 2015
 
-Instructor: David McCaughan
-
-Version: 0.1
-
-Date: November 20, 2015
 
 ## Game Overview
 
@@ -17,33 +15,34 @@ It is a turn-based strategy game where the player is tasked with breaking out of
 
 RIOT! intends to switch the roles of a traditional tower defence game, placing the user in control of what would conventionally be the enemy horde.
 
+
 ## Guidelines Followed & Limitations
 
-- implemented in C
-- ran in a terminal window with a keyboard-based psuedo-gui
-- Curses library used to graphically draw the game
-- to be run in an 80x24 character window (both menu and main screen will be contained here)
+* implemented in C
+* ran in a terminal window with a keyboard-based psuedo-gui
+* Curses library used to graphically draw the game
+* to be run in an 80x24 character window (both menu and main screen will be contained here)
+* map files contained in plain-text encoded with 1148 UTF-8 characters
+
 
 ## Features
 
-- [x] Reverse tower defence puzzle game!
-- [x] Distinct prison-break-esque theme!
-- [x] Exponentially increasing difficulty!
-- [x] Various amounts of levels with different mechanics!
-- [x] Unlock inmates as you progress!
-- [x] Escape from dangerous guards from dogs to cyborgs!
+* Reverse tower defence puzzle game!
+* Distinct prison-break-esque theme!
+* Exponentially increasing difficulty!
+* Various amounts of levels with different mechanics!
+* Unlock inmates as you progress!
+* Escape from dangerous guards from dogs to cyborgs!
 
-## Tests
 
-~~placeholder~~
+## Testing
+
 
 ## Installation and Running
 
-~~placeholder~~
 
 ## Changelog
 
-0.2 Initial
 
 ## Contributors
 

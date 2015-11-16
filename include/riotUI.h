@@ -109,4 +109,8 @@ ARGUMENTS: a position as a single integer value */
 
 
 void drawLevel(struct Interface *win, struct Map* map);
+
+void drawFooterInmates(struct Interface * win, char * inmates);
+
+char * getInmateName(char ch);
 #endif //RIOT_UI

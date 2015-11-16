@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
 
         if (!strcmp(argv[i], "-units")) unitsTest();
         else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
+        else if (!strcmp(argv[i], "-unitmove")) unitsMove(argv[2] ? argv[2] : NULL);
         else printf("Unknown command (%s)\n", argv[i]);
     }
 
@@ -44,6 +45,43 @@ int main(int argc, char **argv) {
 
 }
 
+void unitsMove(char *loadDir) {
+    struct UnitList *inmates;
+    struct Inmate *inmateUnit;
+    struct MapList *testList = parseMap(loadDir);
+    struct Map *current;
+    struct Path * path;
+    printf("Riot Levels Found %d:\n\n", testList->count);
+    inmates = createList();
+
+    current = &testList->level[0];
+    path = getPath(*current);
+    printf("LEVEL %d: \n\n", 0);
+
+    for (int j = 0; j < MAP_ROWS; j++) {
+        printf("%s\n", current->overlay[j]);
+    }
+
+    printPath(path);
+
+    inmateUnit = createInmate(HOMEBOY);
+    inmateUnit->position = 2;
+    enqueue(inmates, inmateUnit);
+    printf("Adding an inmate to the list (%d)\n", inmates->count);
+    printf("Inmate position is: %f\n", inmateUnit->position);
+
+
+    //inmateMove();
+    putchar('\n') ;
+
+    while (inmates->count) {
+        printf("Removing units (%d)\n", inmates->count);
+        rmUnit(dequeue(inmates));
+    }   
+    putchar('\n');
+
+    destroyList(inmates);
+}
 
 void unitsTest(void) {
     struct UnitList *inmates, *guards;
@@ -66,16 +104,15 @@ void unitsTest(void) {
         inmateUnit->position = (rand() % 90) + 1;
         enqueue(inmates, inmateUnit);
         printf("Adding an inmate to the list (%d)\n", inmates->count);
-        printf("Inmate position is: %d\n", inmateUnit->position);
+        printf("Inmate position is: %f\n", inmateUnit->position);
     }
 
     putchar('\n');
-
     guardAttack(guards, inmates);
 
     while (inmates->count) {
-        rmUnit(dequeue(inmates));
         printf("Removing an inmate from the list (%d)\n", inmates->count);
+        rmUnit(dequeue(inmates));
     }
     putchar('\n');
 
@@ -162,7 +199,7 @@ void printInmate(struct Inmate *inmate) {
             break;
     }
 
-    printf("pos:\t%d\n", inmate->position);
+    printf("pos:\t%f\n", inmate->position);
     printf("curHP:\t%d\n", inmate->currentHealth);
     printf("maxHP:\t%d\n", inmate->maxHealth);
     printf("speed:\t%d\n", inmate->speed);

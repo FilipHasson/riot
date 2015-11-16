@@ -31,7 +31,7 @@ struct Inmate {/*
  Inmate stores the stats related to inmate units.*/
 
     char type;
-    int position;
+    float position;
     unsigned int currentHealth;
     unsigned int maxHealth;
     unsigned int speed;
@@ -193,6 +193,10 @@ ARGUMENTS: an InmateType enum associated with the Inmate to be initiated.
 PRECONDITIONS: The enum value is a valid inmate type.
 
 POSTCONDITIONS: Memory is allocated for a new Inmate struct.*/
+
+void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, struct Path *path); /*
+
+  DESCRIPTION: -- */
 
 
 void inmateMove(struct UnitList *inmateList, struct Path *path);/*
