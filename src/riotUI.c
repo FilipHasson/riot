@@ -211,17 +211,8 @@ void drawLevel(struct Interface *win, struct Map *map) {
     return;
 }
 
-<<<<<<< HEAD
-void redrawUnit(struct Interface *win, char unitType, int health, int currentPosition, int newPosition) {
-=======
-void drawQueue (struct Interface *win){
-
-}
-
-
 void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition) {
     /*
->>>>>>> 77b28c03c9fe488f3b8c4f5bb71ee18d39de026a
     int *currentCoordinates;
     int *newCoordinates;
 
