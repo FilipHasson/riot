@@ -44,10 +44,11 @@ void unitsMove(char *loadDir) {
     struct Path * path;
     printf("Riot Levels Found %d:\n\n", testList->count);
     inmates = createList();
+    int riotNum = 0;
 
-    current = &testList->level[0];
+    current = &testList->level[riotNum];
     path = getPath(*current);
-    printf("LEVEL %d: \n\n", 0);
+    printf("LEVEL %d: \n\n", riotNum);
 
     for (int j = 0; j < MAP_ROWS; j++) {
         printf("%s\n", current->overlay[j]);
