@@ -3,7 +3,6 @@
 
 #include "riotExec.h"
 
-#define NAME_LEN 35
 #define PATH_MAX 4096
 #define LINE_MAX 72
 #define MAP_SIZE 1545
@@ -21,7 +20,7 @@ struct Map {/*
  Map stores the game landscape as a 2D array, along with a linked list
  containing the path.*/
 
-    char name[NAME_LEN];
+    char name[LINE_MAX];
     int levelNo;
     bool hidden;
     bool beaten;
@@ -56,7 +55,6 @@ struct TileNode {/*
     char type;
     struct TileNode *next;
 };
-
 
 /* Function Prototypes */
 

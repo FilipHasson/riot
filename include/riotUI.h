@@ -3,6 +3,7 @@
 
 #include "riotExec.h"
 #include "riotMap.h"
+#include "riotUnits.h"
 
 /* Data Types */
 
@@ -63,7 +64,8 @@ DESCRIPTION: Gets name of level
 ARGUMENTS: integer value of what level (0-7)*/
 
 
-void redrawUnit(struct Interface * win, char unitType, int health, int currentPosition, int newPosition);/*
+void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition);
+/*
 
 DESCRIPTION: Function to redraw units on the screen
 
@@ -107,4 +109,8 @@ ARGUMENTS: a position as a single integer value */
 
 
 void drawLevel(struct Interface *win, struct Map* map);
+
+void drawFooterInmates(struct Interface * win, char * inmates);
+
+char * getInmateName(char ch);
 #endif //RIOT_UI

@@ -1,4 +1,5 @@
 #include "riotUI.h"
+#include "string.h"
 
 void uiSet(enum GameMode gameMode, struct Interface *win) {
 
@@ -156,6 +157,7 @@ void drawLevel(struct Interface *win, struct Map *map) {
 
     /* Draw Footer */
     mvwprintw(win->footer, 1, 1, "INMATES");
+    drawFooterInmates(win,map->inmates);
 //    mvwprintw(win->footer, 1, 15,
 //        "[h]omeboy(10)\t[b]ruiser(16)\t[l]unatic(16)\t[f]atty(60)");
 //    mvwprintw(win->footer, 2, 15,
@@ -164,8 +166,9 @@ void drawLevel(struct Interface *win, struct Map *map) {
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
-        mvwprintw(win->body, y, 0, map->overlay[y]);
+        mvwaddstr(win->body, y, 0, map->overlay[y]);
     wrefresh(win->body);
+
 
     /* Draw window borders around windows */
     box(win->header, 0, 0);
@@ -182,31 +185,42 @@ void drawLevel(struct Interface *win, struct Map *map) {
     }
 
     /* Draw Queue */
-    //TODO
-
+    mvwaddstr(win->body,4,MAX_COLS-6,"QUEUE");
+    mvwaddch(win->body,5,MAX_COLS-6,ACS_ULCORNER);
+    mvwaddch(win->body,5,MAX_COLS-2,ACS_URCORNER);
+    mvwaddch(win->body,11,MAX_COLS-6,ACS_LLCORNER);
+    mvwaddch(win->body,11,MAX_COLS-2,ACS_LRCORNER);
+    mvwaddch(win->body,6,MAX_COLS-3,'.');
+    for(y=1;y<6;y++)
+        mvwprintw(win->body,5+y,MAX_COLS-5,"%d",y);
+    for (y=0;y <3 ;y++){
+        mvwaddch(win->body,5,MAX_COLS-5+y,ACS_HLINE);
+        mvwaddch(win->body,11,MAX_COLS-5+y,ACS_HLINE);
+    }
+    for(y=0;y<5;y++){
+        mvwaddch(win->body,6+y,MAX_COLS-6,ACS_VLINE);
+        mvwaddch(win->body,6+y,MAX_COLS-2,ACS_VLINE);
+    }
     /* Refresh windows */
     wrefresh(win->body);
     wrefresh(win->header);
     wrefresh(win->body);
     wrefresh(win->footer);
-
     //TODO
-
     getchar(); //temporary
-
     return;
 }
 
-void redrawUnit(struct Interface *win, char unitType, int health,
-    int currentPosition, int newPosition) {
+void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition) {
+    /*
     int *currentCoordinates;
     int *newCoordinates;
 
-    currentCoordinates = getCoordinate(currentPosition);
+    currentCoordinates = getCoordinate(oldPosition);
     mvwaddch(win->body, currentCoordinates[0], currentCoordinates[1], '*');
 
     newCoordinates = getCoordinate(newPosition);
-    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], unitType);
+    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], unitType);*/
 }
 
 void drawUnit(struct Interface *win, char unitType, int health, int position) {
@@ -236,3 +250,44 @@ int *getCoordinate(int position) {
 
     return coordinates;
 }
+
+void drawFooterInmates(struct Interface * win, char * inmates) {
+    char output[100];
+    strcpy(output,"");
+    int i;
+
+    for (i=0; i<strlen(inmates)-1;i++) {
+        strcat(output, getInmateName(inmates[i]));
+        strcat(output, "\t");
+        if (i==3) {
+            mvwaddstr(win->footer,1,10,output);
+            strcpy(output,"");
+        }       
+    }
+    mvwaddstr(win->footer, 2, 10, output);
+}
+
+char * getInmateName(char ch) {
+    switch (ch) {
+        case 'h':
+        return "[h]omeboy(10)";
+        case 'b':
+        return "[b]ruiser(16)";
+        case 'l':
+        return "[l]unatic(16)";            
+        case 'f':
+        return "[f]fatty(60)";
+        case 's':
+        return "[s]peedy(10)";
+        case 'c':
+        return "[c]utie(20)";
+        case 'a':
+        return "[a]ttorney(30)";
+        case 'd':
+        return "[d]octor(10)";
+        default:
+        return "FUUUUUUCK";
+    }
+}
+
+
