@@ -57,7 +57,7 @@ void unitsTest(void) {
         inmateUnit->position = (rand() % 90) + 1;
         enqueue(inmates, inmateUnit);
         printf("Adding an inmate to the list (%d)\n", inmates->count);
-        printf("Inmate position is: %d\n", inmateUnit->position);
+        printf("Inmate position is: %f\n", inmateUnit->position);
     }
 
     putchar('\n');
@@ -151,7 +151,7 @@ void printInmate(struct Inmate *inmate) {
             break;
     }
 
-    printf("pos:\t%d\n", inmate->position);
+    printf("pos:\t%f\n", inmate->position);
     printf("curHP:\t%d\n", inmate->currentHealth);
     printf("maxHP:\t%d\n", inmate->maxHealth);
     printf("speed:\t%d\n", inmate->speed);

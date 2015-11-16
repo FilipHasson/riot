@@ -31,7 +31,7 @@ struct Inmate {/*
  Inmate stores the stats related to inmate units.*/
 
     char type;
-    int position;
+    float position;
     unsigned int currentHealth;
     unsigned int maxHealth;
     unsigned int speed;
