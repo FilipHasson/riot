@@ -132,6 +132,3 @@ void checkArgs(int argc, char **argv) {
 
     return;
 }
-
-
-

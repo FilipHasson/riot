@@ -164,7 +164,7 @@ void drawLevel(struct Interface *win, struct Map *map) {
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
-        mvwprintw(win->body, y, 0, map->overlay[y]);
+        mvwaddstr(win->body, y, 0, map->overlay[y]);
     wrefresh(win->body);
 
     /* Draw window borders around windows */
@@ -197,16 +197,16 @@ void drawLevel(struct Interface *win, struct Map *map) {
     return;
 }
 
-void redrawUnit(struct Interface *win, char unitType, int health,
-    int currentPosition, int newPosition) {
+void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition) {
+    /*
     int *currentCoordinates;
     int *newCoordinates;
 
-    currentCoordinates = getCoordinate(currentPosition);
+    currentCoordinates = getCoordinate(oldPosition);
     mvwaddch(win->body, currentCoordinates[0], currentCoordinates[1], '*');
 
     newCoordinates = getCoordinate(newPosition);
-    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], unitType);
+    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], unitType);*/
 }
 
 void drawUnit(struct Interface *win, char unitType, int health, int position) {
