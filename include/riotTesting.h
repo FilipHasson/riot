@@ -14,6 +14,7 @@ void printInmates(struct UnitList *list);
 
 void printGuards(struct UnitList *list);
 
+void unitsMove(char *loadDir);
 
 void unitsTest(void);
 

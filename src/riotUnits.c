@@ -291,10 +291,10 @@ void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, stru
     nextInmate = getHead(inmateList);
     while (simulate < 10) {
         prevPos = ((struct Inmate *) nextInmate->unit)->position;
-        //drawUnit(win, nextInmate->unit, path, prevPos);
         inmateMove(inmateList, path);
-        //drawUnit();
+        //drawUnit(win, nextInmate->unit, path, prevPos); (draw new position)
         guardAttack(guardList, inmateList);
+        //drawUnit(); (new colour)
         printf("here");
     }
 }
@@ -311,11 +311,15 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
    nextInmate = getHead(inmateList);
    printf("Checking to move units");
    do {
+       printf("Unit position: %f\n", ((struct Inmate *) nextInmate->unit)->position);
        prevPos = ((struct Inmate *) nextInmate->unit)->position;
-       ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + ((struct Inmate *) nextInmate->unit)->speed/8; 
+       printf("PrevPos: %d\n", prevPos);
+       ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + ((struct Inmate *) nextInmate->unit)->speed/8;
+       printf("New Unit Position: %f\n", ((struct Inmate *) nextInmate->unit)->position); 
        if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1) {
-         printf("Unit Moved");
-         ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *)nextTile)->location;
+           printf("Unit Moved");
+           ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *)nextTile)->location;
+           printf("Unit moved position%f\n", ((struct Inmate *) nextInmate->unit)->position);
        }
        //inmateRedraw(int previousPosition, int currentPosition, char type),
        // need this function to draw redraw units onto the screen. UI
