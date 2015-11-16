@@ -281,18 +281,23 @@ struct Guard *createGuard(enum GuardType type) {
 
     return unit;
 }
-//void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, struct Path *path, struct Interface *win) {
-    //struct UnitNode *nextInmate;
+/*Need to pass in interface?*/
+void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, struct Path *path) {
+    struct UnitNode *nextInmate;
     //struct UnitNode *nextGuard;
-    //int simulate = 0, prevPos = 0;
+    int simulate = 0;
+    int prevPos = 0;
 
-    //nextInmate = getHead(inmateList);
-    //prevPos = ((struct Inmate *) nextInmate->unit)->position;
-    //drawUnit(win, nextInmate->unit, path, prevPos);
-   /* while (simulate < 10) {
+    nextInmate = getHead(inmateList);
+    while (simulate < 10) {
+        prevPos = ((struct Inmate *) nextInmate->unit)->position;
+        //drawUnit(win, nextInmate->unit, path, prevPos);
+        inmateMove(inmateList, path);
+        //drawUnit();
+        guardAttack(guardList, inmateList);
         printf("here");
-    }*/
-//}
+    }
+}
 
 
 /*Moves the units through the map and calls 'inmateRedraw to draw/erase the
