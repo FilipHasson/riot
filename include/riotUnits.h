@@ -247,9 +247,9 @@ ARGUMENTS: The map that will be parsed.*/
 
 struct UnitList * getGuardList(struct Map map);/*
 
-DESCRIPTION: 
+DESCRIPTION: Creates a list of all the guards found inside the map struct overlay.
 
-ARGUMENTS: 
+ARGUMENTS: Map struct to be searched for guards present (struct Map map).
 */
 bool isPathCharacter(char tileChar);/*
 
@@ -276,14 +276,6 @@ DESCRIPTION: Pushes a tile node to the back of the path list.
 
 ARGUMENTS: Tile Node to be pushes (struct TileNode* insertNode).
            Path that the tile node is pushed into (struct Path* path).
-*/
-
-struct UnitNode * createGuardNode(char type, int position);/*
-
-DESCRIPTION: Creates a unit node with a guard as a unit and initializes its variables.
-
-ARGUMENTS: Character which represents the guard (char type).
-           Position of the guard (int position).
 */
 
 struct UnitList *getGuardList(struct Map map);/*

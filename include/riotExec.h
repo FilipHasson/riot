@@ -41,13 +41,13 @@ enum GuardType {/*
 
  GuardType provides a mnemonic for guard unit types.*/
 
-    GUARD,
-    DOGS,
-    LUNCH, //lunch lady
-    PSYCH, //psychiatrist
-    SHARP, //sharpshooter
-    WARDEN,
-    CYBORG
+    GUARD = 'G',
+    DOGS = 'D',
+    LUNCH = 'L', //lunch lady
+    PSYCH = 'P', //psychiatrist
+    SHARP = 'S', //sharpshooter
+    WARDEN = 'W',
+    CYBORG = 'C'
 };
 
 

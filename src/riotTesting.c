@@ -14,6 +14,27 @@ static void printPath(struct Path *path){
     printf("\n########################\n");
 }
 
+static void printGuardList(struct UnitList *guardList){
+    struct UnitNode * nextNode;
+    struct Guard * guard;
+
+    nextNode = getHead(guardList);
+    guard = (struct Guard*)nextNode->unit;
+    printf("\nGuard List Size: %d\n",guardList->count);
+    printf("\n\n#### PRINTING GUARDS ####\n\n");
+    for (int i=0;i<guardList->count-1;i++){
+        printf("Guard Type : %c\n",guard->type);
+        printf("Location: %d\n",guard->position);
+        printf("Damage: %d\n",guard->damage);
+        printf("Range: %d\n",guard->range);
+        printf("Cool Down: %d\n",guard->cooldown);
+        printf("\n");
+        nextNode = nextNode->next;
+        guard = (struct Guard*)nextNode->unit;
+    }
+    printf("\n########################\n");
+}
+
 static void colorTest (){
     initscr();
     start_color();
@@ -143,12 +164,13 @@ void mapTest(char *loadDir) {
     struct MapList *testList = parseMap(loadDir);
     struct Map *current;
     struct Path * path;
+    struct UnitList * guardList;
     printf("Riot Levels Found %d:\n\n", testList->count);
 
     for (int i = 0; i < testList->count; i++) {
         current = &testList->level[i];
         path = getPath(*current);
-
+        guardList = getGuardList(*current);
         printf("LEVEL %d: \n\n", i);
 
         printf("Name: %s\n", current->name);
@@ -164,8 +186,9 @@ void mapTest(char *loadDir) {
 
         printf("Path size: %d",path->count);
         //printPath(path);
+        //printGuardList(guardList);
         printf("\n\n");
-
+        destroyList(guardList);
         destroyPath(path); 
     }
 
