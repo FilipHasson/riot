@@ -288,9 +288,9 @@ ARGUMENTS: Character which represents the guard (char type).
 
 struct UnitList *getGuardList(struct Map map);/*
 
-DESCRIPTION: Creates a guard list based on all the guard characters found in the map struct.
+DESCRIPTION: Creates a list of all the guards found inside the map struct overlay.
 
-ARGUMENTS: Map struct to be searched (struct Map map).
+ARGUMENTS: Map struct to be searched for guards present (struct Map map).
 */
 struct Path *pathSolve(struct Map map,struct Path *path,int prevChecked[],int count,int currentPosition);/*
 
@@ -310,4 +310,5 @@ DESCRIPTION: Checks whether the position exists in the previously checked array.
 ARGUMENTS: Array of all positions previously checked (int prevChecked[]).
            Position to be compared against the previously checked positions.
 */
+
 #endif //RIOT_UNITS
