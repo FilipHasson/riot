@@ -278,8 +278,6 @@ ARGUMENTS: Tile Node to be pushes (struct TileNode* insertNode).
            Path that the tile node is pushed into (struct Path* path).
 */
 
-<<<<<<< HEAD
-=======
 struct UnitNode * createGuardNode(char type, int position);/*
 
 DESCRIPTION: Creates a unit node with a guard as a unit and initializes its variables.
@@ -312,5 +310,4 @@ DESCRIPTION: Checks whether the position exists in the previously checked array.
 ARGUMENTS: Array of all positions previously checked (int prevChecked[]).
            Position to be compared against the previously checked positions.
 */
->>>>>>> unitsTest
 #endif //RIOT_UNITS
