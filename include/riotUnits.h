@@ -286,9 +286,7 @@ ARGUMENTS: Character which represents the guard (char type).
            Position of the guard (int position).
 */
 
-struct UnitList *getGuardList(struct Map map);
-
-/*
+struct UnitList *getGuardList(struct Map map);/*
 
 DESCRIPTION: Creates a list of all the guards found inside the map struct overlay.
 

@@ -186,6 +186,7 @@ void mapTest(char *loadDir) {
         }
 
         printPath(path);
+        printGuardList(guardList);
         printf("\n\n");
 
         destroyList(guardList);
