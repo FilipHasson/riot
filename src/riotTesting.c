@@ -91,9 +91,9 @@ void unitsMove(char *loadDir) {
     printf("Riot Levels Found %d:\n\n", testList->count);
     inmates = createList();
 
-    current = &testList->level[8];
+    current = &testList->level[0];
     path = getPath(*current);
-    printf("LEVEL %d: \n\n", 8);
+    printf("LEVEL %d: \n\n", 0);
 
     for (int j = 0; j < MAP_ROWS; j++) {
         printf("%s\n", current->overlay[j]);
@@ -102,12 +102,12 @@ void unitsMove(char *loadDir) {
     printPath(path);
 
     inmateUnit = createInmate(HOMEBOY);
-    inmateUnit->position = 2;
+    inmateUnit->position = 693;
     enqueue(inmates, inmateUnit);
     printf("Adding an inmate to the list (%d)\n", inmates->count);
-    printf("Inmate position is: %f\n", inmateUnit->position);
+    printf("Inmate position is: %f\n-----\n", inmateUnit->position);
 
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 20; ++i) {
         /* code */
         inmateMove(inmates, path);
     }

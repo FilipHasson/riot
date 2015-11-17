@@ -43,10 +43,6 @@ bool isEmpty(struct UnitList *list) {
 
 }
 
-struct TileNode *getTile(struct Path *path) {
-    return path ? path->first : NULL;
-}
-
 struct UnitNode *getNext(struct UnitNode *list) {
     return list ? list->next : NULL;
 }
@@ -309,33 +305,31 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
     struct TileNode *nextTile;
     int prevPos;
 
-    nextTile = getTile(path);
+    nextTile = path->first;
     nextInmate = getHead(inmateList);
-    printf("Checking to move units");
+    printf("Checking to move units\n");
     do {
-        printf("Unit position: %f\n",
-            ((struct Inmate *) nextInmate->unit)->position);
+        for (int i = 0; i < path->count; i++) {
+            if (nextTile->location == (int)((struct Inmate *) nextInmate->unit)->position) {
+                break;
+            }
+            nextTile = nextTile->next;
+        }
+        printf("Tile position: %d\n", nextTile->location);
+        printf("Unit position: %f\n", ((struct Inmate *) nextInmate->unit)->position);
         prevPos = ((struct Inmate *) nextInmate->unit)->position;
         printf("PrevPos: %d\n", prevPos);
         ((struct Inmate *) nextInmate->unit)->position =
-            ((struct Inmate *) nextInmate->unit)->position +
-                ((struct Inmate *) nextInmate->unit)->speed / 8;
-        printf("New Unit Position: %f\n",
+        ((struct Inmate *) nextInmate->unit)->position +
+        (float)((struct Inmate *) nextInmate->unit)->speed / 8;
+        printf("Temp Unit Position: %f\n---\n", ((struct Inmate *) nextInmate->unit)->position);
+        if ((int) ((struct Inmate *) nextInmate->unit)->position == prevPos + 1) {
+            printf("Unit Moved\n");
+            ((struct Inmate *) nextInmate->unit)->position = nextTile->next->location;
+            printf("Unit moved to new Tile Position%f\n----END\n",
             ((struct Inmate *) nextInmate->unit)->position);
-        if ((int) ((struct Inmate *) nextInmate->unit)->position ==
-            prevPos + 1) {
-            printf("Unit Moved");
-            ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *) nextTile)->location;
-            printf("Unit moved position%f\n",
-                ((struct Inmate *) nextInmate->unit)->position);
         }
-        //inmateRedraw(int previousPosition, int currentPosition, char type),
-        // need this function to draw redraw units onto the screen. UI
-        //source perhaps?
-        // inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
-        //essentially what is going to be called
         nextInmate = getNext(nextInmate);
-
     } while (getNext(nextInmate) != NULL);
 }
 
