@@ -142,22 +142,24 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     return (int) (select - '0');
 }
 
-void drawInmateSelection(struct Interface *win, struct Map *map), struct UnitList * player) {
+void drawInmateSelection(struct Interface *win, struct Map *map) {
     int y, i;
+    int rep = map->panicMax;
+    struct Inmate * inmate;
     char input;
 
     do {
         drawBorders(win);
         
         mvwprintw(win->header, 1, MAX_COLS - 11, "Rep:%d",
-            map->repMax);
+            rep);
         mvwprintw(win->header, 1, 1, "Level %d: %s", map->levelNo,
             map->name); // Display Level
         mvwprintw(win->header, 1, MAX_COLS - 24, "Panic:%d%%",
             map->panicMax); // Display Panic
 
-        mvwprintw(win->body, 1, MAX_COLS/2-10, "Hero Selection");
-        mvwhline(win->body, 2, MAX_COLS/2-11, '-', 16);
+        mvwprintw(win->body, 1, MAX_COLS/2-9, "Inmate Selection");
+        mvwhline(win->body, 2, MAX_COLS/2-10, '-', 18);
 
         y=4;
         for (i=0; i<strlen(map->inmates); i++) {
@@ -167,36 +169,109 @@ void drawInmateSelection(struct Interface *win, struct Map *map), struct UnitLis
 
         mvwprintw(win->footer, 1, 1, "\t\tPress the corresponding letter to buy inmate");
         mvwprintw(win->footer, 2, 1, "\t\tPress \"Enter\" to continue");
+
         wrefresh(win->header);
         wrefresh(win->footer);
         wrefresh(win->body);
 
         input = wgetch(win->body);
+        wclear(win->body);
 
-        switch (input) {
-            case 'h':
-                break
-            case 'b':
-                break
-            case 'l':
-                break
-            case 'f':
-                break
-            case 's':
-                break
-            case 'c':
-                break
-            case 'a':
-                break
-            case 'd':
-                break
-        }
-
+            switch (input) {
+                case 'h':
+                    if (rep >= 10) {
+                        mvwprintw(win->body, 15, 30, "HOMEBOY ADDED");
+                        rep-=10;
+                        inmate = createInmate(input);
+                    } 
+                    else {
+                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                    }     
+                    break;
+                case 'b':
+                    if (rep >= 16) {
+                        mvwprintw(win->body, 15, 30, "BRUISER ADDED");
+                        inmate = createInmate(input);
+                        rep-=16;
+                    }
+                    else {
+                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                    }   
+                    break;
+                case 'l':
+                    if (rep >= 16) {
+                        mvwprintw(win->body, 15, 30, "LUNATIC ADDED");
+                        inmate = createInmate(input);
+                        rep-=16;
+                    }
+                    else {
+                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                    }   
+                    break;
+                case 'f':
+                    if (rep >= 60) {
+                        mvwprintw(win->body, 15, 30, "FATTY ADDED");
+                        inmate = createInmate(input);
+                        rep-=60;
+                    }
+                    else {
+                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                    }   
+                    break;
+                case 's':
+                    if (rep >= 10) {
+                        mvwprintw(win->body, 15, 30, "SPEEDY ADDED");
+                        inmate = createInmate(input);
+                        rep-=10;
+                    }
+                    break;
+                case 'c':
+                    if (rep >= 20) {
+                        mvwprintw(win->body, 15, 30, "CUTIE ADDED");
+                        inmate = createInmate(input);
+                        rep-=20;
+                    }
+                    else {
+                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                    }   
+                    break;
+                case 'a':
+                    if (rep >= 30) {
+                        mvwprintw(win->body, 15, 30, "ATTORNEY ADDED");
+                        inmate = createInmate(input);
+                        rep-=30;
+                    }
+                    else {
+                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                    }   
+                    break;
+                case 'd':
+                    if (rep >= 10) {
+                        mvwprintw(win->body, 15, 30, "DOCTOR ADDED");
+                        inmate = createInmate(input);
+                        rep-=10;
+                    }
+                    else {
+                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                    }              
+                    break;
+                default:
+                    mvwprintw(win->body, 15, 30, "INMATE NOT FOUND");
+            }       
+            if (rep == 0) {
+                wclear(win->body);
+                drawBorders(win);
+                mvwprintw(win->body, 4, 20, "0 REP, PRESS ANY KEY TO CONTINUE");
+                wgetch(win->body);
+                break;
+            }
     } while (input != '\n');
     
+
     wclear(win->header);
     wclear(win->body);
     wclear(win->footer);
+        
 }
 
 void drawLevel(struct Interface *win, struct Map *map) {
