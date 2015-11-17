@@ -247,9 +247,9 @@ ARGUMENTS: The map that will be parsed.*/
 
 struct UnitList * getGuardList(struct Map map);/*
 
-DESCRIPTION: Creates a list of all the guards found inside the map struct overlay.
+DESCRIPTION: 
 
-ARGUMENTS: Map struct to be searched for guards present (struct Map map).
+ARGUMENTS: 
 */
 bool isPathCharacter(char tileChar);/*
 
@@ -278,11 +278,21 @@ ARGUMENTS: Tile Node to be pushes (struct TileNode* insertNode).
            Path that the tile node is pushed into (struct Path* path).
 */
 
-struct UnitList *getGuardList(struct Map map);/*
+struct UnitNode * createGuardNode(char type, int position);/*
 
-DESCRIPTION: Creates a guard list based on all the guard characters found in the map struct.
+DESCRIPTION: Creates a unit node with a guard as a unit and initializes its variables.
 
-ARGUMENTS: Map struct to be searched (struct Map map).
+ARGUMENTS: Character which represents the guard (char type).
+           Position of the guard (int position).
+*/
+
+struct UnitList *getGuardList(struct Map map);
+
+/*
+
+DESCRIPTION: Creates a list of all the guards found inside the map struct overlay.
+
+ARGUMENTS: Map struct to be searched for guards present (struct Map map).
 */
 struct Path *pathSolve(struct Map map,struct Path *path,int prevChecked[],int count,int currentPosition);/*
 
@@ -302,4 +312,5 @@ DESCRIPTION: Checks whether the position exists in the previously checked array.
 ARGUMENTS: Array of all positions previously checked (int prevChecked[]).
            Position to be compared against the previously checked positions.
 */
+
 #endif //RIOT_UNITS
