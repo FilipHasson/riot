@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
 
         switch (gameMode) {
             case NEW:
-
+                drawInmateSelection(&gameInterface, &mapList->level[0]);
                 drawLevel(&gameInterface, &mapList->level[0]);
                 break;
 

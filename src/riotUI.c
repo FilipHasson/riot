@@ -142,12 +142,64 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     return (int) (select - '0');
 }
 
-void drawInmateSelection(struct Interface *win, struct Map *map) {
+void drawInmateSelection(struct Interface *win, struct Map *map), struct UnitList * player) {
+    int y, i;
+    char input;
 
+    do {
+        drawBorders(win);
+        
+        mvwprintw(win->header, 1, MAX_COLS - 11, "Rep:%d",
+            map->repMax);
+        mvwprintw(win->header, 1, 1, "Level %d: %s", map->levelNo,
+            map->name); // Display Level
+        mvwprintw(win->header, 1, MAX_COLS - 24, "Panic:%d%%",
+            map->panicMax); // Display Panic
+
+        mvwprintw(win->body, 1, MAX_COLS/2-10, "Hero Selection");
+        mvwhline(win->body, 2, MAX_COLS/2-11, '-', 16);
+
+        y=4;
+        for (i=0; i<strlen(map->inmates); i++) {
+            mvwprintw(win->body, y, 30, "%s", getInmateName(map->inmates[i]));
+            y++;
+        }
+
+        mvwprintw(win->footer, 1, 1, "\t\tPress the corresponding letter to buy inmate");
+        mvwprintw(win->footer, 2, 1, "\t\tPress \"Enter\" to continue");
+        wrefresh(win->header);
+        wrefresh(win->footer);
+        wrefresh(win->body);
+
+        input = wgetch(win->body);
+
+        switch (input) {
+            case 'h':
+                break
+            case 'b':
+                break
+            case 'l':
+                break
+            case 'f':
+                break
+            case 's':
+                break
+            case 'c':
+                break
+            case 'a':
+                break
+            case 'd':
+                break
+        }
+
+    } while (input != '\n');
+    
+    wclear(win->header);
+    wclear(win->body);
+    wclear(win->footer);
 }
 
 void drawLevel(struct Interface *win, struct Map *map) {
-
     int y;
 
     /* Draw Header */
@@ -303,4 +355,20 @@ char *getInmateName(char ch) {
     }
 }
 
+void drawBorders (struct Interface * win) {
+    int y;
+
+    box(win->header, 0, 0);
+        box(win->footer, 0, 0);
+        mvwaddch(win->footer, 0, 0, ACS_LTEE);
+        mvwaddch(win->footer, 0, MAX_COLS - 1, ACS_RTEE);
+        mvwaddch(win->header, 0, 0, ACS_ULCORNER);
+        mvwaddstr(win->header, 0, 1, "riot");
+        mvwaddch (win->header, 2, 0, ACS_LTEE);
+        mvwaddch (win->header, 2, MAX_COLS - 1, ACS_RTEE);
+        for (y = 0; y < MAX_ROWS; y++) {
+            mvwaddch(win->body, y, 0, ACS_VLINE);
+            mvwaddch(win->body, y, MAX_COLS - 1, ACS_VLINE);
+        }
+}
 

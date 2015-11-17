@@ -114,4 +114,6 @@ void drawLevel(struct Interface *win, struct Map* map);
 void drawFooterInmates(struct Interface * win, char * inmates);
 
 char * getInmateName(char ch);
+
+void drawBorders (struct Interface * win);
 #endif //RIOT_UI
