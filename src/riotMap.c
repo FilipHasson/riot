@@ -18,7 +18,7 @@ struct MapList *parseMap(char *loadDir) {
     bool useCwd = false;
     bool firstRun = true;
 
-    int x,y;
+    int x, y;
 
     /* Compile regex */
     regcomp(&riotExt, REGEX_EXT, REG_NOSUB | REG_EXTENDED);
@@ -46,14 +46,14 @@ struct MapList *parseMap(char *loadDir) {
             if (ftell(file) < MAP_SIZE) continue;
 
             /* Determine level number and hidden status from filename*/
-            if(entry->d_name[0]=='.') {
-                current = &mapList->level[entry->d_name[1]-'0'];
-                current->levelNo = entry->d_name[1]-'0';
-                current->hidden=false;
-            } else{
-                current = &mapList->level[entry->d_name[0]-'0'];
-                current->levelNo = entry->d_name[0]-'0';
-                current->hidden=true;
+            if (entry->d_name[0] == '.') {
+                current = &mapList->level[entry->d_name[1] - '0'];
+                current->levelNo = entry->d_name[1] - '0';
+                current->hidden = false;
+            } else {
+                current = &mapList->level[entry->d_name[0] - '0'];
+                current->levelNo = entry->d_name[0] - '0';
+                current->hidden = true;
             }
 
             /* Assign beaten status */
@@ -61,26 +61,26 @@ struct MapList *parseMap(char *loadDir) {
 
             /* Determine level name*/
             rewind(file);
-            fgets(line,MAX_COLS,file);
-            strncpy(current->name,strtok(line,DELIMITER),LINE_MAX);
+            fgets(line, MAX_COLS, file);
+            strncpy(current->name, strtok(line, DELIMITER), LINE_MAX);
 
             /* Determine starting rep */
-            current->repMax=atoi(strtok(NULL,DELIMITER));
+            current->repMax = atoi(strtok(NULL, DELIMITER));
 
             /* Determine panic threshold */
-            current->panicMax=atoi(strtok(NULL,DELIMITER));
+            current->panicMax = atoi(strtok(NULL, DELIMITER));
 
             /* Determine level inmates*/
-            strncpy(current->inmates,strtok(NULL,"\n"),INMATE_TYPES);
+            strncpy(current->inmates, strtok(NULL, "\n"), INMATE_TYPES);
 
             /* Copy map elements to array */
             rewind(file);
             while (fgetc(file) != '\n');
             while (fgetc(file) != '\n');
 //            fseek(file, 1, SEEK_CUR);
-            for ( y = 0; y < MAP_ROWS; y++) {
+            for (y = 0; y < MAP_ROWS; y++) {
                 fseek(file, 7, SEEK_CUR);
-                for( x = 0; x < MAP_COLS-1; x++)
+                for (x = 0; x < MAP_COLS - 1; x++)
                     current->overlay[y][x] = fgetc(file);
                 fseek(file, 3, SEEK_CUR);
             }

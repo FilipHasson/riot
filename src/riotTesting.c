@@ -1,41 +1,21 @@
 #include <time.h>
+#include <ncurses.h>
 #include "riotTesting.h"
 
-static void printPath(struct Path *path){
-    struct TileNode * nextNode;
-    
+static void printPath(struct Path *path) {
+    struct TileNode *nextNode;
+
     nextNode = path->first;
     printf("\n\n#### PRINTING PATH ####\n\n");
-    for (int i=0;i<path->count;i++){
-        printf("Location: %d\n",nextNode->location);
-        printf("Type: %c\n",nextNode->type);
+    for (int i = 0; i < path->count; i++) {
+        printf("Location: %d  :", nextNode->location);
+        printf("Type: %c\n", nextNode->type);
         nextNode = nextNode->next;
     }
     printf("\n########################\n");
 }
 
-static void printGuardList(struct UnitList *guardList){
-    struct UnitNode * nextNode;
-    struct Guard * guard;
-
-    nextNode = getHead(guardList);
-    guard = (struct Guard*)nextNode->unit;
-    printf("\nGuard List Size: %d\n",guardList->count);
-    printf("\n\n#### PRINTING GUARDS ####\n\n");
-    for (int i=0;i<guardList->count-1;i++){
-        printf("Guard Type : %c\n",guard->type);
-        printf("Location: %d\n",guard->position);
-        printf("Damage: %d\n",guard->damage);
-        printf("Range: %d\n",guard->range);
-        printf("Cool Down: %d\n",guard->cooldown);
-        printf("\n");
-        nextNode = nextNode->next;
-        guard = (struct Guard*)nextNode->unit;
-    }
-    printf("\n########################\n");
-}
-
-static void colorTest (){
+static void colorTest() {
     initscr();
     start_color();
     init_pair(GREEN, GREEN, COLOR_BLACK);
@@ -44,13 +24,13 @@ static void colorTest (){
     init_pair(PURPLE, PURPLE, COLOR_BLACK);
 
     attron (COLOR_PAIR(GREEN));
-    mvprintw(0,0,"Green test");
+    mvprintw(0, 0, "Green test");
     attron (COLOR_PAIR(YELLOW));
-    mvprintw(1,0,"Yellow test");
+    mvprintw(1, 0, "Yellow test");
     attron (COLOR_PAIR(RED));
-    mvprintw(2,0,"Red test");
+    mvprintw(2, 0, "Red test");
     attron (COLOR_PAIR(PURPLE));
-    mvprintw(3,0,"Purple test");
+    mvprintw(3, 0, "Purple test");
     refresh();
     getchar();
     endwin();
@@ -69,7 +49,8 @@ int main(int argc, char **argv) {
 
         if (!strcmp(argv[i], "-units")) unitsTest();
         else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
-        else if (!strcmp(argv[i], "-unitmove")) unitsMove(argv[2] ? argv[2] : NULL);
+        else if (!strcmp(argv[i], "-unitmove"))
+            unitsMove(argv[2] ? argv[2] : NULL);
         else if (!strcmp(argv[i], "-color")) colorTest();
         else printf("Unknown command (%s)\n", argv[i]);
     }
@@ -84,7 +65,7 @@ void unitsMove(char *loadDir) {
     struct Inmate *inmateUnit;
     struct MapList *testList = parseMap(loadDir);
     struct Map *current;
-    struct Path * path;
+    struct Path *path;
     printf("Riot Levels Found %d:\n\n", testList->count);
     inmates = createList();
 
@@ -104,17 +85,16 @@ void unitsMove(char *loadDir) {
     printf("Adding an inmate to the list (%d)\n", inmates->count);
     printf("Inmate position is: %f\n", inmateUnit->position);
 
-    for (int i = 0; i < 2; ++i)
-    {
+    for (int i = 0; i < 2; ++i) {
         /* code */
-    inmateMove(inmates, path);
+        inmateMove(inmates, path);
     }
-    putchar('\n') ;
+    putchar('\n');
 
     while (inmates->count) {
         printf("Removing units (%d)\n", inmates->count);
         rmUnit(dequeue(inmates));
-    }   
+    }
     putchar('\n');
 
     destroyList(inmates);
