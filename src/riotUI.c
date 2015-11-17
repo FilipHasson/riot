@@ -1,5 +1,4 @@
 #include "riotUI.h"
-#include "string.h"
 
 void uiSet(enum GameMode gameMode, struct Interface *win) {
 
@@ -120,7 +119,7 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
             mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
         } else y--;
 #else
-        mvwprintw(menu, y + i, 21, "[%c] %s", i + '0',current->name);
+        mvwprintw(menu, y + i, 21, "[%c] %s", i + '0', current->name);
 #endif
 
         /* Set unlocked state */
@@ -135,7 +134,7 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
         if (select == 'b') return -1;
         if (select - '0' < 0 || select > MAX_LEVELS) continue;
 #ifndef _DEBUG
-    } while (!unlocked[select - '0']);
+        } while (!unlocked[select - '0']);
 #else
     } while (false);
 #endif
@@ -143,8 +142,8 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     return (int) (select - '0');
 }
 
-void drawInmateSelection (struct Interface *win, struct Map *map) {
-    
+void drawInmateSelection(struct Interface *win, struct Map *map) {
+
 }
 
 void drawLevel(struct Interface *win, struct Map *map) {
@@ -174,7 +173,7 @@ void drawLevel(struct Interface *win, struct Map *map) {
     }
 
     /* creates pause with text output*/
-    mvwprintw (win->body, 7,10,"Placeholder text motherfucker.....");//temp
+    mvwprintw(win->body, 7, 10, "Placeholder text motherfucker.....");//temp
     wrefresh(win->body);
     wrefresh(win->header);
     wrefresh(win->footer);
@@ -182,33 +181,33 @@ void drawLevel(struct Interface *win, struct Map *map) {
 
     /* Draw Footer */
     mvwprintw(win->footer, 1, 1, "INMATES");
-    drawFooterInmates(win,map->inmates);
+    drawFooterInmates(win, map->inmates);
 
     /* Draw the game map */
     for (y = 0; y < MAP_ROWS; y++)
         mvwaddstr(win->body, y, 1, map->overlay[y]);
     wrefresh(win->body);
-        for (y = 0; y < MAX_ROWS; y++) {
+    for (y = 0; y < MAX_ROWS; y++) {
         mvwaddch(win->body, y, 0, ACS_VLINE);
         mvwaddch(win->body, y, MAX_COLS - 1, ACS_VLINE);
     }
 
     /* Draw Queue */
-    mvwaddstr(win->body,4,MAX_COLS-6,"QUEUE");
-    mvwaddch(win->body,5,MAX_COLS-6,ACS_ULCORNER);
-    mvwaddch(win->body,5,MAX_COLS-2,ACS_URCORNER);
-    mvwaddch(win->body,11,MAX_COLS-6,ACS_LLCORNER);
-    mvwaddch(win->body,11,MAX_COLS-2,ACS_LRCORNER);
-    mvwaddch(win->body,6,MAX_COLS-3,'.');
-    for(y=1;y<6;y++)
-        mvwprintw(win->body,5+y,MAX_COLS-5,"%d",y);
-    for (y=0;y <3 ;y++){
-        mvwaddch(win->body,5,MAX_COLS-5+y,ACS_HLINE);
-        mvwaddch(win->body,11,MAX_COLS-5+y,ACS_HLINE);
+    mvwaddstr(win->body, 4, MAX_COLS - 6, "QUEUE");
+    mvwaddch(win->body, 5, MAX_COLS - 6, ACS_ULCORNER);
+    mvwaddch(win->body, 5, MAX_COLS - 2, ACS_URCORNER);
+    mvwaddch(win->body, 11, MAX_COLS - 6, ACS_LLCORNER);
+    mvwaddch(win->body, 11, MAX_COLS - 2, ACS_LRCORNER);
+    mvwaddch(win->body, 6, MAX_COLS - 3, '.');
+    for (y = 1; y < 6; y++)
+        mvwprintw(win->body, 5 + y, MAX_COLS - 5, "%d", y);
+    for (y = 0; y < 3; y++) {
+        mvwaddch(win->body, 5, MAX_COLS - 5 + y, ACS_HLINE);
+        mvwaddch(win->body, 11, MAX_COLS - 5 + y, ACS_HLINE);
     }
-    for(y=0;y<5;y++){
-        mvwaddch(win->body,6+y,MAX_COLS-6,ACS_VLINE);
-        mvwaddch(win->body,6+y,MAX_COLS-2,ACS_VLINE);
+    for (y = 0; y < 5; y++) {
+        mvwaddch(win->body, 6 + y, MAX_COLS - 6, ACS_VLINE);
+        mvwaddch(win->body, 6 + y, MAX_COLS - 2, ACS_VLINE);
     }
     /* Refresh windows */
     wrefresh(win->body);
@@ -220,7 +219,8 @@ void drawLevel(struct Interface *win, struct Map *map) {
     return;
 }
 
-void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition) {
+void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path,
+    int oldPosition) {
     int *currentCoordinates;
     int *newCoordinates;
 
@@ -264,42 +264,42 @@ int *getCoordinate(int position) {
     return coordinates;
 }
 
-void drawFooterInmates(struct Interface * win, char * inmates) {
+void drawFooterInmates(struct Interface *win, char *inmates) {
     char output[100];
-    strcpy(output,"");
+    strcpy(output, "");
     int i;
 
-    for (i=0; i<strlen(inmates)-1;i++) {
+    for (i = 0; i < strlen(inmates) - 1; i++) {
         strcat(output, getInmateName(inmates[i]));
         strcat(output, "\t");
-        if (i==3) {
-            mvwaddstr(win->footer,1,10,output);
-            strcpy(output,"");
-        }       
+        if (i == 3) {
+            mvwaddstr(win->footer, 1, 10, output);
+            strcpy(output, "");
+        }
     }
     mvwaddstr(win->footer, 2, 10, output);
 }
 
-char * getInmateName(char ch) {
+char *getInmateName(char ch) {
     switch (ch) {
         case 'h':
-        return "[h]omeboy(10)";
+            return "[h]omeboy(10)";
         case 'b':
-        return "[b]ruiser(16)";
+            return "[b]ruiser(16)";
         case 'l':
-        return "[l]unatic(16)";            
+            return "[l]unatic(16)";
         case 'f':
-        return "[f]fatty(60)";
+            return "[f]fatty(60)";
         case 's':
-        return "[s]peedy(10)";
+            return "[s]peedy(10)";
         case 'c':
-        return "[c]utie(20)";
+            return "[c]utie(20)";
         case 'a':
-        return "[a]ttorney(30)";
+            return "[a]ttorney(30)";
         case 'd':
-        return "[d]octor(10)";
+            return "[d]octor(10)";
         default:
-        return "FAIL";
+            return "FAIL";
     }
 }
 

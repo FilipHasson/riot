@@ -281,8 +281,10 @@ struct Guard *createGuard(enum GuardType type) {
 
     return unit;
 }
+
 /*Need to pass in interface?*/
-void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, struct Path *path) {
+void runSimulation(struct UnitList *guardList, struct UnitList *inmateList,
+    struct Path *path) {
     struct UnitNode *nextInmate;
     //struct UnitNode *nextGuard;
     int simulate = 0;
@@ -303,32 +305,38 @@ void runSimulation(struct UnitList *guardList, struct UnitList *inmateList, stru
 /*Moves the units through the map and calls 'inmateRedraw to draw/erase the
  units*/
 void inmateMove(struct UnitList *inmateList, struct Path *path) {
-   struct UnitNode *nextInmate;
-   struct TileNode *nextTile;
-   int prevPos;
+    struct UnitNode *nextInmate;
+    struct TileNode *nextTile;
+    int prevPos;
 
-   nextTile = getTile(path);
-   nextInmate = getHead(inmateList);
-   printf("Checking to move units");
-   do {
-       printf("Unit position: %f\n", ((struct Inmate *) nextInmate->unit)->position);
-       prevPos = ((struct Inmate *) nextInmate->unit)->position;
-       printf("PrevPos: %d\n", prevPos);
-       ((struct Inmate *) nextInmate->unit)->position = ((struct Inmate *) nextInmate->unit)->position  + ((struct Inmate *) nextInmate->unit)->speed/8;
-       printf("New Unit Position: %f\n", ((struct Inmate *) nextInmate->unit)->position); 
-       if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1) {
-           printf("Unit Moved");
-           ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *)nextTile)->location;
-           printf("Unit moved position%f\n", ((struct Inmate *) nextInmate->unit)->position);
-       }
-       //inmateRedraw(int previousPosition, int currentPosition, char type),
-       // need this function to draw redraw units onto the screen. UI
-       //source perhaps?
-       // inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
-       //essentially what is going to be called
-       nextInmate = getNext(nextInmate);
+    nextTile = getTile(path);
+    nextInmate = getHead(inmateList);
+    printf("Checking to move units");
+    do {
+        printf("Unit position: %f\n",
+            ((struct Inmate *) nextInmate->unit)->position);
+        prevPos = ((struct Inmate *) nextInmate->unit)->position;
+        printf("PrevPos: %d\n", prevPos);
+        ((struct Inmate *) nextInmate->unit)->position =
+            ((struct Inmate *) nextInmate->unit)->position +
+                ((struct Inmate *) nextInmate->unit)->speed / 8;
+        printf("New Unit Position: %f\n",
+            ((struct Inmate *) nextInmate->unit)->position);
+        if ((int) ((struct Inmate *) nextInmate->unit)->position ==
+            prevPos + 1) {
+            printf("Unit Moved");
+            ((struct Inmate *) nextInmate->unit)->position = ((struct TileNode *) nextTile)->location;
+            printf("Unit moved position%f\n",
+                ((struct Inmate *) nextInmate->unit)->position);
+        }
+        //inmateRedraw(int previousPosition, int currentPosition, char type),
+        // need this function to draw redraw units onto the screen. UI
+        //source perhaps?
+        // inmateRedraw(prevPos,(int)inmate->pos,inmate->type);
+        //essentially what is going to be called
+        nextInmate = getNext(nextInmate);
 
-   } while (getNext(nextInmate) != NULL);
+    } while (getNext(nextInmate) != NULL);
 }
 
 
@@ -406,152 +414,189 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
 }
 
 
-struct Path *getPath(struct Map map){
-	int i,j, position;
-	char mapChar;
-	struct Path *path;
+struct UnitList *getGuardList(struct Map map) {
+    int i, j, position;
+    char mapChar;
+    struct UnitList *guardList;
 
-	path = (struct Path *)malloc(sizeof(struct Path));
-	path->count = 0;
+    guardList = createList();
 
-	for (i=0;i<MAP_ROWS;i++){
-		for (j=0;j<MAP_COLS;j++){
-			position = (i*MAP_COLS)+j;
-			mapChar = map.overlay[i][j];
-			if (isPathCharacter(mapChar) || isalpha(mapChar)){
-				pushToPath(createTileNode(position,map.overlay[i][j]),path);
-			}
-		}
-	}
+    for (i = 0; i < MAP_ROWS; i++) {
+        for (j = 0; j < MAP_COLS; j++) {
+            position = (i * MAP_COLS) + j;
+            mapChar = toupper(map.overlay[i][j]);
+            if (isalpha(mapChar)) {
+                enqueue(guardList, createGuardNode(mapChar, position));
+            }
+        }
+    }
 
-	return path;
-}
-
-struct Path *pathSolve(struct Map map,struct Path *path,int prevChecked[],int count,int currentPosition){
-	int i,j,nextPosition,beingChecked;
-	i = (currentPosition-1)/MAP_COLS;
-	j = currentPosition - (MAP_COLS*i);
-
-	//if (map.overlay[i][j] != '$'){
-		printf("i is: %d",i);
-		printf("j is: %d",j);
-		beingChecked = (i+1)*j;
-		if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i+1][j])){
-			nextPosition = (i*MAP_ROWS)+j;
-			prevChecked[count] = currentPosition;
-			pushToPath(createTileNode(currentPosition,map.overlay[i+1][j]),path);
-			pathSolve(map,path,prevChecked,count+1,nextPosition);
-		}
-		beingChecked = i*(j+1);
-		if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i][j+1])){
-			nextPosition = (i*MAP_ROWS)+j;
-			prevChecked[count] = currentPosition;
-			pushToPath(createTileNode(currentPosition,map.overlay[i][j+1]),path);
-			pathSolve(map,path,prevChecked,count+1,nextPosition);
-		}
-		beingChecked = (i-1)*j;
-		if (i > 0){
-			if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i-1][j])){
-				nextPosition = (i*MAP_ROWS)+j;
-				prevChecked[count] = currentPosition;
-				pushToPath(createTileNode(currentPosition,map.overlay[i-1][j]),path);
-				pathSolve(map,path,prevChecked,count+1,nextPosition);
-			}
-		}
-		beingChecked = i*(j-1);
-		if (j > 0){
-			if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i][j-1])){
-				nextPosition = (i*MAP_ROWS)+j;
-				prevChecked[count] = currentPosition;
-				pushToPath(createTileNode(currentPosition,map.overlay[i][j-1]),path);
-				pathSolve(map,path,prevChecked,count+1,nextPosition);
-			}
-		}
-	//}
-	return path;
-}
-
-bool beenChecked(int prevChecked[],int position){
-	int arrayLength;
-
-	arrayLength = sizeof(prevChecked)/sizeof(int);
-	for (int i=0;i<arrayLength;i++){
-		if (prevChecked[i] == position){
-			return true;
-		}
-	}
-	return false;
-}
-bool isPathCharacter(char tileChar){
-	return (tileChar == '.' || tileChar == '#' || tileChar == '$' || tileChar == '&' || tileChar == '%');
+    return guardList;
 }
 
 
-struct UnitNode * createGuardNode(char type, int position){
-	struct UnitNode * guardNode = NULL;
+struct Path *getPath(struct Map map) {
+    struct Path *path = NULL;
+    int i, j;
+    int count;
+    int position;
+    int prevChecked[MAP_ROWS * MAP_COLS];
 
-	guardNode = (struct UnitNode *)malloc(sizeof(struct UnitNode));
+    for (int i = 0; i < (MAP_ROWS * MAP_COLS); i++) {
+        prevChecked[i] = 0;
+    }
+    path = (struct Path *) malloc(sizeof(struct Path));
+    path->count = 0;
+    for (i = 0; i < MAP_ROWS; i++) {
+        for (j = 0; j < MAP_COLS; j++) {
+            if (map.overlay[i][j] == '$') {
+                printf("FOUND");
+                position = (i * MAP_COLS) + j;
+                count = 0;
+                prevChecked[count] = position;
+                goto outer;
+            }
+        }
+    }
 
-	guardNode->next = NULL;
-	guardNode->unit = createGuard(toupper(type));
-	((struct Guard*)guardNode->unit)->position = position;
+    outer:
+    pathSolve(map, path, prevChecked, count + 1, position);
 
-	return guardNode;
+    return path;
 }
 
-struct TileNode * createTileNode(int location, char type){
-	struct TileNode * tileNode = NULL;
+struct Path *pathSolve(struct Map map, struct Path *path, int prevChecked[],
+    int count, int currentPosition) {
+    int i, j, nextPosition, beingChecked;
 
-	tileNode = (struct TileNode *)malloc(sizeof(struct TileNode));
+    i = (currentPosition - 1) / MAP_COLS;
+    j = currentPosition - (MAP_COLS * i);
 
-	tileNode->next = NULL;
-	tileNode->location = location;
-	tileNode->type = type;
+    beingChecked = ((i + 1) * MAP_COLS) + j;
 
-	return tileNode;
+    if (!beenChecked(prevChecked, beingChecked) &&
+        isPathCharacter(map.overlay[i + 1][j])) {
+        nextPosition = currentPosition + MAP_COLS;
+        prevChecked[count] = currentPosition;
+        pushToPath(createTileNode(currentPosition, map.overlay[i + 1][j]),
+            path);
+        pathSolve(map, path, prevChecked, count + 1, nextPosition);
+    }
+
+    beingChecked = (i * MAP_COLS) + (j + 1);
+
+    if (!beenChecked(prevChecked, beingChecked) &&
+        isPathCharacter(map.overlay[i][j + 1])) {
+        nextPosition = currentPosition + 1;
+        prevChecked[count] = currentPosition;
+        pushToPath(createTileNode(currentPosition, map.overlay[i][j + 1]),
+            path);
+        pathSolve(map, path, prevChecked, count + 1, nextPosition);
+    }
+
+    beingChecked = ((i - 1) * MAP_COLS) + j;
+
+    if (i > 0) {
+        if (!beenChecked(prevChecked, beingChecked) &&
+            isPathCharacter(map.overlay[i - 1][j])) {
+            nextPosition = currentPosition - MAP_COLS;
+            prevChecked[count] = currentPosition;
+            pushToPath(createTileNode(currentPosition, map.overlay[i - 1][j]),
+                path);
+            pathSolve(map, path, prevChecked, count + 1, nextPosition);
+        }
+    }
+
+    beingChecked = (i * MAP_COLS) + (j - 1);
+
+    if (j > 0) {
+        if (!beenChecked(prevChecked, beingChecked) &&
+            isPathCharacter(map.overlay[i][j - 1])) {
+            nextPosition = currentPosition - 1;
+            prevChecked[count] = currentPosition;
+            pushToPath(createTileNode(currentPosition, map.overlay[i][j - 1]),
+                path);
+            pathSolve(map, path, prevChecked, count + 1, nextPosition);
+        }
+    }
+
+    return path;
 }
-void destroyPath(struct Path * path){
-	struct TileNode * nextNode = NULL;
 
-	if (path->count > 0){
-		nextNode = path->first;
-	}
+bool beenChecked(int prevChecked[], int position) {
+    int arrayLength;
 
-	for (int i=0 ;i< path->count;i++){
-		while (nextNode->next != NULL){
-			nextNode = nextNode->next;
-			free(nextNode);
-			path->count--;
-		}	
-	}
-	free(path);
+    arrayLength = MAP_COLS * MAP_ROWS;
+    for (int i = 0; i < arrayLength; i++) {
+        if (prevChecked[i] == position) {
+            return true;
+        }
+    }
+    return false;
 }
-void pushToPath(struct TileNode* insertNode, struct Path* path){
-	struct TileNode * nextNode = NULL;
 
-	if (path->count > 0){
-		nextNode = path->first;
-
-		while (nextNode->next != NULL){
-			nextNode = nextNode->next;
-		}
-
-		nextNode->next = insertNode;
-		path->count++;
-	}
-	else{
-		path->first = insertNode;
-		path->count++;
-	}
+bool isPathCharacter(char tileChar) {
+    return (tileChar == '.' || tileChar == '#' || tileChar == '$' ||
+        tileChar == '&' || tileChar == '%');
 }
-/*struct UnitList *getGuardList(struct Map map){
 
-	for (int i=0 ;i< guardList->count;i++){
-		while (nextNode->next != NULL){
-			nextNode = nextNode->next;
-			free(nextNode);
-			guardList->count--;
-		}	
-	}
-	free(guardList);
-}*/
+
+struct UnitNode *createGuardNode(char type, int position) {
+    struct UnitNode *guardNode = NULL;
+
+    guardNode = (struct UnitNode *) malloc(sizeof(struct UnitNode));
+
+    guardNode->next = NULL;
+    guardNode->unit = createGuard(toupper(type));
+    ((struct Guard *) guardNode->unit)->position = position;
+
+    return guardNode;
+}
+
+struct TileNode *createTileNode(int location, char type) {
+    struct TileNode *tileNode = NULL;
+
+    tileNode = (struct TileNode *) malloc(sizeof(struct TileNode));
+
+    tileNode->next = NULL;
+    tileNode->location = location;
+    tileNode->type = type;
+
+    return tileNode;
+}
+
+void pushToPath(struct TileNode *insertNode, struct Path *path) {
+    struct TileNode *nextNode = NULL;
+
+    if (path->count > 0) {
+        nextNode = path->first;
+
+        while (nextNode->next != NULL) {
+            nextNode = nextNode->next;
+        }
+
+        nextNode->next = insertNode;
+        path->count++;
+    }
+    else {
+        path->first = insertNode;
+        path->count++;
+    }
+}
+
+void destroyPath(struct Path *path) {
+    struct TileNode *nextNode = NULL;
+
+    if (path->count > 0) {
+        nextNode = path->first;
+    }
+
+    for (int i = 0; i < path->count; i++) {
+        while (nextNode->next != NULL) {
+            nextNode = nextNode->next;
+            free(nextNode);
+            path->count--;
+        }
+    }
+    free(path);
+}

@@ -1,4 +1,5 @@
 #include "riotUI.h"
+
 int main(int argc, char **argv) {
     struct MapList *mapList;
     enum GameMode gameMode;
@@ -23,7 +24,7 @@ int main(int argc, char **argv) {
 
             case CONTINUE:
                 levelSelect = menuContinue(&gameInterface, mapList);
-                drawLevel(&gameInterface,  &mapList->level[levelSelect]);
+                drawLevel(&gameInterface, &mapList->level[levelSelect]);
                 break;
 
             default:
