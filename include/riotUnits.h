@@ -97,8 +97,6 @@ PRECONDITIONS: The position is within the size of the list.
 
 POSTCONDITIONS: Will return TRUE is empty, otherwide FALSE.*/
 
-struct TileNode *getTile(struct Path *);
-
 struct UnitNode *getHead(struct UnitList *);/*
 
 DESCRIPTION: getHead() is used to get a pointer to the first UnitNode stored
@@ -130,7 +128,6 @@ ARGUMENTS: The list to be extended and a pointer to the data to be added.
 
 POSTCONDITIONS: Will store either the newly created UnitStore cointaing the
  unit within it's data member or NULL if not possible.*/
-
 
 struct UnitNode *dequeue(struct UnitList *queue);/*
 
@@ -196,7 +193,11 @@ POSTCONDITIONS: Memory is allocated for a new Inmate struct.*/
 
 void runSimulation(struct Interface *win, struct UnitList *guardList, struct UnitList *inmateList, struct Path *path); /*
 
-  DESCRIPTION: -- */
+  DESCRIPTION: Simulates all unit interactions and drawing for a period of time
+  
+  ARGUMENTS: The win interface
+             List of guards and the list of inmates
+             The path of the map*/
 
 
 void inmateMove(struct UnitList *inmateList, struct Path *path);/*
@@ -240,17 +241,17 @@ ARGUMENTS: The path which the tile is being added to
 
 struct Path * getPath(struct Map map);/*
 
-DESCRIPTION: Retreieves infromation from the given map and stores this data into a path structure.
+DESCRIPTION: Retreieves information from the given map and stores this data into a path structure.
              Returns said path structure.
 
 ARGUMENTS: The map that will be parsed.*/
 
 struct UnitList * getGuardList(struct Map map);/*
 
-DESCRIPTION: 
+DESCRIPTION: Retrieves the guard data from the given map and stores the guards into a linked list UnitList structure.
 
-ARGUMENTS: 
-*/
+ARGUMENTS: The map that will be parsed */
+
 bool isPathCharacter(char tileChar);/*
 
 DESCRIPTION: Returns a boolean based on whether the character is a path character. 
