@@ -14,7 +14,10 @@ struct MapList *parseMap(char *loadDir) {
     struct Map *current;
     struct dirent *entry;
 
-    char path[PATH_MAX], line[MAX_COLS];
+    char path[PATH_MAX];
+    char line[MAX_COLS];
+    char *textBox[3];
+    char checkChar;
     bool useCwd = false;
     bool firstRun = true;
 
@@ -44,45 +47,61 @@ struct MapList *parseMap(char *loadDir) {
             if (!(file = fopen(path, "r"))) continue;
             fseek(file, 0, SEEK_END);
             if (ftell(file) < MAP_SIZE) continue;
-
-            /* Determine level number and hidden status from filename*/
+            rewind(file);
+            /* Determine level number from filename*/
             if (entry->d_name[0] == '.') {
                 current = &mapList->level[entry->d_name[1] - '0'];
                 current->levelNo = entry->d_name[1] - '0';
-                current->hidden = false;
             } else {
                 current = &mapList->level[entry->d_name[0] - '0'];
                 current->levelNo = entry->d_name[0] - '0';
-                current->hidden = true;
             }
 
             /* Assign beaten status */
             current->beaten = false;
 
-            /* Determine level name*/
-            rewind(file);
+            /* Get level name */
             fgets(line, MAX_COLS, file);
-            strncpy(current->name, strtok(line, DELIMITER), LINE_MAX);
+            strtok(line, "]");
+            strcpy(current->name, strtok(NULL, "\n"));
 
-            /* Determine starting rep */
-            current->repMax = atoi(strtok(NULL, DELIMITER));
+            /* Get rep */
+            fgets(line, MAX_COLS, file);
+            strtok(line, "]");
+            current->repMax = atoi(strtok(NULL, "\n"));
 
-            /* Determine panic threshold */
-            current->panicMax = atoi(strtok(NULL, DELIMITER));
+            /* Get panic */
+            fgets(line, MAX_COLS, file);
+            strtok(line, "]");
+            current->panicMax = atoi(strtok(NULL, "\n"));
 
-            /* Determine level inmates*/
-            strncpy(current->inmates, strtok(NULL, "\n"), INMATE_TYPES);
+            /* Get units */
+            fgets(line, MAX_COLS, file);
+            strtok(line, "]");
+            strcpy(current->inmates, strtok(NULL, "\n"));
 
-            /* Copy map elements to array */
-            rewind(file);
-            while (fgetc(file) != '\n');
-            while (fgetc(file) != '\n');
-//            fseek(file, 1, SEEK_CUR);
-            for (y = 0; y < MAP_ROWS; y++) {
-                fseek(file, 7, SEEK_CUR);
-                for (x = 0; x < MAP_COLS - 1; x++)
-                    current->overlay[y][x] = fgetc(file);
-                fseek(file, 3, SEEK_CUR);
+            /* Get map */
+            while((fgetc(file)=='>'));
+            for(y=0;y<MAP_ROWS;y++) {
+                fgets(current->overlay[y], MAP_COLS, file);
+                fseek(file,2,SEEK_CUR);
+            }
+
+            /* Get text boxes*/
+            textBox[0] = current->textIntro;
+            textBox[1] = current->textWin;
+            textBox[2] = current->textLose;
+
+            for (int i = 0; i < 3; i++) {
+                x = 0;
+                do checkChar = fgetc(file); while (checkChar == '>');
+                if (checkChar == '\0') strcpy(textBox[i], "");
+                else while ((checkChar = fgetc(file)) != '>') {
+                    if (checkChar == '\n')textBox[i][x++] = ' ';
+                    else textBox[i][x++] = checkChar;
+                }
+                printf("%s\n",textBox[i]);
+
             }
 
             fclose(file);

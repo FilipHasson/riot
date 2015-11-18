@@ -111,16 +111,10 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     for (int i = 1; i < mapList->count; i++) {
         current = &mapList->level[i];
         last = &mapList->level[i - 1];
-#ifndef _DEBUG
-        if (!current->hidden) {
-            mvwprintw(menu, y + i, 21, "[%c] %s",
-                last->beaten ? i + '0' : '-', current->name);
-        } else if (current->hidden && last->beaten) {
+        if (last->beaten) {
             mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
         } else y--;
-#else
-        mvwprintw(menu, y + i, 21, "[%c] %s", i + '0', current->name);
-#endif
+
 
         /* Set unlocked state */
         unlocked[i] = current->beaten;
@@ -133,13 +127,10 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
         select = (char) wgetch(menu);
         if (select == 'b') return -1;
         if (select - '0' < 0 || select > MAX_LEVELS) continue;
-#ifndef _DEBUG
-        } while (!unlocked[select - '0']);
-#else
-    } while (false);
-#endif
+    } while (!unlocked[select - '0']);
 
-    return (int) (select - '0');
+
+    return (select - '0');
 }
 
 void drawInmateSelection(struct Interface *win, struct Map *map) {

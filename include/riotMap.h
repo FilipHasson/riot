@@ -7,9 +7,8 @@
 #define LINE_MAX 72
 #define MAP_SIZE 1545
 #define MAX_LEVELS 10
+#define MAX_TEXT 500
 #define INMATE_TYPES 10
-#define DELIMITER ";"
-#define TEXT_OFFSET 7
 #define REGEX_EXT "(\\.)?[0-9](.riot)$"
 
 
@@ -22,10 +21,12 @@ struct Map {/*
 
     char name[LINE_MAX];
     int levelNo;
-    bool hidden;
     bool beaten;
-    char overlay[MAP_ROWS][MAP_COLS]; //walls, scenery, etc.
+    char overlay[MAP_ROWS][MAP_COLS+1]; //+1 for null char
     char inmates[INMATE_TYPES];
+    char textIntro[MAX_TEXT];
+    char textWin[MAX_TEXT];
+    char textLose[MAX_TEXT];
     int panicMax;
     int repMax;
 };

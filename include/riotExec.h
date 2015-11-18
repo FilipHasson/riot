@@ -12,7 +12,7 @@
 #define MAX_COLS 80
 #define MAX_ROWS 24
 #define MAP_COLS 72
-#define MAP_ROWS 16
+#define MAP_ROWS 15
 #define HEADER 3
 #define FOOTER 4
 #define MAIN 17
@@ -41,7 +41,7 @@ enum GuardType {/*
 
  GuardType provides a mnemonic for guard unit types.*/
 
-        GUARD = 'G',
+    GUARD = 'G',
     DOGS = 'D',
     LUNCH = 'L', //lunch lady
     PSYCH = 'P', //psychiatrist
