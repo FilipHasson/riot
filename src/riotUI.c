@@ -455,7 +455,7 @@ int *getCoordinate(int position) {
     static int coordinates[2];
 
     coordinates[0] = ((position - 1) / MAP_COLS);    //Gives you the row, where the lowest row is 0
-    coordinates[1] = (position - (coordinates[0] * MAP_COLS))+1;      //Gives you x
+    coordinates[1] = (position - (coordinates[0] * MAP_COLS))-1;      //Gives you x
 
     return coordinates;
 }
