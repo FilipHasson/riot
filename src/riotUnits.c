@@ -305,7 +305,7 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
     while (simulateTime < 30) {
 
     	nextInmate = getHead(inmateList);
-    	for (int i=0;i<inmateList->count-1;i++){
+    	for (int i=0;i<inmateList->count;i++){
             prevPos[i] = ((struct Inmate*)nextInmate->unit)->position;
             nextInmate = nextInmate->next;
         }
@@ -320,10 +320,9 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
       	    writeToFile(printstring);
             nextInmate = nextInmate->next;
         }
+        simulateTime += .25;
         wrefresh(gameInterface->body);
-        simulateTime += 1;
-        sleep(1);
-
+        usleep(25000);
     }
 }
 
