@@ -191,14 +191,14 @@ struct Inmate *createInmate(enum InmateType type) {
 
         case ATTORNEY:
             unit->currentHealth = unit->maxHealth = 30;
-            unit->speed = 5;
+            unit->speed = 4;
             unit->rep = 30;
             unit->panic = 2;
             break;
 
         case DOCTOR:
             unit->currentHealth = unit->maxHealth = 10;
-            unit->speed = 5;
+            unit->speed = 4;
             unit->rep = 40;
             unit->panic = 2;
             break;
@@ -323,7 +323,7 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
         ((struct Inmate *) nextInmate->unit)->position +
         (float)((struct Inmate *) nextInmate->unit)->speed / 8;
         printf("Temp Unit Position: %f\n---\n", ((struct Inmate *) nextInmate->unit)->position);
-        if ((int) ((struct Inmate *) nextInmate->unit)->position == prevPos + 1) {
+        if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 && nextTile->next->type == '.') {
             printf("Unit Moved\n");
             ((struct Inmate *) nextInmate->unit)->position = nextTile->next->location;
             printf("Unit moved to new Tile Position%f\n----END\n",
