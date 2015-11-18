@@ -2,6 +2,13 @@
 #include <unistd.h>
 #include "riotUnits.h"
 #include "riotUI.h"
+
+static void writeToFile(char *message){
+	FILE * file = fopen("/assets/test.txt","w");
+
+	fprintf(file,"%s\n",message);
+}
+
 struct UnitList *createList(void) {
 
     struct UnitList *newList = malloc(sizeof(struct UnitList));
@@ -306,7 +313,7 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
 
        // inmateMove(inmateList, path);
         guardAttack(guardList, inmateList);
-        
+
         nextInmate = getHead(inmateList);
         for (int i=0;i<inmateList->count-1;i++){
             //redrawUnit(gameInterface,(struct Inmate*)nextInmate->unit,path,prevPos[i]);
