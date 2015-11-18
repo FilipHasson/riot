@@ -2,7 +2,7 @@
 
 CC      = gcc
 CFLAGS  = -Wall -std=c99 -pedantic -g
-LDFLAGS = -lncurses
+LDFLAGS = -lcursesw
 INCLUDES = -Iinclude
 
 BINDIR   = bin

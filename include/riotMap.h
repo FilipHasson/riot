@@ -2,6 +2,8 @@
 #define RIOT_MAP
 
 #include "riotExec.h"
+#include <locale.h>
+#include <wchar.h>
 
 #define PATH_MAX 4096
 #define LINE_MAX 72
@@ -22,7 +24,7 @@ struct Map {/*
     char name[LINE_MAX];
     int levelNo;
     bool beaten;
-    char overlay[MAP_ROWS][MAP_COLS+1]; //+1 for null char
+    wchar_t overlay[MAP_ROWS][MAP_COLS+1]; //+1 for null char
     char inmates[INMATE_TYPES];
     char textIntro[MAX_TEXT];
     char textWin[MAX_TEXT];

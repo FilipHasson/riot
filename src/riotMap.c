@@ -23,6 +23,8 @@ struct MapList *parseMap(char *loadDir) {
 
     int x, y;
 
+    setlocale(LC_ALL, "");
+
     /* Compile regex */
     regcomp(&riotExt, REGEX_EXT, REG_NOSUB | REG_EXTENDED);
 
@@ -83,7 +85,7 @@ struct MapList *parseMap(char *loadDir) {
             /* Get map */
             while((fgetc(file)=='>'));
             for(y=0;y<MAP_ROWS;y++) {
-                fgets(current->overlay[y], MAP_COLS, file);
+                fgets(current->overlay[y], MAP_COLS*2, file);
                 fseek(file,2,SEEK_CUR);
             }
 
