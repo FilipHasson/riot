@@ -12,6 +12,9 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
         case INIT:
             initscr();
             start_color();
+            init_pair(1,COLOR_WHITE,COLOR_BLACK);
+            wbkgd (win->body,COLOR_PAIR (1));
+
             noecho(); // hide keypresses
             curs_set(FALSE); // hide cursor
 
@@ -89,6 +92,57 @@ enum GameMode menuMain(struct Interface *gameInterface) {
     return gameMode;
 }
 
+/*
+int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
+    WINDOW *menu = gameInterface->menu;
+    struct Map *current, *last;
+    int select;
+    int y = 3;
+    bool unlocked[MAX_LEVELS];
+
+    wclear(menu);
+    box(menu, 0, 0);
+
+    mvwaddstr(menu, y, 21, "LEVEL SELECT");
+    mvwhline(menu, y += 2, 21, ACS_HLINE, 37);
+    y += 2;
+
+    mvwprintw(menu, y, 21, "[0] %s", mapList->level[0].name);
+    unlocked[0] = true;
+
+    for (int i = 1; i < mapList->count; i++) {
+        current = &mapList->level[i];
+        last = &mapList->level[i - 1];
+
+#ifndef _DEBUG
+        if (last->beaten) {
+#endif
+
+        mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
+
+#ifndef _DEBUG
+        } else y--;
+#endif
+
+        unlocked[i] = current->beaten;
+    }
+    mvwaddstr(menu, MAX_ROWS - 4, 21, "[b]ack");
+    wrefresh(menu);
+
+    do {
+        select = (char) wgetch(menu);
+        if (select == 'b') return -1;
+        if (select - '0' < 0 || select > MAX_LEVELS) continue;
+
+#ifndef _DEBUG
+    } while (false);
+#else
+    } while (!unlocked[select - '0']);
+#endif
+
+    return (select - '0');
+}
+*/
 
 int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     WINDOW *menu = gameInterface->menu;
@@ -113,17 +167,18 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     for (int i = 1; i < mapList->count; i++) {
         current = &mapList->level[i];
         last = &mapList->level[i - 1];
-
 #ifndef _DEBUG
-        if (last->beaten) {
-#endif
-
-        mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
-
-#ifndef _DEBUG
+        if (!current->hidden) {
+            mvwprintw(menu, y + i, 21, "[%c] %s",
+                last->beaten ? i + '0' : '-', current->name);
+        } else if (current->hidden && last->beaten) {
+            mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
         } else y--;
+#else
+        mvwprintw(menu, y + i, 21, "[%c] %s", i + '0', current->name);
 #endif
 
+        /* Set unlocked state */
         unlocked[i] = current->beaten;
     }
     mvwaddstr(menu, MAX_ROWS - 4, 21, "[b]ack");
@@ -134,14 +189,13 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
         select = (char) wgetch(menu);
         if (select == 'b') return -1;
         if (select - '0' < 0 || select > MAX_LEVELS) continue;
-
 #ifndef _DEBUG
-    } while (false);
+        } while (!unlocked[select - '0']);
 #else
-    } while (!unlocked[select - '0']);
+    } while (false);
 #endif
 
-    return (select - '0');
+    return (int) (select - '0');
 }
 
 void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList *inmates, struct UnitList *guards) {
@@ -397,65 +451,59 @@ void drawLevel(struct Interface *win, struct Map *map, struct UnitList *guards){
     drawMap(win->body,map);
     drawGuards(win->body,map,guards);
     drawQueue(win->body);
-    wrefresh(win->body);
     return;
 }
 
-void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path, int oldPosition) {
+void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path, float oldPosition) {
     int *currentCoordinates = malloc(sizeof(int)*2);
     int *newCoordinates = malloc(sizeof(int)*2);
     float hp, mhp, php;
-
+    int setColor=GREEN;
     hp = (float)inmate->currentHealth;
     mhp = (float)inmate->maxHealth;
     php = (hp/mhp)*100;
-
+    struct TileNode *tNode= path->first;
+    char type = tNode->type;
     init_pair(1,COLOR_WHITE, COLOR_BLACK);
     init_pair(GREEN, GREEN, COLOR_BLACK);
     init_pair(YELLOW, YELLOW, COLOR_BLACK);
     init_pair(RED, RED, COLOR_BLACK);
     init_pair(PURPLE, PURPLE, COLOR_BLACK);
 
-    currentCoordinates = getCoordinate(oldPosition);
-    mvwaddch(body, currentCoordinates[0], currentCoordinates[1], '.');
-    mvwprintw (body, 0, 1, "%d %d",newCoordinates[0],newCoordinates[1]);
+    while(oldPosition < ((float)tNode->location)){
+        tNode = tNode->next;
+    }
+    type = tNode->type;
 
-    if (php > 75){
-        attron (COLOR_PAIR (GREEN));
-    } else if (php >50){
-        attron (COLOR_PAIR (YELLOW));
-    } else if (php >25){
-        attron (COLOR_PAIR (RED));
+    wbkgd(body,COLOR_PAIR(1));
+
+    if (php > 75.0){
+        setColor=GREEN;
+    } else if (php >50.0){
+        setColor=YELLOW;
+    } else if (php >25.0){
+        setColor=RED;
     } else{
-        attron (COLOR_PAIR (PURPLE));
+        setColor=PURPLE;
     }
 
+    mvwprintw (body, 0, 1, "%d %d %f %f, %d, %d, %f, %f",newCoordinates[0],newCoordinates[1],inmate->position,php,inmate->currentHealth,inmate->maxHealth,hp,mhp);
+        wbkgd(body,COLOR_PAIR(1));
+
+    currentCoordinates = getCoordinate(oldPosition);
+    mvwaddch(body, currentCoordinates[0], currentCoordinates[1], type);
     newCoordinates = getCoordinate(inmate->position);
+    wbkgd(body,COLOR_PAIR(setColor));
     mvwaddch(body, newCoordinates[0], newCoordinates[1], inmate->type);
-    wrefresh(body);
-    attron (COLOR_PAIR (1));
-
-
+    wbkgd (body,COLOR_PAIR (1));
 }
 
-
-void eraseUnit(struct Interface *win, int position) {
-    int *coordinates;
-    coordinates = getCoordinate(position);
-    mvwaddch(win->body, coordinates[0], coordinates[1], '.');
-}
-
-void drawTile(struct Interface *win, char type, int position) {
-    int *coordinates;
-    coordinates = getCoordinate(position);
-    mvwaddch(win->body, coordinates[0], coordinates[1], type);
-}
 
 int *getCoordinate(int position) {
     static int coordinates[2];
 
     coordinates[0] = ((position - 1) / MAP_COLS);    //Gives you the row, where the lowest row is 0
-    coordinates[1] = (position - (coordinates[0] * MAP_COLS))-1;      //Gives you x
+    coordinates[1] = (position - (coordinates[0] * MAP_COLS))+1;      //Gives you x
 
     return coordinates;
 }

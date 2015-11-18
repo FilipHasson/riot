@@ -316,8 +316,9 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
         nextInmate = getHead(inmateList);
         for (int i=0;i<inmateList->count;i++){
             redrawUnit(gameInterface->body,(struct Inmate*)nextInmate->unit,path,prevPos[i]);
+            /*
             sprintf(printstring, "position %f", ((struct Inmate*)nextInmate->unit)->position);
-      	    writeToFile(printstring);
+      	    writeToFile(printstring);*/
             nextInmate = nextInmate->next;
         }
         simulateTime += .25;
@@ -347,9 +348,9 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
         ((struct Inmate *) nextInmate->unit)->position =
         ((struct Inmate *) nextInmate->unit)->position +
         (float)((struct Inmate *) nextInmate->unit)->speed / 8;
-        if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 && nextTile->next->type == '.') {
+        if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 /*&& nextTile->next->type == '.'*/) {
             ((struct Inmate *) nextInmate->unit)->position = nextTile->next->location;
-        } else if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos - 1 && nextTile->next->type == '&') {
+        } else if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 && nextTile->next->type == '&') {
         	((struct Inmate *) nextInmate->unit)->delUnit = TRUE;
         }
         nextInmate = getNext(nextInmate);
@@ -376,9 +377,7 @@ void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
 
 
 void dealDamage(struct UnitNode *inmateNode, struct UnitNode *guardNode) {
-    ((struct Inmate *) inmateNode->unit)->currentHealth =
-        ((struct Inmate *) inmateNode->unit)->currentHealth -
-            ((struct Guard *) guardNode->unit)->damage;
+    ((struct Inmate *) inmateNode->unit)->currentHealth =((struct Inmate *) inmateNode->unit)->currentHealth -((struct Guard *) guardNode->unit)->damage;
 }
 
 
@@ -499,7 +498,7 @@ struct Path *pathSolve(struct Map map,struct Path *path,int prevChecked[],int co
         if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i][j-1])){
             nextPosition = currentPosition - 1;
             prevChecked[count] = currentPosition;
-            pushToPath(createTileNode(currentPosition,map.overlay[i][j-1]),path);
+            pushToPath(createTileNode(currentPosition,map.overlay[i][j]),path);
             pathSolve(map,path,prevChecked,count+1,nextPosition);
         }
     }

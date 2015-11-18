@@ -101,7 +101,7 @@ on the side of the body window
 
 ARGUMENTS: The body window*/
 
-void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path, int oldPosition);
+void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path, float oldPosition);
 /*
 
 DESCRIPTION: Function to redraw units on the screen
@@ -109,15 +109,6 @@ DESCRIPTION: Function to redraw units on the screen
 ARGUMENTS: A pointer to the interface window, unit to be drawn, integer health value, curreent position and position to be mmoved to
 
 POSTCONDITION: Ensures that the unit given is drawn at the given newPostiion*/
-
-
-void drawUnit(struct Interface * win, char unitType,int health, int position);/*
-
-DESCRIPTION: Draws a unit to a given position on the screen
-
-ARGUMENTS: A pointer to the interface window, unit to be drawn, integer health value, integer value to draw at
-
-POSTCONDITION:*/
 
 
 void eraseUnit(struct Interface * win, int position);/*
