@@ -305,10 +305,10 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
     struct TileNode *nextTile;
     int prevPos;
 
-    nextTile = path->first;
     nextInmate = getHead(inmateList);
     printf("Checking to move units\n");
     do {
+    nextTile = path->first;
         for (int i = 0; i < path->count; i++) {
             if (nextTile->location == (int)((struct Inmate *) nextInmate->unit)->position) {
                 break;

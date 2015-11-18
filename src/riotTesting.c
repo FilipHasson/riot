@@ -8,7 +8,7 @@ static void printPath(struct Path *path) {
     nextNode = path->first;
     printf("\n\n#### PRINTING PATH ####\n\n");
     for (int i = 0; i < path->count; i++) {
-        printf("Location: %d\n", nextNode->location);
+        printf("Location: %d :", nextNode->location);
         printf("Type: %c\n", nextNode->type);
         nextNode = nextNode->next;
     }
