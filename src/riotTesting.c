@@ -18,19 +18,6 @@ void play(struct Interface gameInterface,struct Map map){
 
 }
 
-static void printPath(struct Path *path) {
-    struct TileNode *nextNode;
-
-    nextNode = path->first;
-    printf("\n\n#### PRINTING PATH ####\n\n");
-    for (int i = 0; i < path->count; i++) {
-        printf("Location: %d :", nextNode->location);
-        printf("Type: %c\n", nextNode->type);
-        nextNode = nextNode->next;
-    }
-    printf("\n########################\n");
-}
-
 static void printGuardList(struct UnitList *guardList) {
     struct UnitNode *nextNode;
     struct Guard *guard;
@@ -101,40 +88,47 @@ int main(int argc, char **argv) {
 
 void unitsMove(char *loadDir) {
     struct UnitList *inmates;
+    struct UnitList *guards;
     struct Inmate *inmateUnit;
     struct MapList *testList = parseMap(loadDir);
     struct Map *current;
     struct Path *path;
+    struct Interface gameInterface;
+    enum GameMode gameMode;
     printf("Riot Levels Found %d:\n\n", testList->count);
-    inmates = createList();
+    uiSet(INIT, &gameInterface);
+    uiSet(NEW, &gameInterface);
 
+    inmates = createList();
+    guards = createList();
     current = &testList->level[0];
     path = getPath(*current);
     printf("LEVEL %d: \n\n", 0);
 
-    for (int j = 0; j < MAP_ROWS; j++) {
+    /*for (int j = 0; j < MAP_ROWS; j++) {
         printf("%s\n", current->overlay[j]);
-    }
+    }*/
 
-    printPath(path);
+    /*printPath(path);*/
 
     inmateUnit = createInmate(HOMEBOY);
     inmateUnit->position = 693;
     enqueue(inmates, inmateUnit);
-    printf("Adding an inmate to the list (%d)\n", inmates->count);
-    printf("Inmate position is: %f\n-----\n", inmateUnit->position);
+    /*printf("Adding an inmate to the list (%d)\n", inmates->count);
+    printf("Inmate position is: %f\n-----\n", inmateUnit->position);*/
 
-    for (int i = 0; i < 20; ++i) {
-        /* code */
+    /*for (int i = 0; i < 20; ++i) {
+         code 
         inmateMove(inmates, path);
-    }
-    putchar('\n');
+    }*/
+    runSimulation(&gameInterface,guards, inmates, path);
+    //putchar('\n');
 
     while (inmates->count) {
-        printf("Removing units (%d)\n", inmates->count);
+        //printf("Removing units (%d)\n", inmates->count);
         rmUnit(dequeue(inmates));
     }
-    putchar('\n');
+    //putchar('\n');
 
     destroyList(inmates);
 }

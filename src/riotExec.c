@@ -36,17 +36,23 @@ int main(int argc, char **argv) {
 void play(struct Interface gameInterface,struct Map map){
     struct UnitList *inmates;
     struct UnitList *guards;
+    struct UnitNode *nextInmate;
     struct Path *path;
+    char printstring[100];
 
     inmates = createList();
+    guards = getGuardList(map);
+    path = getPath(map);
 
     drawIntroText(&gameInterface, &map);
-    guards = getGuardList(map);
-    drawInmateSelection(&gameInterface,&map, inmates, guards);
+    drawInmateSelection(&gameInterface,&map, inmates);
 
-//    path = getPath(map);
-//    runSimulation(&gameInterface, guards,inmates,path);
-
+    nextInmate = getHead(inmates);
+    for (int i=0;i<inmates->count;i++){
+        ((struct Inmate*)nextInmate->unit)->position = path->first->location;
+        nextInmate = nextInmate->next;
+    }
+    runSimulation(&gameInterface, guards,inmates,path);
 }
 
 void quit(char *message) {
