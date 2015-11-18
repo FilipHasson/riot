@@ -279,7 +279,7 @@ struct Guard *createGuard(enum GuardType type) {
 }
 
 /*Need to pass in interface?*/
-void runSimulation(struct UnitList *guardList, struct UnitList *inmateList,
+void runSimulation(struct Interface *win, struct UnitList *guardList, struct UnitList *inmateList,
     struct Path *path) {
     struct UnitNode *nextInmate;
     //struct UnitNode *nextGuard;

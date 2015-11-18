@@ -160,6 +160,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         mvwprintw(win->footer, 0, 40, "HOMEBOY ADDED");
                         map->repMax -= 10;
                         inmate = createInmate(input);
+                        enqueue(inmates,inmate);
                     } 
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -170,6 +171,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         mvwprintw(win->footer, 0, 40, "BRUISER ADDED");
                         inmate = createInmate(input);
                         map->repMax-=16;
+                        enqueue(inmates,inmate);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -180,6 +182,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         mvwprintw(win->footer, 0, 40, "LUNATIC ADDED");
                         inmate = createInmate(input);
                         map->repMax-=16;
+                        enqueue(inmates,inmate);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -190,6 +193,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         mvwprintw(win->footer, 0, 40, "FATTY ADDED");
                         inmate = createInmate(input);
                         map->repMax-=60;
+                        enqueue(inmates,inmate);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -200,6 +204,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         mvwprintw(win->footer, 0, 40, "SPEEDY ADDED");
                         inmate = createInmate(input);
                         map->repMax-=10;
+                        enqueue(inmates,inmate);
                     }
                     break;
                 case 'c':
@@ -207,6 +212,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         mvwprintw(win->footer, 0, 40, "CUTIE ADDED");
                         inmate = createInmate(input);
                         map->repMax-=20;
+                        enqueue(inmates,inmate);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -217,6 +223,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         mvwprintw(win->footer, 0, 40, "ATTORNEY ADDED");
                         inmate = createInmate(input);
                         map->repMax-=30;
+                        enqueue(inmates,inmate);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -227,6 +234,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         mvwprintw(win->footer, 0, 40, "DOCTOR ADDED");
                         inmate = createInmate(input);
                         map->repMax-=10;
+                        enqueue(inmates,inmate);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -238,19 +246,18 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
             if (map->repMax < 10) {
                 mvwprintw(win->footer, 0, 20, "INSUFICIENT FUNDS");
                 wrefresh(win->footer);
-                wgetch(win->body);
+                wgetch(win->body); 
                 break;
             }
             wrefresh(win->footer);
             for (y=40; y<MAX_COLS-5;y++){
                mvwaddch(win->footer, 0,y,ACS_HLINE);
         }
+        updateQueue(win->body,inmates);
     } while (input != '\n');
-
     wclear(win->header);
     wclear(win->body);
     wclear(win->footer);
-        
 }
 
 void updateHeader (WINDOW *header, struct Map *map){
@@ -312,7 +319,11 @@ void drawQueue (WINDOW *body){
 }
 
 void updateQueue (WINDOW *body, struct UnitList *list){
-    //Need to DO
+    int l = getLength(list);
+    int y;
+    for (y=0; y < l; y++){
+   //     mvwaddch(body, 6+y, MAX_COLS - 3, list->)
+    }
     wrefresh(body);
 }
 

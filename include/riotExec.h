@@ -19,6 +19,14 @@
 
 
 /* Data Types */
+struct Interface {
+    WINDOW *menu;
+    WINDOW *body;
+    WINDOW *header;
+    WINDOW *footer;
+};
+
+
 
 enum InmateType {/*
 
