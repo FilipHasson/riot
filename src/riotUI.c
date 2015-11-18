@@ -88,7 +88,6 @@ enum GameMode menuMain(struct Interface *gameInterface) {
 
 
 int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
-
     WINDOW *menu = gameInterface->menu;
     struct Map *current, *last;
     int select;
@@ -142,131 +141,111 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     return (int) (select - '0');
 }
 
-void drawInmateSelection(struct Interface *win, struct Map *map) {
-    int y, i;
-    int rep = map->panicMax;
+void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList *inmates) {
     struct Inmate * inmate;
     char input;
+    int y;
 
+    mvwprintw(win->body, MAP_ROWS, 3, "Press the corresponding letter to buy inmate");
+    mvwprintw(win->footer, 0, 3, "Press \"Enter\" to play:");
+    drawLevel (win, map);
+    wrefresh(win->footer);
     do {
-        drawBorders(win);
-        
-        mvwprintw(win->header, 1, MAX_COLS - 11, "Rep:%d",
-            rep);
-        mvwprintw(win->header, 1, 1, "Level %d: %s", map->levelNo,
-            map->name); // Display Level
-        mvwprintw(win->header, 1, MAX_COLS - 24, "Panic:%d%%",
-            map->panicMax); // Display Panic
-
-        mvwprintw(win->body, 1, MAX_COLS/2-9, "Inmate Selection");
-        mvwhline(win->body, 2, MAX_COLS/2-10, '-', 18);
-
-        y=4;
-        for (i=0; i<strlen(map->inmates); i++) {
-            mvwprintw(win->body, y, 30, "%s", getInmateName(map->inmates[i]));
-            y++;
-        }
-
-        mvwprintw(win->footer, 1, 1, "\t\tPress the corresponding letter to buy inmate");
-        mvwprintw(win->footer, 2, 1, "\t\tPress \"Enter\" to continue");
-
+        updateHeader(win->header,map);
         wrefresh(win->header);
-        wrefresh(win->footer);
-        wrefresh(win->body);
-
         input = wgetch(win->body);
-        wclear(win->body);
-
             switch (input) {
                 case 'h':
-                    if (rep >= 10) {
-                        mvwprintw(win->body, 15, 30, "HOMEBOY ADDED");
-                        rep-=10;
+                    if (map->repMax >= 10) {
+                        mvwprintw(win->footer, 0, 40, "HOMEBOY ADDED");
+                        map->repMax -= 10;
                         inmate = createInmate(input);
                     } 
                     else {
-                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                        mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
                     }     
                     break;
                 case 'b':
-                    if (rep >= 16) {
-                        mvwprintw(win->body, 15, 30, "BRUISER ADDED");
+                    if (map->repMax >= 16) {
+                        mvwprintw(win->footer, 0, 40, "BRUISER ADDED");
                         inmate = createInmate(input);
-                        rep-=16;
+                        map->repMax-=16;
                     }
                     else {
-                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                        mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
                     }   
                     break;
                 case 'l':
-                    if (rep >= 16) {
-                        mvwprintw(win->body, 15, 30, "LUNATIC ADDED");
+                    if (map->repMax >= 16) {
+                        mvwprintw(win->footer, 0, 40, "LUNATIC ADDED");
                         inmate = createInmate(input);
-                        rep-=16;
+                        map->repMax-=16;
                     }
                     else {
-                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                        mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
                     }   
                     break;
                 case 'f':
-                    if (rep >= 60) {
-                        mvwprintw(win->body, 15, 30, "FATTY ADDED");
+                    if (map->repMax >= 60) {
+                        mvwprintw(win->footer, 0, 40, "FATTY ADDED");
                         inmate = createInmate(input);
-                        rep-=60;
+                        map->repMax-=60;
                     }
                     else {
-                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                        mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
                     }   
                     break;
                 case 's':
-                    if (rep >= 10) {
-                        mvwprintw(win->body, 15, 30, "SPEEDY ADDED");
+                    if (map->repMax >= 10) {
+                        mvwprintw(win->footer, 0, 40, "SPEEDY ADDED");
                         inmate = createInmate(input);
-                        rep-=10;
+                        map->repMax-=10;
                     }
                     break;
                 case 'c':
-                    if (rep >= 20) {
-                        mvwprintw(win->body, 15, 30, "CUTIE ADDED");
+                    if (map->repMax >= 20) {
+                        mvwprintw(win->footer, 0, 40, "CUTIE ADDED");
                         inmate = createInmate(input);
-                        rep-=20;
+                        map->repMax-=20;
                     }
                     else {
-                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                        mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
                     }   
                     break;
                 case 'a':
-                    if (rep >= 30) {
-                        mvwprintw(win->body, 15, 30, "ATTORNEY ADDED");
+                    if (map->repMax >= 30) {
+                        mvwprintw(win->footer, 0, 40, "ATTORNEY ADDED");
                         inmate = createInmate(input);
-                        rep-=30;
+                        map->repMax-=30;
                     }
                     else {
-                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                        mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
                     }   
                     break;
                 case 'd':
-                    if (rep >= 10) {
-                        mvwprintw(win->body, 15, 30, "DOCTOR ADDED");
+                    if (map->repMax >= 10) {
+                        mvwprintw(win->footer, 0, 40, "DOCTOR ADDED");
                         inmate = createInmate(input);
-                        rep-=10;
+                        map->repMax-=10;
                     }
                     else {
-                        mvwprintw(win->body, 15, 30, "INSUFICIENT FUNDS");
+                        mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
                     }              
                     break;
                 default:
-                    mvwprintw(win->body, 15, 30, "INMATE NOT FOUND");
+                    mvwprintw(win->footer, 0, 40, "INMATE NOT FOUND");
             }       
-            if (rep == 0) {
-                wclear(win->body);
-                drawBorders(win);
-                mvwprintw(win->body, 4, 20, "0 REP, PRESS ANY KEY TO CONTINUE");
+            if (map->repMax < 10) {
+                mvwprintw(win->footer, 0, 20, "INSUFICIENT FUNDS");
+                wrefresh(win->footer);
                 wgetch(win->body);
                 break;
             }
+            wrefresh(win->footer);
+            for (y=40; y<MAX_COLS-5;y++){
+               mvwaddch(win->footer, 0,y,ACS_HLINE);
+        }
     } while (input != '\n');
-    
 
     wclear(win->header);
     wclear(win->body);
@@ -274,75 +253,85 @@ void drawInmateSelection(struct Interface *win, struct Map *map) {
         
 }
 
-void drawLevel(struct Interface *win, struct Map *map) {
+void updateHeader (WINDOW *header, struct Map *map){
+    wclear(header);
+    box(header, 0, 0);
+    mvwprintw(header, 1, 1, "Level %d: %s", map->levelNo,
+        map->name); // Display Level
+    mvwprintw(header, 1, MAX_COLS - 24, "Panic:%d%%",
+        map->panicMax); // Display Panic
+    mvwprintw(header, 1, MAX_COLS - 11, "Rep:%d",
+        map->repMax); // Display Rep
+    mvwaddstr(header, 0, 1, "riot");
+    mvwaddch (header, 2, 0, ACS_LTEE);
+    mvwaddch (header, 2, MAX_COLS - 1, ACS_RTEE);
+}
+
+void startHeadFoot(struct Interface *win, struct Map *map){
     int y;
 
-    /* Draw Header */
-    mvwprintw(win->header, 1, 1, "Level %d: %s", map->levelNo,
-        map->name); // Display Level
-    mvwprintw(win->header, 1, MAX_COLS - 24, "Panic:%d%%",
-        map->panicMax); // Display Panic
-    mvwprintw(win->header, 1, MAX_COLS - 11, "Rep:%d",
-        map->repMax); // Display Rep
+    wclear(win->header);
+    wclear(win->footer);
+
+    /*Draws the header*/
+    updateHeader(win->header, map);
 
     /* Draw window borders around windows */
-    box(win->header, 0, 0);
     box(win->footer, 0, 0);
     mvwaddch(win->footer, 0, 0, ACS_LTEE);
     mvwaddch(win->footer, 0, MAX_COLS - 1, ACS_RTEE);
     mvwaddch(win->header, 0, 0, ACS_ULCORNER);
-    mvwaddstr(win->header, 0, 1, "riot");
-    mvwaddch (win->header, 2, 0, ACS_LTEE);
-    mvwaddch (win->header, 2, MAX_COLS - 1, ACS_RTEE);
     for (y = 0; y < MAX_ROWS; y++) {
         mvwaddch(win->body, y, 0, ACS_VLINE);
         mvwaddch(win->body, y, MAX_COLS - 1, ACS_VLINE);
     }
-
-    /* creates pause with text output*/
-    mvwprintw(win->body, 7, 10, "Placeholder text motherfucker.....");//temp
-    wrefresh(win->body);
-    wrefresh(win->header);
-    wrefresh(win->footer);
-    getchar();
-
-    /* Draw Footer */
-    mvwprintw(win->footer, 1, 1, "INMATES");
+        /*Populates footer*/
     drawFooterInmates(win, map->inmates);
+}
 
-    /* Draw the game map */
-    for (y = 0; y < MAP_ROWS; y++)
-        mvwaddstr(win->body, y, 1, map->overlay[y]);
-    wrefresh(win->body);
-    for (y = 0; y < MAX_ROWS; y++) {
-        mvwaddch(win->body, y, 0, ACS_VLINE);
-        mvwaddch(win->body, y, MAX_COLS - 1, ACS_VLINE);
-    }
+void drawQueue (WINDOW *body){
+    int y;
 
-    /* Draw Queue */
-    mvwaddstr(win->body, 4, MAX_COLS - 6, "QUEUE");
-    mvwaddch(win->body, 5, MAX_COLS - 6, ACS_ULCORNER);
-    mvwaddch(win->body, 5, MAX_COLS - 2, ACS_URCORNER);
-    mvwaddch(win->body, 11, MAX_COLS - 6, ACS_LLCORNER);
-    mvwaddch(win->body, 11, MAX_COLS - 2, ACS_LRCORNER);
-    mvwaddch(win->body, 6, MAX_COLS - 3, '.');
+    mvwaddstr(body, 4, MAX_COLS - 6, "QUEUE");
+    mvwaddch(body, 5, MAX_COLS - 6, ACS_ULCORNER);
+    mvwaddch(body, 5, MAX_COLS - 2, ACS_URCORNER);
+    mvwaddch(body, 11, MAX_COLS - 6, ACS_LLCORNER);
+    mvwaddch(body, 11, MAX_COLS - 2, ACS_LRCORNER);
+    mvwaddch(body, 6, MAX_COLS - 3, '.');
     for (y = 1; y < 6; y++)
-        mvwprintw(win->body, 5 + y, MAX_COLS - 5, "%d", y);
+        mvwprintw(body, 5 + y, MAX_COLS - 5, "%d", y);
     for (y = 0; y < 3; y++) {
-        mvwaddch(win->body, 5, MAX_COLS - 5 + y, ACS_HLINE);
-        mvwaddch(win->body, 11, MAX_COLS - 5 + y, ACS_HLINE);
+        mvwaddch(body, 5, MAX_COLS - 5 + y, ACS_HLINE);
+        mvwaddch(body, 11, MAX_COLS - 5 + y, ACS_HLINE);
     }
     for (y = 0; y < 5; y++) {
-        mvwaddch(win->body, 6 + y, MAX_COLS - 6, ACS_VLINE);
-        mvwaddch(win->body, 6 + y, MAX_COLS - 2, ACS_VLINE);
+        mvwaddch(body, 6 + y, MAX_COLS - 6, ACS_VLINE);
+        mvwaddch(body, 6 + y, MAX_COLS - 2, ACS_VLINE);
     }
+    wrefresh(body);
+}
+
+void updateQueue (WINDOW *body, struct UnitList *list){
+    //Need to DO
+    wrefresh(body);
+}
+
+void drawMap (WINDOW *body, struct Map*map){
+    int y;
+    for (y = 0; y < MAP_ROWS; y++)
+        mvwaddstr(body, y, 1, map->overlay[y]);
+    for (y = 0; y < MAX_ROWS; y++) {
+        mvwaddch(body, y, 0, ACS_VLINE);
+        mvwaddch(body, y, MAX_COLS - 1, ACS_VLINE);
+    }
+}
+
+
+void drawLevel(struct Interface *win, struct Map *map){
+    drawMap(win->body,map);
+    drawQueue(win->body);
     /* Refresh windows */
     wrefresh(win->body);
-    wrefresh(win->header);
-    wrefresh(win->body);
-    wrefresh(win->footer);
-    //TODO
-    getchar(); //temporary
     return;
 }
 
@@ -350,17 +339,36 @@ void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path,
     int oldPosition) {
     int *currentCoordinates;
     int *newCoordinates;
+    float hp, mhp, php;
 
+    hp = 1*inmate->currentHealth;
+    mhp = 1*inmate->maxHealth;
+    php = (hp/mhp)*100;
+
+    init_pair(1,COLOR_WHITE, COLOR_BLACK);
     init_pair(GREEN, GREEN, COLOR_BLACK);
     init_pair(YELLOW, YELLOW, COLOR_BLACK);
     init_pair(RED, RED, COLOR_BLACK);
     init_pair(PURPLE, PURPLE, COLOR_BLACK);
+
+    if (php > 75){
+        attron (COLOR_PAIR (GREEN));
+    } else if (php >50){
+        attron (COLOR_PAIR (YELLOW));
+    } else if (php >25){
+        attron (COLOR_PAIR (RED));
+    } else{
+        attron (COLOR_PAIR (PURPLE));
+    }
 
     currentCoordinates = getCoordinate(oldPosition);
     mvwaddch(win->body, currentCoordinates[0], currentCoordinates[1], '*');
 
     newCoordinates = getCoordinate(inmate->position);
     mvwaddch(win->body, newCoordinates[0], newCoordinates[1], inmate->type);
+
+    attron (COLOR_PAIR (1));
+
 }
 
 void drawUnit(struct Interface *win, char unitType, int health, int position) {
@@ -393,10 +401,10 @@ int *getCoordinate(int position) {
 
 void drawFooterInmates(struct Interface *win, char *inmates) {
     char output[100];
-    strcpy(output, "");
     int i;
 
-    for (i = 0; i < strlen(inmates) - 1; i++) {
+    strcpy(output, "");
+    for (i = 0; i < strlen(inmates); i++) {
         strcat(output, getInmateName(inmates[i]));
         strcat(output, "\t");
         if (i == 3) {
@@ -404,8 +412,32 @@ void drawFooterInmates(struct Interface *win, char *inmates) {
             strcpy(output, "");
         }
     }
+    mvwprintw(win->footer, 1, 1, "INMATES");
     mvwaddstr(win->footer, 2, 10, output);
 }
+
+
+void drawIntroText (struct Interface *win, struct Map *map){
+    /* creates pause with text output*/
+    startHeadFoot(win,map);
+    mvwprintw(win->body, 7, 10, "Placeholder text motherfucker.....");//temp
+    wrefresh(win->body);
+    wclear(win->body);
+    wrefresh(win->header);
+    wrefresh(win->footer);
+    getchar();
+}
+
+
+void drawOutroText (struct Interface *win, struct Map *map){
+    /* creates pause with text output*/
+    mvwprintw(win->body, 7, 10, "Placeholder text motherfucker.....");//temp
+    wrefresh(win->body);
+    wrefresh(win->header);
+    wrefresh(win->footer);
+    getchar();
+}
+
 
 char *getInmateName(char ch) {
     switch (ch) {
@@ -429,21 +461,3 @@ char *getInmateName(char ch) {
             return "FAIL";
     }
 }
-
-void drawBorders (struct Interface * win) {
-    int y;
-
-    box(win->header, 0, 0);
-        box(win->footer, 0, 0);
-        mvwaddch(win->footer, 0, 0, ACS_LTEE);
-        mvwaddch(win->footer, 0, MAX_COLS - 1, ACS_RTEE);
-        mvwaddch(win->header, 0, 0, ACS_ULCORNER);
-        mvwaddstr(win->header, 0, 1, "riot");
-        mvwaddch (win->header, 2, 0, ACS_LTEE);
-        mvwaddch (win->header, 2, MAX_COLS - 1, ACS_RTEE);
-        for (y = 0; y < MAX_ROWS; y++) {
-            mvwaddch(win->body, y, 0, ACS_VLINE);
-            mvwaddch(win->body, y, MAX_COLS - 1, ACS_VLINE);
-        }
-}
-

@@ -54,10 +54,28 @@ void inmateRemove(int position);
 void guardUpdate(bool isAttacking, int position);
 
 
-void drawMap (WINDOW *mWin, struct Map*map);
+void drawMap (WINDOW *bod, struct Map*map);
 
 
-char * getLevelName (int level);/*
+char * getLevelName (int level);
+
+
+void updateHeader (WINDOW *header, struct Map *map);
+
+
+void drawIntroText (struct Interface *win, struct Map *map);
+
+
+void drawOutroText (struct Interface *win, struct Map *map);
+
+
+void drawQueue (WINDOW *body);
+
+
+void updateQueue (WINDOW *body, struct UnitList *list);/*
+
+
+
 
 DESCRIPTION: Gets name of level
 
@@ -107,13 +125,16 @@ DESCRIPTION: Takes the position and converts it into a 2 dimensional coordinate
 
 ARGUMENTS: a position as a single integer value */
 
-void drawInmateSelection (struct Interface *win, struct Map *map);
+void drawInmateSelection (struct Interface *win, struct Map *map, struct UnitList *imates);
  
 void drawLevel(struct Interface *win, struct Map* map);
 
 void drawFooterInmates(struct Interface * win, char * inmates);
 
-char * getInmateName(char ch);
+void startHeadFoot(struct Interface *win, struct Map *map);
 
+char * getInmateName(char ch);
+/*
 void drawBorders (struct Interface * win);
+*/
 #endif //RIOT_UI

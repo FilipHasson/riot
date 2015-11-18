@@ -433,8 +433,8 @@ struct UnitList *getGuardList(struct Map map){
 struct Path *getPath(struct Map map) {
     struct Path *path = NULL;
     int i, j;
-    int count;
-    int position;
+    int count=0;
+    int position=0;
     int prevChecked[MAP_ROWS * MAP_COLS];
 
     for (int i = 0; i < (MAP_ROWS * MAP_COLS); i++) {
