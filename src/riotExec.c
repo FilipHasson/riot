@@ -45,7 +45,7 @@ void play(struct Interface gameInterface,struct Map map){
     path = getPath(map);
 
     drawIntroText(&gameInterface, &map);
-    drawInmateSelection(&gameInterface,&map, inmates);
+    drawInmateSelection(&gameInterface,&map, inmates, guards);
 
     nextInmate = getHead(inmates);
     for (int i=0;i<inmates->count;i++){
