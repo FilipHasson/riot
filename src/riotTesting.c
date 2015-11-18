@@ -109,10 +109,9 @@ void unitsMove(char *loadDir) {
 
     inmates = createList();
     //guards = createList();
-    current = &testList->level[0];
+    current = &testList->level[1];
     path = getPath(*current);
-    printf("LEVEL %d: \n\n", 0);
-
+    printf("LEVEL %d: \n\n", 1);
     for (int j = 0; j < MAP_ROWS; j++) {
         printf("%s\n", current->overlay[j]);
     }
@@ -125,9 +124,9 @@ void unitsMove(char *loadDir) {
     printf("Adding an inmate to the list (%d)\n", inmates->count);
     printf("Inmate position is: %f\n-----\n", inmateUnit->position);
 
-    for (int i = 0; i < 20; ++i) { 
+   /* for (int i = 0; i < 20; ++i) { 
         inmateMove(inmates, path);
-    }
+    }*/
     //runSimulation(&gameInterface,guards, inmates, path);
     putchar('\n');
 
