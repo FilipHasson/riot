@@ -294,8 +294,6 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
     int curPos, health;
     int prevPos[inmateList->count];
     char unitType;
-
-
     while (simulateTime < 10) {
 
     	nextInmate = getHead(inmateList);
@@ -304,8 +302,8 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
             nextInmate = nextInmate->next;
         }
 
-       // inmateMove(inmateList, path);
-        guardAttack(guardList, inmateList);
+        //inmateMove(inmateList, path);
+        //guardAttack(guardList, inmateList);
         
         nextInmate = getHead(inmateList);
         for (int i=0;i<inmateList->count-1;i++){
