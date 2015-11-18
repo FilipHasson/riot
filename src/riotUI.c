@@ -13,7 +13,6 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
             initscr();
             start_color();
             init_pair(1,COLOR_WHITE,COLOR_BLACK);
-            wbkgd (win->body,COLOR_PAIR (1));
 
             noecho(); // hide keypresses
             curs_set(FALSE); // hide cursor
@@ -28,6 +27,7 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
             win->body = newwin(MAIN, MAX_COLS, HEADER, 0);
             win->footer = newwin(FOOTER, MAX_COLS, HEADER + MAIN, 0);
             win->menu = newwin(MAX_ROWS, MAX_COLS, 0, 0);
+            wbkgd (win->body,COLOR_PAIR (1));
             break;
 
         case MENU:
