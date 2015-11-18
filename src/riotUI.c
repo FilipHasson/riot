@@ -110,12 +110,17 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     for (int i = 1; i < mapList->count; i++) {
         current = &mapList->level[i];
         last = &mapList->level[i - 1];
+
+#ifndef _DEBUG
         if (last->beaten) {
-            mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
+#endif
+
+        mvwprintw(menu, y + i, 21, "[%i] %s", i, current->name);
+
+#ifndef _DEBUG
         } else y--;
+#endif
 
-
-        /* Set unlocked state */
         unlocked[i] = current->beaten;
     }
     mvwaddstr(menu, MAX_ROWS - 4, 21, "[b]ack");
@@ -126,8 +131,12 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
         select = (char) wgetch(menu);
         if (select == 'b') return -1;
         if (select - '0' < 0 || select > MAX_LEVELS) continue;
-    } while (!unlocked[select - '0']);
 
+#ifndef _DEBUG
+    } while (false);
+#else
+    } while (!unlocked[select - '0']);
+#endif
 
     return (select - '0');
 }

@@ -176,16 +176,16 @@ void mapTest(char *loadDir) {
         printf("LEVEL %d: \n\n", i);
 
         printf("Name: %s\n", current->name);
-        printf("Beaten: %d\n", current->beaten);
+        printf("Beaten: %s\n", current->beaten?"Yes":"No");
         printf("\n");
 
         printf("Layout:\n");
         for (int j = 0; j < MAP_ROWS; j++) {
-            printf("[%d] %s\n", j, current->overlay[j]);
+            printf("[%02d] %s\n", j, current->overlay[j]);
         }
 
-        printPath(path);
-        printGuardList(guardList);
+//        printPath(path);
+//        printGuardList(guardList);
         printf("\n\n");
 
         destroyList(guardList);

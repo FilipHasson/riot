@@ -100,8 +100,6 @@ struct MapList *parseMap(char *loadDir) {
                     if (checkChar == '\n')textBox[i][x++] = ' ';
                     else textBox[i][x++] = checkChar;
                 }
-                printf("%s\n",textBox[i]);
-
             }
 
             fclose(file);
