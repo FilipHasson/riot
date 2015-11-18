@@ -101,7 +101,7 @@ on the side of the body window
 
 ARGUMENTS: The body window*/
 
-void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition);
+void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path, int oldPosition);
 /*
 
 DESCRIPTION: Function to redraw units on the screen

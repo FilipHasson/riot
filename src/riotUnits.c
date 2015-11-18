@@ -300,9 +300,7 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
     struct Path *path) {
     struct UnitNode *nextInmate;
     float simulateTime = 0;
-    int curPos, health;
     int prevPos[inmateList->count];
-    char unitType;
     char printstring[100];
     while (simulateTime < 30) {
 
@@ -317,7 +315,7 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
         
         nextInmate = getHead(inmateList);
         for (int i=0;i<inmateList->count;i++){
-            redrawUnit(gameInterface,(struct Inmate*)nextInmate->unit,path,prevPos[i]);
+            redrawUnit(gameInterface->body,(struct Inmate*)nextInmate->unit,path,prevPos[i]);
             sprintf(printstring, "position %f", ((struct Inmate*)nextInmate->unit)->position);
       	    writeToFile(printstring);
             nextInmate = nextInmate->next;

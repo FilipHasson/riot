@@ -281,9 +281,14 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                mvwaddch(win->footer, 0,y,ACS_HLINE);
         }
     } while (input != '\n' && numAdded <5);
-    wclear(win->header);
-    wclear(win->body);
-    wclear(win->footer);
+    for (y=1; y<MAX_COLS-5;y++){
+        mvwaddch(win->footer, 0,y,ACS_HLINE);
+    }
+    for (y=1; y<MAX_COLS-5;y++){
+        mvwaddch(win->body, MAP_ROWS,y,' ');
+    }
+    wrefresh(win->footer);
+    wrefresh(win->body);
 }
 
 void updateHeader (WINDOW *header, struct Map *map){
@@ -378,11 +383,11 @@ void drawGuards(WINDOW *body, struct Map *map, struct UnitList *guards){
     coordinates = getCoordinate(guard->position);
     type = guard->type;
     mvwaddch(body,coordinates[0],coordinates[1],type);
-    for (x=1; x< getLength(guards); x++){
+    for (x=1; x< getLength(guards)-1; x++){
         guardNode = guardNode->next;
         guard = (struct Guard*)guardNode->unit;
         coordinates = getCoordinate(guard->position);
-         type = guard->type;
+        type = guard->type;
         mvwaddch(body,coordinates[0],coordinates[1],type);
     }
 }
@@ -396,8 +401,7 @@ void drawLevel(struct Interface *win, struct Map *map, struct UnitList *guards){
     return;
 }
 
-void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path,
-    int oldPosition) {
+void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path, int oldPosition) {
     int *currentCoordinates = malloc(sizeof(int)*2);
     int *newCoordinates = malloc(sizeof(int)*2);
     float hp, mhp, php;
@@ -423,20 +427,17 @@ void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path,
     }
 
     currentCoordinates = getCoordinate(oldPosition);
-    mvwaddch(win->body, currentCoordinates[0], currentCoordinates[1], '*');
+    mvwaddch(body, currentCoordinates[0], currentCoordinates[1], '.');
 
     newCoordinates = getCoordinate(inmate->position);
-    mvwaddch(win->body, newCoordinates[0], newCoordinates[1], inmate->type);
+    mvwaddch(body, newCoordinates[0], newCoordinates[1], inmate->type);
+    wrefresh(body);
 
     attron (COLOR_PAIR (1));
-
+    mvwprintw (body, 1, 0, "%d %d",newCoordinates[0],newCoordinates[1]);
+    wrefresh(body);
 }
 
-void drawUnit(struct Interface *win, char unitType, int health, int position) {
-    int *coordinates;
-    coordinates = getCoordinate(position);
-    mvwaddch(win->body, coordinates[0], coordinates[1], unitType);
-}
 
 void eraseUnit(struct Interface *win, int position) {
     int *coordinates;
@@ -453,9 +454,8 @@ void drawTile(struct Interface *win, char type, int position) {
 int *getCoordinate(int position) {
     static int coordinates[2];
 
-    coordinates[0] = ((position - 1) /
-        MAX_ROWS);    //Gives you the row, where the lowest row is 0
-    coordinates[1] = position - (coordinates[0] * MAX_ROWS);      //Gives you x
+    coordinates[0] = ((position - 1) / MAX_COLS);    //Gives you the row, where the lowest row is 0
+    coordinates[1] = position - (coordinates[0] * MAX_COLS);      //Gives you x
 
     return coordinates;
 }
