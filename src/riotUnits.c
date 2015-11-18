@@ -145,6 +145,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 2;
             unit->rep = 0;
             unit->panic = 0;
+            unit->delUnit = FALSE;
             break;
 
         case HOMEBOY:
@@ -152,6 +153,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 4;
             unit->rep = 5;
             unit->panic = 2;
+            unit->delUnit = FALSE;
             break;
 
         case BRUISER:
@@ -159,6 +161,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 4;
             unit->rep = 15;
             unit->panic = 6;
+            unit->delUnit = FALSE;
             break;
 
         case LUNATIC:
@@ -166,6 +169,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 6;
             unit->rep = 10;
             unit->panic = 8;
+            unit->delUnit = FALSE;
             break;
 
         case FATTY:
@@ -173,6 +177,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 2;
             unit->rep = 10;
             unit->panic = 4;
+            unit->delUnit = FALSE;
             break;
 
         case SPEEDY:
@@ -180,6 +185,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 8;
             unit->rep = 20;
             unit->panic = 2;
+            unit->delUnit = FALSE;
             break;
 
         case CUTIE:
@@ -187,6 +193,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 4;
             unit->rep = 20;
             unit->panic = 1;
+            unit->delUnit = FALSE;
             break;
 
         case ATTORNEY:
@@ -194,6 +201,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 4;
             unit->rep = 30;
             unit->panic = 2;
+            unit->delUnit = FALSE;
             break;
 
         case DOCTOR:
@@ -201,6 +209,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 4;
             unit->rep = 40;
             unit->panic = 2;
+            unit->delUnit = FALSE;
             break;
 
         default:

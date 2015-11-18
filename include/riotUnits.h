@@ -29,7 +29,7 @@ UnitNode stores the information related to inmate units.*/
 struct Inmate {/*
 
  Inmate stores the stats related to inmate units.*/
-
+    bool delUnit;
     char type;
     float position;
     unsigned int currentHealth;
