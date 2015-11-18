@@ -1,4 +1,3 @@
-#include <riotMap.h>
 #include <ctype.h>
 #include "riotUnits.h"
 

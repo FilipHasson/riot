@@ -8,9 +8,9 @@ int main(int argc, char **argv) {
     mapList = parseMap(argv[1] ? argv[1] : NULL);
     int levelSelect;
     struct UnitList *inmates;
-
+    struct UnitList *guards;
+    struct Path *path;
     inmates = createList();
-
     uiSet(INIT, &gameInterface);
 
 
@@ -23,8 +23,11 @@ int main(int argc, char **argv) {
 
         switch (gameMode) {
             case NEW:
+                guards = getGuardList(mapList->level[0]);
                 drawIntroText(&gameInterface, &mapList->level[0]);
                 drawInmateSelection(&gameInterface, &mapList->level[0], inmates);
+                path = getPath(mapList->level[0]);
+                //runSimulation(&gameInterface, guards,inmates,path);
                 break;
             case CONTINUE:
                 levelSelect = menuContinue(&gameInterface, mapList);
