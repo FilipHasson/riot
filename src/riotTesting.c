@@ -2,6 +2,22 @@
 #include <ncurses.h>
 #include "riotTesting.h"
 
+void play(struct Interface gameInterface,struct Map map){
+    struct UnitList *inmates;
+    struct UnitList *guards;
+    struct Path *path;
+
+    inmates = createList();
+
+    drawIntroText(&gameInterface, &map);
+    drawInmateSelection(&gameInterface,&map, inmates);
+
+    guards = getGuardList(map);
+    path = getPath(map);
+    runSimulation(&gameInterface, guards,inmates,path);
+
+}
+
 static void printPath(struct Path *path) {
     struct TileNode *nextNode;
 
@@ -74,6 +90,7 @@ int main(int argc, char **argv) {
         else if (!strcmp(argv[i], "-unitmove"))
             unitsMove(argv[2] ? argv[2] : NULL);
         else if (!strcmp(argv[i], "-color")) colorTest();
+        else if (!strcmp(argv[i], "-play")) unitsPlay(argv[2]);
         else printf("Unknown command (%s)\n", argv[i]);
     }
 
@@ -120,6 +137,36 @@ void unitsMove(char *loadDir) {
     putchar('\n');
 
     destroyList(inmates);
+}
+
+void unitsPlay(char *argument){
+    struct MapList *mapList;
+    enum GameMode gameMode;
+    struct Interface gameInterface;
+    mapList = parseMap(argument);
+    int levelSelect;
+    uiSet(INIT, &gameInterface);
+
+    /* Begin body game loop */
+    do {
+        uiSet(MENU, &gameInterface);
+        gameMode = menuMain(&gameInterface);
+        uiSet(gameMode, &gameInterface);
+
+        switch (gameMode) {
+            case NEW:
+                play(gameInterface,mapList->level[0]);
+                break;
+            case CONTINUE:
+                levelSelect = menuContinue(&gameInterface, mapList);
+                play(gameInterface,mapList->level[levelSelect]);
+                break;
+            default:
+                break;
+        }
+    } while (gameMode != EXIT);
+
+    quit("Thanks for playing.\n");
 }
 
 void unitsTest(void) {

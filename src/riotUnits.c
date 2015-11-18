@@ -294,7 +294,6 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
     int prevPos, curPos, health;
     char unitType;
 
-    nextInmate = getHead(inmateList);
     while (simulateTime < 10) {
         prevPos = ((struct Inmate *) nextInmate->unit)->position;
 

@@ -20,6 +20,7 @@ void unitsMove(char *loadDir);
 
 void unitsTest(void);
 
+void unitsPlay(char *argument);
 
 void mapTest(char *loadDir);
 
