@@ -8,11 +8,11 @@ void play(struct Interface gameInterface,struct Map map){
     struct Path *path;
 
     inmates = createList();
+    guards = getGuardList(map);
 
     drawIntroText(&gameInterface, &map);
-    drawInmateSelection(&gameInterface,&map, inmates);
+    drawInmateSelection(&gameInterface,&map, inmates, guards);
 
-    guards = getGuardList(map);
     path = getPath(map);
     runSimulation(&gameInterface, guards,inmates,path);
 

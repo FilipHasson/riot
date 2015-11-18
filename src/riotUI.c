@@ -144,7 +144,7 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     return (select - '0');
 }
 
-void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList *inmates) {
+void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList *inmates, struct UnitList *guards) {
     struct Inmate * inmate;
     char input;
     int y;
@@ -152,7 +152,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
 
     mvwprintw(win->body, MAP_ROWS, 3, "Press the corresponding letter to buy inmate");
     mvwprintw(win->footer, 0, 3, "Press \"Enter\" to play:");
-    drawLevel (win, map);
+    drawLevel (win, map, guards);
     wrefresh(win->footer);
     do {
         updateHeader(win->header,map);
@@ -270,15 +270,17 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                 break;
             }
             if (input == '\n' && numAdded ==0){
-                mvwprintw(win->footer,0,20,"Please select at least one unit");
+                mvwprintw(win->footer,0,30,"Please select at least one unit");
                 input = ' ';
             }
+            else if (input == '\n'){
+                break;
+            }
             wrefresh(win->footer);
-            for (y=40; y<MAX_COLS-5;y++){
+            for (y=30; y<MAX_COLS-5;y++){
                mvwaddch(win->footer, 0,y,ACS_HLINE);
         }
     } while (input != '\n' && numAdded <5);
-    getchar();
     wclear(win->header);
     wclear(win->body);
     wclear(win->footer);
@@ -365,8 +367,30 @@ void drawMap (WINDOW *body, struct Map*map){
 }
 
 
-void drawLevel(struct Interface *win, struct Map *map){
+void drawGuards(WINDOW *body, struct Map *map, struct UnitList *guards){
+    int *coordinates;
+    int x;
+    struct UnitNode *guardNode;
+    struct Guard *guard;
+    char type;
+    guardNode = getHead(guards);
+    guard = (struct Guard*)guardNode->unit;
+    coordinates = getCoordinate(guard->position);
+    type = guard->type;
+    mvwaddch(body,coordinates[0],coordinates[1],type);
+    for (x=1; x< getLength(guards); x++){
+        guardNode = guardNode->next;
+        guard = (struct Guard*)guardNode->unit;
+        coordinates = getCoordinate(guard->position);
+         type = guard->type;
+        mvwaddch(body,coordinates[0],coordinates[1],type);
+    }
+}
+
+
+void drawLevel(struct Interface *win, struct Map *map, struct UnitList *guards){
     drawMap(win->body,map);
+    drawGuards(win->body,map,guards);
     drawQueue(win->body);
     wrefresh(win->body);
     return;
@@ -374,8 +398,8 @@ void drawLevel(struct Interface *win, struct Map *map){
 
 void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path,
     int oldPosition) {
-    int *currentCoordinates;
-    int *newCoordinates;
+    int *currentCoordinates = malloc(sizeof(int)*2);
+    int *newCoordinates = malloc(sizeof(int)*2);
     float hp, mhp, php;
 
     hp = 1*inmate->currentHealth;

@@ -144,7 +144,7 @@ DESCRIPTION: Takes the position and converts it into a 2 dimensional coordinate
 
 ARGUMENTS: a position as a single integer value */
 
-void drawInmateSelection (struct Interface *win, struct Map *map, struct UnitList *inmates);/*
+void drawInmateSelection (struct Interface *win, struct Map *map, struct UnitList *inmates, struct UnitList *guards);/*
 
 DESCRIPTION: Draws the window of all the inmates that the player an choose from 
 
@@ -153,7 +153,7 @@ ARGUMENTS: The interface window
            The list of inmates
 */
  
-void drawLevel(struct Interface *win, struct Map* map); /*
+void drawLevel(struct Interface *win, struct Map* map, struct UnitList *guard); /*
 
 DESCRIPTION: Calls drawMap and drawQueue and refreshes the body window
 

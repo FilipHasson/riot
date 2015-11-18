@@ -41,11 +41,11 @@ void play(struct Interface gameInterface,struct Map map){
     inmates = createList();
 
     drawIntroText(&gameInterface, &map);
-    drawInmateSelection(&gameInterface,&map, inmates);
-
     guards = getGuardList(map);
-    path = getPath(map);
-    runSimulation(&gameInterface, guards,inmates,path);
+    drawInmateSelection(&gameInterface,&map, inmates, guards);
+
+//    path = getPath(map);
+//    runSimulation(&gameInterface, guards,inmates,path);
 
 }
 
