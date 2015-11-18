@@ -9,21 +9,44 @@
 #define TRIALS 10
 #define MAPSIZE 100
 
-void printInmates(struct UnitList *list);
+void printInmates(struct UnitList *list);/*
+
+DESCRIPTION: Prints the inmate list
+
+ARGUMENTS: The inmate list
+*/
+
+void printGuards(struct UnitList *list);/*
+
+DESCRIPTION: Prints the guard list
+
+ARGUMENTS: The guard list
+*/
 
 
-void printGuards(struct UnitList *list);
+void unitsMove(char *loadDir);/*
+
+DESCRIPTION: Testing the movement of the units
+
+ARGUMENTS: The location of the directory
+*/
 
 
-void unitsMove(char *loadDir);
+void unitsTest(void);/*
 
+DESCRIPTION: Testing the guard range and attacking
 
-void unitsTest(void);
+ARGUMENTS:
+*/
 
 void unitsPlay(char *argument);
 
-void mapTest(char *loadDir);
+void mapTest(char *loadDir);/*
 
+DESCRIPTION: Tests the map
+
+ARGUMENTS: The location of the directory
+*/
 
 void testingHelp();
 
