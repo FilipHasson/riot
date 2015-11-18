@@ -322,6 +322,7 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
       	    writeToFile(printstring);
             nextInmate = nextInmate->next;
         }
+        wrefresh(gameInterface->body);
         simulateTime += 1;
         sleep(1);
 
