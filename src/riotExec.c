@@ -1,3 +1,4 @@
+#include "riotExec.h"
 #include "riotUI.h"
 
 int main(int argc, char **argv) {
