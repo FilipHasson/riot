@@ -290,7 +290,6 @@ struct Guard *createGuard(enum GuardType type) {
 void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, struct UnitList *inmateList,
     struct Path *path) {
     struct UnitNode *nextInmate;
-    struct UnitNode *nextGuard;
     float simulateTime = 0;
     int prevPos, curPos, health;
     char unitType;
