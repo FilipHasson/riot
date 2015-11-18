@@ -356,6 +356,8 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
             ((struct Inmate *) nextInmate->unit)->position = nextTile->next->location;
             printf("Unit moved to new Tile Position%f\n----END\n",
             ((struct Inmate *) nextInmate->unit)->position);
+        } else if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 && nextTile->next->type == '&') {
+        	((struct Inmate *) nextInmate->unit)->delUnit = TRUE;
         }
         nextInmate = getNext(nextInmate);
     } while (getNext(nextInmate) != NULL);
