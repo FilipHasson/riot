@@ -46,6 +46,7 @@ void play(struct Interface gameInterface,struct Map map){
     drawIntroText(&gameInterface, &map);
     drawInmateSelection(&gameInterface,&map, inmates);
 
+    printw("SIZE: %d",inmates->count);
     nextInmate = getHead(inmates);
     for (int i=0;i<inmates->count;i++){
         ((struct Inmate*)nextInmate->unit)->position = path->first->location;

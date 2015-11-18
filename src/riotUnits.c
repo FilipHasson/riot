@@ -304,9 +304,9 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
             nextInmate = nextInmate->next;
         }
 
-        inmateMove(inmateList, path);
+       // inmateMove(inmateList, path);
         guardAttack(guardList, inmateList);
-
+        
         nextInmate = getHead(inmateList);
         for (int i=0;i<inmateList->count-1;i++){
             //redrawUnit(gameInterface,(struct Inmate*)nextInmate->unit,path,prevPos[i]);
