@@ -291,17 +291,6 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
         prevPos = ((struct Inmate *) nextInmate->unit)->position;
 
         inmateMove(inmateList, path);
-
-        curPos = ((struct Inmate*)nextInmate->unit)->position;
-        unitType = ((struct Inmate*)nextInmate->unit)->type;
-        health = ((struct Inmate*)nextInmate->unit)->currentHealth;
-
-        nextInmate = getHead(inmateList);
-        for (int i=0;i<inmateList->count-1;i++){
-            redrawUnit(gameInterface,(struct Inmate*)nextInmate->unit,path,prevPos);
-            nextInmate = nextInmate->next;
-        }
-
         guardAttack(guardList, inmateList);
 
         nextInmate = getHead(inmateList);
