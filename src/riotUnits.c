@@ -1,6 +1,7 @@
 #include <ctype.h>
+#include <unistd.h>
 #include "riotUnits.h"
-
+#include "riotUI.h"
 struct UnitList *createList(void) {
 
     struct UnitList *newList = malloc(sizeof(struct UnitList));
@@ -277,22 +278,41 @@ struct Guard *createGuard(enum GuardType type) {
     return unit;
 }
 
-/*Need to pass in interface?*/
-void runSimulation(struct Interface *win, struct UnitList *guardList, struct UnitList *inmateList,
+void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, struct UnitList *inmateList,
     struct Path *path) {
     struct UnitNode *nextInmate;
-    //struct UnitNode *nextGuard;
-    int simulate = 0;
-    int prevPos = 0;
+    struct UnitNode *nextGuard;
+    float simulateTime = 0;
+    int prevPos, curPos, health;
+    char unitType;
 
     nextInmate = getHead(inmateList);
-    while (simulate < 10) {
+    while (simulateTime < 10) {
         prevPos = ((struct Inmate *) nextInmate->unit)->position;
+
         inmateMove(inmateList, path);
-        //drawUnit(win, nextInmate->unit, path, prevPos); (draw new position)
+
+        curPos = ((struct Inmate*)nextInmate->unit)->position;
+        unitType = ((struct Inmate*)nextInmate->unit)->type;
+        health = ((struct Inmate*)nextInmate->unit)->currentHealth;
+
+        nextInmate = getHead(inmateList);
+        for (int i=0;i<inmateList->count-1;i++){
+            redrawUnit(gameInterface,(struct Inmate*)nextInmate->unit,path,prevPos);
+            nextInmate = nextInmate->next;
+        }
+
         guardAttack(guardList, inmateList);
-        //drawUnit(); (new colour)
-        printf("here");
+
+        nextInmate = getHead(inmateList);
+        for (int i=0;i<inmateList->count-1;i++){
+            redrawUnit(gameInterface,(struct Inmate*)nextInmate->unit,path,prevPos);
+            nextInmate = nextInmate->next;
+        }
+
+        simulateTime += 0.2;
+        sleep(0.2);
+
     }
 }
 
