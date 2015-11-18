@@ -38,6 +38,7 @@ void play(struct Interface gameInterface,struct Map map){
     struct UnitList *guards;
     struct UnitNode *nextInmate;
     struct Path *path;
+    char printstring[100];
 
     inmates = createList();
     guards = getGuardList(map);
@@ -46,12 +47,11 @@ void play(struct Interface gameInterface,struct Map map){
     drawIntroText(&gameInterface, &map);
     drawInmateSelection(&gameInterface,&map, inmates);
 
-    printw("SIZE: %d",inmates->count);
     nextInmate = getHead(inmates);
     for (int i=0;i<inmates->count;i++){
         ((struct Inmate*)nextInmate->unit)->position = path->first->location;
+        nextInmate = nextInmate->next;
     }
-
     runSimulation(&gameInterface, guards,inmates,path);
 
 }

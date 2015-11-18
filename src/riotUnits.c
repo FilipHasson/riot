@@ -4,9 +4,11 @@
 #include "riotUI.h"
 
 static void writeToFile(char *message){
-	FILE * file = fopen("/assets/test.txt","w");
+    FILE * file = fopen("test.txt","a");
 
-	fprintf(file,"%s\n",message);
+    fprintf(file,"%s\n",message);
+
+    fclose(file);
 }
 
 struct UnitList *createList(void) {
@@ -301,27 +303,27 @@ void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, 
     int curPos, health;
     int prevPos[inmateList->count];
     char unitType;
-    while (simulateTime < 10) {
+    char printstring[100];
+    while (simulateTime < 30) {
 
     	nextInmate = getHead(inmateList);
     	for (int i=0;i<inmateList->count-1;i++){
             prevPos[i] = ((struct Inmate*)nextInmate->unit)->position;
             nextInmate = nextInmate->next;
         }
-       // inmateMove(inmateList, path);
-        guardAttack(guardList, inmateList);
 
-        //inmateMove(inmateList, path);
-        //guardAttack(guardList, inmateList);
+        inmateMove(inmateList, path);
+        guardAttack(guardList, inmateList);
         
         nextInmate = getHead(inmateList);
-        for (int i=0;i<inmateList->count-1;i++){
-            //redrawUnit(gameInterface,(struct Inmate*)nextInmate->unit,path,prevPos[i]);
+        for (int i=0;i<inmateList->count;i++){
+            redrawUnit(gameInterface,(struct Inmate*)nextInmate->unit,path,prevPos[i]);
+            sprintf(printstring, "position %f", ((struct Inmate*)nextInmate->unit)->position);
+      	    writeToFile(printstring);
             nextInmate = nextInmate->next;
         }
-
-        simulateTime += 0.2;
-        sleep(0.2);
+        simulateTime += 1;
+        sleep(1);
 
     }
 }

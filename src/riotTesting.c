@@ -18,19 +18,6 @@ void play(struct Interface gameInterface,struct Map map){
 
 }
 
-static void printPath(struct Path *path) {
-    struct TileNode *nextNode;
-
-    nextNode = path->first;
-    printf("\n\n#### PRINTING PATH ####\n\n");
-    for (int i = 0; i < path->count; i++) {
-        printf("Location: %d :", nextNode->location);
-        printf("Type: %c\n", nextNode->type);
-        nextNode = nextNode->next;
-    }
-    printf("\n########################\n");
-}
-
 static void printGuardList(struct UnitList *guardList) {
     struct UnitNode *nextNode;
     struct Guard *guard;
