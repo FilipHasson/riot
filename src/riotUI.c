@@ -1,4 +1,7 @@
 #include "riotUI.h"
+#ifndef _DEBUG
+#define _DEBUG
+#endif
 
 void uiSet(enum GameMode gameMode, struct Interface *win) {
 
@@ -145,6 +148,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
     struct Inmate * inmate;
     char input;
     int y;
+    int numAdded =0;
 
     mvwprintw(win->body, MAP_ROWS, 3, "Press the corresponding letter to buy inmate");
     mvwprintw(win->footer, 0, 3, "Press \"Enter\" to play:");
@@ -161,6 +165,8 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         map->repMax -= 10;
                         inmate = createInmate(input);
                         enqueue(inmates,inmate);
+                        numAdded++;
+                        updateQueue(win->body,inmates,numAdded);
                     } 
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -172,6 +178,8 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         inmate = createInmate(input);
                         map->repMax-=16;
                         enqueue(inmates,inmate);
+                        numAdded++;
+                        updateQueue(win->body,inmates,numAdded);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -183,6 +191,8 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         inmate = createInmate(input);
                         map->repMax-=16;
                         enqueue(inmates,inmate);
+                        numAdded++;
+                        updateQueue(win->body,inmates,numAdded);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -194,6 +204,8 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         inmate = createInmate(input);
                         map->repMax-=60;
                         enqueue(inmates,inmate);
+                        numAdded++;
+                        updateQueue(win->body,inmates,numAdded);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -205,6 +217,8 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         inmate = createInmate(input);
                         map->repMax-=10;
                         enqueue(inmates,inmate);
+                        numAdded++;
+                        updateQueue(win->body,inmates,numAdded);
                     }
                     break;
                 case 'c':
@@ -213,6 +227,8 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         inmate = createInmate(input);
                         map->repMax-=20;
                         enqueue(inmates,inmate);
+                        numAdded++;
+                        updateQueue(win->body,inmates,numAdded);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -224,6 +240,8 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         inmate = createInmate(input);
                         map->repMax-=30;
                         enqueue(inmates,inmate);
+                        numAdded++;
+                        updateQueue(win->body,inmates,numAdded);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -235,6 +253,8 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                         inmate = createInmate(input);
                         map->repMax-=10;
                         enqueue(inmates,inmate);
+                        numAdded++;
+                        updateQueue(win->body,inmates,numAdded);
                     }
                     else {
                         mvwprintw(win->footer, 0, 40, "INSUFICIENT FUNDS");
@@ -249,12 +269,16 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
                 wgetch(win->body); 
                 break;
             }
+            if (input == '\n' && numAdded ==0){
+                mvwprintw(win->footer,0,20,"Please select at least one unit");
+                input = ' ';
+            }
             wrefresh(win->footer);
             for (y=40; y<MAX_COLS-5;y++){
                mvwaddch(win->footer, 0,y,ACS_HLINE);
         }
-        updateQueue(win->body,inmates);
-    } while (input != '\n');
+    } while (input != '\n' && numAdded <5);
+    getchar();
     wclear(win->header);
     wclear(win->body);
     wclear(win->footer);
@@ -318,11 +342,14 @@ void drawQueue (WINDOW *body){
     wrefresh(body);
 }
 
-void updateQueue (WINDOW *body, struct UnitList *list){
-    int l = getLength(list);
-    int y;
-    for (y=0; y < l; y++){
-   //     mvwaddch(body, 6+y, MAX_COLS - 3, list->)
+void updateQueue (WINDOW *body, struct UnitList *inmates, int numAdded){
+    struct Inmate *temp;
+    struct UnitNode *node;
+    node = getHead (inmates);
+    temp = (struct Inmate*)node->unit;
+    mvwaddch(body, 5+numAdded, MAX_COLS - 3,temp->type);
+    if (numAdded<5){
+        mvwaddch(body,6+numAdded,MAX_COLS - 3,'.');
     }
     wrefresh(body);
 }
@@ -341,7 +368,6 @@ void drawMap (WINDOW *body, struct Map*map){
 void drawLevel(struct Interface *win, struct Map *map){
     drawMap(win->body,map);
     drawQueue(win->body);
-    /* Refresh windows */
     wrefresh(win->body);
     return;
 }

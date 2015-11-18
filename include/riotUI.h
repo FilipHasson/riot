@@ -65,7 +65,7 @@ void drawOutroText (struct Interface *win, struct Map *map);
 void drawQueue (WINDOW *body);
 
 
-void updateQueue (WINDOW *body, struct UnitList *list);/*
+void updateQueue (WINDOW *body, struct UnitList *list, int numAdded);/*
 
 
 
