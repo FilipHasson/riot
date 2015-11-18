@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 /* Macro Constants */
 #define MAX_COLS 80
 #define MAX_ROWS 24
@@ -17,6 +16,9 @@
 #define FOOTER 4
 #define MAIN 17
 
+#define MAX_TEXT 500
+#define INMATE_TYPES 10
+#define LINE_MAX 72
 
 /* Data Types */
 struct Interface {
@@ -26,7 +28,22 @@ struct Interface {
     WINDOW *footer;
 };
 
+struct Map {/*
 
+ Map stores the game landscape as a 2D array, along with a linked list
+ containing the path.*/
+
+    char name[LINE_MAX];
+    int levelNo;
+    bool beaten;
+    char overlay[MAP_ROWS][MAP_COLS+1]; //+1 for null char
+    char inmates[INMATE_TYPES];
+    char textIntro[MAX_TEXT];
+    char textWin[MAX_TEXT];
+    char textLose[MAX_TEXT];
+    int panicMax;
+    int repMax;
+};
 
 enum InmateType {/*
 
@@ -121,4 +138,12 @@ ARGUMENTS: argc, represents the number of command line paramers passed to the
 POSTCONDITIONS: May call quit() to terminate program operation if the user
  has provided an invalid map file path.*/
 
+void play(struct Interface gameInterface,struct Map map);/*
+
+DESCRIPTION: play() calls all functions that involve player unit selection, and game simulation.
+
+ARGUMENTS: Game interface struct that holds neccessary windows (struct Interface gameInterface).
+           Map struct which holds neccessary map information (struct Map map). 
+
+*/
 #endif //RIOT_EXEC

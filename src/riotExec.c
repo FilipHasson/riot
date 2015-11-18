@@ -7,13 +7,7 @@ int main(int argc, char **argv) {
     struct Interface gameInterface;
     mapList = parseMap(argv[1] ? argv[1] : NULL);
     int levelSelect;
-    struct UnitList *inmates;
-    struct UnitList *guards;
-    struct Path *path;
-    inmates = createList();
     uiSet(INIT, &gameInterface);
-
-
 
     /* Begin body game loop */
     do {
@@ -23,16 +17,11 @@ int main(int argc, char **argv) {
 
         switch (gameMode) {
             case NEW:
-                guards = getGuardList(mapList->level[0]);
-                drawIntroText(&gameInterface, &mapList->level[0]);
-                drawInmateSelection(&gameInterface, &mapList->level[0], inmates);
-                path = getPath(mapList->level[0]);
-                //runSimulation(&gameInterface, guards,inmates,path);
+                play(gameInterface,mapList->level[0]);
                 break;
             case CONTINUE:
                 levelSelect = menuContinue(&gameInterface, mapList);
-                drawIntroText(&gameInterface, &mapList->level[levelSelect]);
-                drawInmateSelection(&gameInterface, &mapList->level[levelSelect], inmates);
+                play(gameInterface,mapList->level[levelSelect]);
                 break;
             default:
                 break;
@@ -44,6 +33,21 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+void play(struct Interface gameInterface,struct Map map){
+    struct UnitList *inmates;
+    struct UnitList *guards;
+    struct Path *path;
+
+    inmates = createList();
+
+    drawIntroText(&gameInterface, &map);
+    drawInmateSelection(&gameInterface,&map, inmates);
+
+    guards = getGuardList(map);
+    path = getPath(map);
+    runSimulation(&gameInterface, guards,inmates,path);
+
+}
 
 void quit(char *message) {
     if (stdscr) endwin();
