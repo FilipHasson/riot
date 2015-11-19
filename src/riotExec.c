@@ -1,6 +1,7 @@
 #include "riotExec.h"
 #include "riotUI.h"
 
+
 int main(int argc, char **argv) {
     enum GameMode gameMode;
     struct Windows windows;
@@ -10,8 +11,8 @@ int main(int argc, char **argv) {
     struct UnitList inmates, guards;
     struct UnitNode *unitNode;
     struct Path path;
-    int levelSelect;
-    bool playerProgress[MAX_LEVELS];
+    bool progress[MAX_LEVELS];
+    int level;
 
     /* Parse map files */
     parseMap(argv[1], &mapList, dialog);
@@ -19,25 +20,26 @@ int main(int argc, char **argv) {
     /* Create nCurses WINDOWs */
     uiInit(&windows);
 
-    /* Present user with main meno */
+    /* Present user with main menu */
     gameMode = menuMain(&windows);
 
+    /* Begin main game loop */
     if (gameMode != EXIT) {
 
         /* New game starts on level 0 (tutorial) */
-        if (gameMode == NEW) levelSelect = 0;
+        if (gameMode == NEW) level = 0;
 
             /* Continue loads continue meno */
-        else levelSelect = menuContinue(&windows, &mapList, playerProgress);
+        else level = menuContinue(&windows, &mapList, progress);
 
         /* Exit frees system resources, terminates program operation */
-        while (levelSelect != EXIT) {
+        while (level != EXIT) {
 
-            /* Select currect map */
-            map = &(mapList).level[levelSelect];
+            /* Select correct map */
+            map = &(mapList).level[level];
 
             /* Display intro text */
-            drawText(&windows, dialog);
+            drawText(&windows, dialog[level], gameMode);
 
             /* Initialize game elements */
             getGuards(&guards, *map);
@@ -58,7 +60,8 @@ int main(int argc, char **argv) {
                 unitNode = unitNode->next;
             }
 
-            runSimulation(&windows, &guards, &inmates, &path);
+            /* Simulate unit interactions */
+            progress[level] = simulate(&windows, &guards, &inmates, &path);
         }
     }
 

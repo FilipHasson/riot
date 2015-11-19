@@ -267,7 +267,7 @@ struct Guard *createGuard(enum GuardType type) {
 }
 
 
-void runSimulation(struct Windows *gameInterface,
+bool simulate(struct Windows *gameInterface,
     struct UnitList *guardList, struct UnitList *inmateList,
     struct Path *path) {
 
@@ -305,6 +305,9 @@ void runSimulation(struct Windows *gameInterface,
         wrefresh(gameInterface->body);
         nanosleep(&delay, NULL);
     }
+
+    return true;  //TODO return win condition
+
 }
 
 

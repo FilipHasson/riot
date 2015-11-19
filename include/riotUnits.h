@@ -172,7 +172,8 @@ PRECONDITIONS: The enum value is a valid inmate type.
 POSTCONDITIONS: Memory is allocated for a new Inmate struct.*/
 
 
-void runSimulation(struct Windows *win, struct UnitList *guardList, struct UnitList *inmateList, struct Path *path); /*
+bool simulate(struct Windows *win, struct UnitList *guardList,
+    struct UnitList *inmateList, struct Path *path); /*
 
   DESCRIPTION: Simulates all unit interactions and drawing for a period of time
   

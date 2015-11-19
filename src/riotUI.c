@@ -4,6 +4,7 @@
 #define _DEBUG
 #endif
 
+
 void uiInit(struct Windows *win) {
 
     int y, x;
@@ -17,8 +18,7 @@ void uiInit(struct Windows *win) {
 
     /* Verify terminal dimensions */
     getmaxyx(stdscr, y, x);
-    if ((x < MAX_COLS) || (y < MAX_ROWS))
-        quit("Terminal size too small");
+    if ((x < MAX_COLS) || (y < MAX_ROWS)) quit("Terminal size too small");
 
     /* Set window positions*/
     win->header = newwin(HEADER, MAX_COLS, 0, 0);
@@ -27,6 +27,7 @@ void uiInit(struct Windows *win) {
     win->menu = newwin(MAX_ROWS, MAX_COLS, 0, 0);
     wbkgd(win->body, COLOR_PAIR (1));
 }
+
 
 void uiFree(struct Windows *win) {
     if (stdscr) {
@@ -37,6 +38,7 @@ void uiFree(struct Windows *win) {
         endwin();
     }
 }
+
 
 enum GameMode menuMain(struct Windows *gameInterface) {
 
@@ -116,7 +118,6 @@ int menuContinue(struct Windows *gameInterface, struct MapList *mapList,
 #endif
 
         /* Set unlocked state */
-
 #ifndef _DEBUG
         unlocked[i] = current->beaten;
 #endif
@@ -444,11 +445,15 @@ void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path,
         setColor = PURPLE;
     }
 
+#ifndef _DEBUG
+    /* Print movement debug information if the debug macro has been set */
     mvwprintw(
         body, 0, 1, "%d %d %f %f, %d, %d, %f, %f",
         newCoordinates[0], newCoordinates[1],
         inmate->position, php, inmate->currentHealth, inmate->maxHealth, hp, mhp
     );
+#endif
+
     wbkgd(body, COLOR_PAIR(1));
 
     currentCoordinates = getCoordinate(oldPosition);
@@ -472,16 +477,68 @@ int *getCoordinate(int position) {
 }
 
 
-void drawText(struct Windows *windows, struct Dialog *dialog) {
+void drawText(struct Windows *windows, struct Dialog dialog,
+    enum GameMode gameMode) {
+    char *target = NULL;
+    char current;
+    char new[] = "Placeholder newgame text"; //TODO revise
+    int height = 0;
+    int i = 1;
+    int yOff, xOff;
+
+    /* Get dialogue text field */
+    switch (gameMode) {
+        case NEW:
+            target = new;
+            height=1;
+            break;
+        case CONTINUE:
+            target = dialog.textIntro;
+            break;
+        case WIN:
+            target = dialog.textWin;
+            break;
+        case LOSE:
+            target = dialog.textLose;
+            break;
+        default:
+            quit("Simulation terminated with unknown condition");
+    }
+
+    xOff = MAX_COLS / 2 - MAP_COLS / 2;
+
+    /* Print borders and static text */
     wclear(windows->menu);
-    mvwaddstr(windows->menu, 7, 5, dialog->textIntro);
     box(windows->menu, 0, 0);
+    mvwaddstr(windows->menu,2,xOff,"Level x: Title"); //TODO revise
+    mvwaddstr(windows->menu,2,MAX_COLS-27-xOff,"Press any key to continue...");
+
+
     wrefresh(windows->menu);
+
+    /* Determine text height based on newline count */
+    while ((current = target[i++]) != '\0')
+        if (current == '\n')height++;
+    if (height > MAX_ROWS) quit("Too much text in current dialogue entry");
+
+    yOff = MAX_ROWS / 2 - height / 2;
+
+    /* Resize window (temporarily)*/
+    wresize(windows->menu, height, MAP_COLS + 1); // +1 for newline
+    mvwin(windows->menu, yOff, xOff);
+    wclear(windows->menu);
+
+
+    /* Printout to screen */
+    mvwaddstr(windows->menu,0,0, target);
+    wrefresh(windows->menu);
+
+    /* Wait for user input to continue */
     getchar();
 
-    wclear(windows->body);
-    wclear(windows->header);
-    wclear(windows->footer);
+    /* Restore window dimensions */
+    wresize(windows->menu, MAX_ROWS, MAX_COLS);
+    wresize(windows->menu, 0, 0);
 }
 
 

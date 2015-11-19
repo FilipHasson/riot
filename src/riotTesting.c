@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 
         if (argv[i][0] != '-')continue; //only process flags
 
-        if (!strcmp(argv[i], "-units")) unitsTest();
+//        if (!strcmp(argv[i], "-units")) unitsTest();
         else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
         else if (!strcmp(argv[i], "-unitmove"))
             unitsMove(argv[2] ? argv[2] : NULL);
@@ -122,7 +122,7 @@ void unitsMove(char *loadDir) {
     /* for (int i = 0; i < 20; ++i) {
          inmateMove(inmates, path);
      }*/
-    //runSimulation(&gameInterface,guards, inmates, path);
+    //simulate(&gameInterface,guards, inmates, path);
     putchar('\n');
 
     while (inmates->count) {
@@ -235,7 +235,7 @@ void mapTest(char *loadDir) {
 //        printGuardList(guardList);
         printf("\n\n");
 
-        destroyList(&guardList);
+//        destroyList(&guardList);
     }
 
     return;
