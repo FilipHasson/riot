@@ -2,57 +2,57 @@
 #include "riotUI.h"
 
 int main(int argc, char **argv) {
-    struct MapList *mapList;
     enum GameMode gameMode;
-    struct GameInterface gameInterface;
-    mapList = parseMap(argv[1] ? argv[1] : NULL);
+    struct Windows windows;
+    struct MapList mapList, *mapListPtr;
+    struct Dialog dialog[MAX_LEVELS];
     int levelSelect;
-    uiSet(INIT, &gameInterface);
+    bool playerProgress[MAX_LEVELS];
 
-    /* Begin body game loop */
-    do {
-        uiSet(MENU, &gameInterface);
-        gameMode = menuMain(&gameInterface);
-        uiSet(gameMode, &gameInterface);
+    parseMap(argv[1], &mapList, dialog);
+    uiInit(&windows);
 
-        switch (gameMode) {
-            case NEW:
-                play(gameInterface,mapList->level[0]);
-                break;
-            case CONTINUE:
-                levelSelect = menuContinue(&gameInterface, mapList);
-                play(gameInterface,mapList->level[levelSelect]);
-                break;
-            default:
-                break;
+    mapListPtr = &mapList;
+    gameMode = menuMain(&windows);
+
+    if (gameMode != EXIT) {
+        if (gameMode == NEW) levelSelect = 0;
+        else levelSelect = menuContinue(&windows, &mapList, playerProgress);
+        while (levelSelect != EXIT) {
+            drawText(&windows, dialog);
+            play(&windows, &(mapListPtr->level[levelSelect]));
         }
-    } while (gameMode != EXIT);
+    }
 
+    uiFree(&windows);
     quit("Thanks for playing.\n");
 
     return 0;
 }
 
 
-void play(struct GameInterface gameInterface,struct Map map){
+void play(struct Windows *windows, struct Map *map) {
     struct UnitList *inmates;
     struct UnitList *guards;
     struct UnitNode *nextInmate;
     struct Path *path;
 
-    inmates = createList();
-    guards = getGuardList(map);
-    path = getPath(map);
+    wclear(windows->body);
+    wclear(windows->header);
+    wclear(windows->footer);
 
-    drawIntroText(&gameInterface, &map);
-    drawInmateSelection(&gameInterface,&map, inmates, guards);
+    inmates = createList();
+    guards = getGuardList(*map);
+    path = getPath(*map);
+
+    drawInmateSelection(windows, map, inmates, guards);
 
     nextInmate = getHead(inmates);
-    for (int i=0;i<inmates->count;i++){
-        ((struct Inmate*)nextInmate->unit)->position = path->first->location;
+    for (int i = 0; i < inmates->count; i++) {
+        ((struct Inmate *) nextInmate->unit)->position = path->first->location;
         nextInmate = nextInmate->next;
     }
-    runSimulation(&gameInterface, guards,inmates,path);
+    runSimulation(windows, guards, inmates, path);
 }
 
 

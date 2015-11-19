@@ -25,11 +25,18 @@
 
 /* Data Types */
 
-struct GameInterface {
+struct Windows {
     WINDOW *menu;
     WINDOW *body;
     WINDOW *header;
     WINDOW *footer;
+};
+
+
+struct Dialog{
+    char textIntro[MAX_TEXT];
+    char textWin[MAX_TEXT];
+    char textLose[MAX_TEXT];
 };
 
 
@@ -40,14 +47,11 @@ struct Map {/*
 
     char name[LINE_MAX];
     int levelNo;
-    bool beaten;
     char overlay[MAP_ROWS][MAP_COLS+1]; //+1 for null char
     char inmates[INMATE_TYPES];
-    char textIntro[MAX_TEXT];
-    char textWin[MAX_TEXT];
-    char textLose[MAX_TEXT];
     int panicMax;
     int repMax;
+    struct Dialog dialog;
 };
 
 
@@ -145,11 +149,11 @@ POSTCONDITIONS: May call quit() to terminate program operation if the user
  has provided an invalid map file path.*/
 
 
-void play(struct GameInterface gameInterface,struct Map map);/*
+void play(struct Windows *gameInterface,struct Map* map);/*
 
 DESCRIPTION: play() calls all functions that involve player unit selection, and game simulation.
 
-ARGUMENTS: Game interface struct that holds neccessary windows (struct GameInterface gameInterface).
+ARGUMENTS: Game interface struct that holds neccessary windows (struct Windows gameInterface).
            Map struct which holds neccessary map information (struct Map map). 
 
 */

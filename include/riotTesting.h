@@ -59,6 +59,9 @@ ARGUMENTS: The location of the directory
 void writeToFile(char *message);
 
 
+void colorTest();
+
+
 void testingHelp();
 
 #endif //RIOT_TESTING

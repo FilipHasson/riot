@@ -39,7 +39,7 @@ struct TileNode {/*
 
 /* Function Prototypes */
 
-struct MapList * parseMap(char *loadDir);/*
+void parseMap(char *loadDir, struct MapList* mapList, struct Dialog dialog[]);/*
 
 DESCRIPTION: parseMap() will parse level files and store their contents into
  the structures used by the rest of the system.

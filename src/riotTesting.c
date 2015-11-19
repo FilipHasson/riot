@@ -2,31 +2,40 @@
 #include <ncurses.h>
 #include "riotTesting.h"
 
-void play(struct GameInterface gameInterface,struct Map map){
-    struct UnitList *inmates;
-    struct UnitList *guards;
-    struct Path *path;
 
-    inmates = createList();
-    guards = getGuardList(map);
+int main(int argc, char **argv) {
 
-    drawIntroText(&gameInterface, &map);
-    drawInmateSelection(&gameInterface,&map, inmates, guards);
+    if (argc == 1) {
+        testingHelp();
+        printf("\nExiting.");
+        exit(-1);
+    }
+    for (int i = 1; i < argc; i++) {
 
-    path = getPath(map);
-    runSimulation(&gameInterface, guards,inmates,path);
+        if (argv[i][0] != '-')continue; //only process flags
+
+        if (!strcmp(argv[i], "-units")) unitsTest();
+        else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
+        else if (!strcmp(argv[i], "-unitmove"))
+            unitsMove(argv[2] ? argv[2] : NULL);
+        else if (!strcmp(argv[i], "-color")) colorTest();
+//        else if (!strcmp(argv[i], "-play")) unitsPlay(argv[2]);
+        else printf("Unknown command (%s)\n", argv[i]);
+    }
+
+    printf("Testing done.\n");
+    return 0;
 
 }
 
+void printPath(struct Path *path) {
+    struct TileNode *nextNode;
 
-void printPath(struct Path * path){
-    struct TileNode * nextNode;
-    
     nextNode = path->first;
     printf("\n\n#### PRINTING PATH ####\n\n");
-    for (int i=0;i<path->count;i++){
-        printf("Location: %d :",nextNode->location);
-        printf("Type: %c\n",nextNode->type);
+    for (int i = 0; i < path->count; i++) {
+        printf("Location: %d :", nextNode->location);
+        printf("Type: %c\n", nextNode->type);
         nextNode = nextNode->next;
     }
     printf("\n########################\n");
@@ -77,37 +86,13 @@ void colorTest() {
 }
 
 
-int main(int argc, char **argv) {
-
-    if (argc == 1) {
-        testingHelp();
-        printf("\nExiting.");
-        exit(-1);
-    }
-    for (int i = 1; i < argc; i++) {
-
-        if (argv[i][0] != '-')continue; //only process flags
-
-        if (!strcmp(argv[i], "-units")) unitsTest();
-        else if (!strcmp(argv[i], "-map")) mapTest(argv[2] ? argv[2] : NULL);
-        else if (!strcmp(argv[i], "-unitmove"))
-            unitsMove(argv[2] ? argv[2] : NULL);
-        else if (!strcmp(argv[i], "-color")) colorTest();
-        else if (!strcmp(argv[i], "-play")) unitsPlay(argv[2]);
-        else printf("Unknown command (%s)\n", argv[i]);
-    }
-
-    printf("Testing done.\n");
-    return 0;
-
-}
-
-
 void unitsMove(char *loadDir) {
     struct UnitList *inmates;
     //struct UnitList *guards;
     struct Inmate *inmateUnit;
-    struct MapList *testList = parseMap(loadDir);
+    struct Dialog dialog[MAX_LEVELS];
+    struct MapList *testList = malloc(sizeof(struct MapList));
+    parseMap(loadDir, testList, dialog);
     struct Map *current;
     struct Path *path;
     printf("Riot Levels Found %d:\n\n", testList->count);
@@ -129,9 +114,9 @@ void unitsMove(char *loadDir) {
     printf("Adding an inmate to the list (%d)\n", inmates->count);
     printf("Inmate position is: %f\n-----\n", inmateUnit->position);
 
-   /* for (int i = 0; i < 20; ++i) { 
-        inmateMove(inmates, path);
-    }*/
+    /* for (int i = 0; i < 20; ++i) {
+         inmateMove(inmates, path);
+     }*/
     //runSimulation(&gameInterface,guards, inmates, path);
     putchar('\n');
 
@@ -145,35 +130,37 @@ void unitsMove(char *loadDir) {
 }
 
 
-void unitsPlay(char *argument){
-    struct MapList *mapList;
-    enum GameMode gameMode;
-    struct GameInterface gameInterface;
-    mapList = parseMap(argument);
-    int levelSelect;
-    uiSet(INIT, &gameInterface);
-
-    /* Begin body game loop */
-    do {
-        uiSet(MENU, &gameInterface);
-        gameMode = menuMain(&gameInterface);
-        uiSet(gameMode, &gameInterface);
-
-        switch (gameMode) {
-            case NEW:
-                play(gameInterface,mapList->level[0]);
-                break;
-            case CONTINUE:
-                levelSelect = menuContinue(&gameInterface, mapList);
-                play(gameInterface,mapList->level[levelSelect]);
-                break;
-            default:
-                break;
-        }
-    } while (gameMode != EXIT);
-
-    quit("Thanks for playing.\n");
-}
+//
+//void unitsPlay(char *argument){
+//    struct MapList *mapList;
+//    enum GameMode gameMode;
+//    struct Windows gameInterface;
+//    struct Dialog *dialog = calloc(MAX_LEVELS,sizeof(struct Dialog));
+//    struct MapList *testList = malloc(sizeof(struct MapList));
+//    parseMap(loadDir,testList,&dialog);    int levelSelect;
+//    uiSet(INIT, &gameInterface);
+//
+//    /* Begin body game loop */
+//    do {
+//        uiSet(MENU, &gameInterface);
+//        gameMode = menuMain(&gameInterface);
+//        uiSet(gameMode, &gameInterface);
+//
+//        switch (gameMode) {
+//            case NEW:
+//                play(gameInterface,mapList->level[0]);
+//                break;
+//            case CONTINUE:
+//                levelSelect = menuContinue(&gameInterface, mapList);
+//                play(gameInterface,mapList->level[levelSelect]);
+//                break;
+//            default:
+//                break;
+//        }
+//    } while (gameMode != EXIT);
+//
+//    quit("Thanks for playing.\n");
+//}
 
 
 void unitsTest(void) {
@@ -217,7 +204,9 @@ void unitsTest(void) {
 
 
 void mapTest(char *loadDir) {
-    struct MapList *testList = parseMap(loadDir);
+    struct Dialog *dialog = calloc(MAX_LEVELS, sizeof(struct Dialog));
+    struct MapList *testList = malloc(sizeof(struct MapList));
+    parseMap(loadDir, testList, dialog);
     struct Map *current;
     struct Path *path;
     struct UnitList *guardList;
@@ -230,7 +219,6 @@ void mapTest(char *loadDir) {
         printf("LEVEL %d: \n\n", i);
 
         printf("Name: %s\n", current->name);
-        printf("Beaten: %s\n", current->beaten?"Yes":"No");
         printf("\n");
 
         printf("Layout:\n");

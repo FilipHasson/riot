@@ -4,13 +4,12 @@
 #include "riotMap.h"
 
 
-struct MapList *parseMap(char *loadDir) {
+void parseMap(char *loadDir, struct MapList *mapList, struct Dialog *dialog) {
 
     FILE *file;
     DIR *directory;
     regex_t riotExt;
 
-    struct MapList *mapList;
     struct Map *current;
     struct dirent *entry;
 
@@ -27,7 +26,6 @@ struct MapList *parseMap(char *loadDir) {
     regcomp(&riotExt, REGEX_EXT, REG_NOSUB | REG_EXTENDED);
 
     /* Create a new mapList to store map file details */
-    mapList = malloc(sizeof(struct MapList));
     mapList->count = 0;
 
     /* Use map directory passed as argument if provided, else cwd */
@@ -57,9 +55,6 @@ struct MapList *parseMap(char *loadDir) {
                 current->levelNo = entry->d_name[0] - '0';
             }
 
-            /* Assign beaten status */
-            current->beaten = false;
-
             /* Get level name */
             fgets(line, MAX_COLS, file);
             strtok(line, "]");
@@ -81,25 +76,25 @@ struct MapList *parseMap(char *loadDir) {
             strcpy(current->inmates, strtok(NULL, "\n"));
 
             /* Get map */
-            while((fgetc(file)=='>'));
-            for(y=0;y<MAP_ROWS;y++) {
+            while ((fgetc(file) == '>'));
+            for (y = 0; y < MAP_ROWS; y++) {
                 fgets(current->overlay[y], MAP_COLS, file);
-                fseek(file,2,SEEK_CUR);
+                fseek(file, 2, SEEK_CUR);
             }
 
             /* Get text boxes*/
-            textBox[0] = current->textIntro;
-            textBox[1] = current->textWin;
-            textBox[2] = current->textLose;
+            textBox[0] = dialog[current->levelNo].textIntro;
+            textBox[1] = dialog[current->levelNo].textWin;
+            textBox[2] = dialog[current->levelNo].textLose;
 
             for (int i = 0; i < 3; i++) {
                 x = 0;
                 do checkChar = fgetc(file); while (checkChar == '>');
                 if (checkChar == '\0') strcpy(textBox[i], "");
-                else while ((checkChar = fgetc(file)) != '>') {
-                    if (checkChar == '\n')textBox[i][x++] = ' ';
-                    else textBox[i][x++] = checkChar;
-                }
+                else
+                    while ((checkChar = fgetc(file)) != '>') {
+                        textBox[i][x++] = checkChar;
+                    }
             }
 
             fclose(file);
@@ -117,14 +112,7 @@ struct MapList *parseMap(char *loadDir) {
         quit("No map files found");
     }
 
-//    /* Terminate on level ordering inconsistency */
-//    for (int i = MAX_LEVELS; i > 1; i--) {
-//        if (strlen(mapList->level[i].name) &&
-//            !strlen(mapList->level[i - 1].name))
-//            quit("Inconsistent map file numbering");
-//    }
-
-    return mapList;
+    return;
 }
 
 
