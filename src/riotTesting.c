@@ -2,7 +2,7 @@
 #include <ncurses.h>
 #include "riotTesting.h"
 
-void play(struct Interface gameInterface,struct Map map){
+void play(struct GameInterface gameInterface,struct Map map){
     struct UnitList *inmates;
     struct UnitList *guards;
     struct Path *path;
@@ -17,7 +17,9 @@ void play(struct Interface gameInterface,struct Map map){
     runSimulation(&gameInterface, guards,inmates,path);
 
 }
-static void printPath(struct Path * path){
+
+
+void printPath(struct Path * path){
     struct TileNode * nextNode;
     
     nextNode = path->first;
@@ -30,7 +32,8 @@ static void printPath(struct Path * path){
     printf("\n########################\n");
 }
 
-static void printGuardList(struct UnitList *guardList) {
+
+void printGuardList(struct UnitList *guardList) {
     struct UnitNode *nextNode;
     struct Guard *guard;
 
@@ -52,7 +55,7 @@ static void printGuardList(struct UnitList *guardList) {
 }
 
 
-static void colorTest() {
+void colorTest() {
     initscr();
     start_color();
     init_pair(GREEN, GREEN, COLOR_BLACK);
@@ -72,6 +75,7 @@ static void colorTest() {
     getchar();
     endwin();
 }
+
 
 int main(int argc, char **argv) {
 
@@ -97,6 +101,7 @@ int main(int argc, char **argv) {
     return 0;
 
 }
+
 
 void unitsMove(char *loadDir) {
     struct UnitList *inmates;
@@ -139,10 +144,11 @@ void unitsMove(char *loadDir) {
     destroyList(inmates);
 }
 
+
 void unitsPlay(char *argument){
     struct MapList *mapList;
     enum GameMode gameMode;
-    struct Interface gameInterface;
+    struct GameInterface gameInterface;
     mapList = parseMap(argument);
     int levelSelect;
     uiSet(INIT, &gameInterface);
@@ -168,6 +174,7 @@ void unitsPlay(char *argument){
 
     quit("Thanks for playing.\n");
 }
+
 
 void unitsTest(void) {
     struct UnitList *inmates, *guards;
@@ -242,6 +249,7 @@ void mapTest(char *loadDir) {
     return;
 
 }
+
 
 void printInmate(struct Inmate *inmate) {
 

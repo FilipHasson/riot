@@ -4,7 +4,7 @@
 int main(int argc, char **argv) {
     struct MapList *mapList;
     enum GameMode gameMode;
-    struct Interface gameInterface;
+    struct GameInterface gameInterface;
     mapList = parseMap(argv[1] ? argv[1] : NULL);
     int levelSelect;
     uiSet(INIT, &gameInterface);
@@ -33,12 +33,12 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void play(struct Interface gameInterface,struct Map map){
+
+void play(struct GameInterface gameInterface,struct Map map){
     struct UnitList *inmates;
     struct UnitList *guards;
     struct UnitNode *nextInmate;
     struct Path *path;
-    char printstring[100];
 
     inmates = createList();
     guards = getGuardList(map);
@@ -54,6 +54,7 @@ void play(struct Interface gameInterface,struct Map map){
     }
     runSimulation(&gameInterface, guards,inmates,path);
 }
+
 
 void quit(char *message) {
     if (stdscr) endwin();

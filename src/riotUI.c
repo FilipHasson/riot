@@ -3,7 +3,8 @@
 #define _DEBUG
 #endif
 
-void uiSet(enum GameMode gameMode, struct Interface *win) {
+
+void uiSet(enum GameMode gameMode, struct GameInterface *win) {
 
     int y, x;
 
@@ -58,7 +59,8 @@ void uiSet(enum GameMode gameMode, struct Interface *win) {
     return;
 }
 
-enum GameMode menuMain(struct Interface *gameInterface) {
+
+enum GameMode menuMain(struct GameInterface *gameInterface) {
 
     enum GameMode gameMode = _GAME_MODE_LIMIT;
     WINDOW *menu = gameInterface->menu;
@@ -93,7 +95,7 @@ enum GameMode menuMain(struct Interface *gameInterface) {
 }
 
 /*
-int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
+int menuContinue(struct GameInterface *gameInterface, struct MapList *mapList) {
     WINDOW *menu = gameInterface->menu;
     struct Map *current, *last;
     int select;
@@ -143,13 +145,16 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     return (select - '0');
 }
 */
-
-int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
+int menuContinue(struct GameInterface *gameInterface, struct MapList *mapList) {
     WINDOW *menu = gameInterface->menu;
-    struct Map *current, *last;
+    struct Map *current;
     int select;
     int y = 3;
+
+#ifndef _DEBUG
     bool unlocked[MAX_LEVELS];
+    struct Map *current, *last;
+#endif
 
     wclear(menu);
     box(menu, 0, 0);
@@ -161,13 +166,16 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
 
     /* Always print first level */
     mvwprintw(menu, y, 21, "[0] %s", mapList->level[0].name);
+
+#ifndef _DEBUG
     unlocked[0] = true;
+#endif
 
     /* Print additional levels */
     for (int i = 1; i < mapList->count; i++) {
         current = &mapList->level[i];
-        last = &mapList->level[i - 1];
 #ifndef _DEBUG
+        last = &mapList->level[i - 1];
         if (!current->hidden) {
             mvwprintw(menu, y + i, 21, "[%c] %s",
                 last->beaten ? i + '0' : '-', current->name);
@@ -179,7 +187,10 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
 #endif
 
         /* Set unlocked state */
+
+#ifndef _DEBUG
         unlocked[i] = current->beaten;
+#endif
     }
     mvwaddstr(menu, MAX_ROWS - 4, 21, "[b]ack");
     wrefresh(menu);
@@ -198,7 +209,8 @@ int menuContinue(struct Interface *gameInterface, struct MapList *mapList) {
     return (int) (select - '0');
 }
 
-void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList *inmates, struct UnitList *guards) {
+
+void drawInmateSelection(struct GameInterface *win, struct Map *map, struct UnitList *inmates, struct UnitList *guards) {
     struct Inmate * inmate;
     char input;
     int y;
@@ -345,6 +357,7 @@ void drawInmateSelection(struct Interface *win, struct Map *map, struct UnitList
     wrefresh(win->body);
 }
 
+
 void updateHeader (WINDOW *header, struct Map *map){
     wclear(header);
     box(header, 0, 0);
@@ -359,7 +372,8 @@ void updateHeader (WINDOW *header, struct Map *map){
     mvwaddch (header, 2, MAX_COLS - 1, ACS_RTEE);
 }
 
-void startHeadFoot(struct Interface *win, struct Map *map){
+
+void startHeadFoot(struct GameInterface *win, struct Map *map){
     int y;
 
     wclear(win->header);
@@ -380,6 +394,7 @@ void startHeadFoot(struct Interface *win, struct Map *map){
         /*Populates footer*/
     drawFooterInmates(win, map->inmates);
 }
+
 
 void drawQueue (WINDOW *body){
     int y;
@@ -403,6 +418,7 @@ void drawQueue (WINDOW *body){
     wrefresh(body);
 }
 
+
 void updateQueue (WINDOW *body, struct UnitList *inmates, int numAdded){
     struct Inmate *temp;
     struct UnitNode *node;
@@ -414,6 +430,7 @@ void updateQueue (WINDOW *body, struct UnitList *inmates, int numAdded){
     }
     wrefresh(body);
 }
+
 
 void drawMap (WINDOW *body, struct Map*map){
     int y;
@@ -447,12 +464,13 @@ void drawGuards(WINDOW *body, struct Map *map, struct UnitList *guards){
 }
 
 
-void drawLevel(struct Interface *win, struct Map *map, struct UnitList *guards){
+void drawLevel(struct GameInterface *win, struct Map *map, struct UnitList *guards){
     drawMap(win->body,map);
     drawGuards(win->body,map,guards);
     drawQueue(win->body);
     return;
 }
+
 
 void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path, float oldPosition) {
     int *currentCoordinates = malloc(sizeof(int)*2);
@@ -508,7 +526,8 @@ int *getCoordinate(int position) {
     return coordinates;
 }
 
-void drawFooterInmates(struct Interface *win, char *inmates) {
+
+void drawFooterInmates(struct GameInterface *win, char *inmates) {
     char output[100];
     int i;
 
@@ -526,7 +545,7 @@ void drawFooterInmates(struct Interface *win, char *inmates) {
 }
 
 
-void drawIntroText (struct Interface *win, struct Map *map){
+void drawIntroText (struct GameInterface *win, struct Map *map){
     /* creates pause with text output*/
     startHeadFoot(win,map);
     mvwprintw(win->body, 7, 10, "Placeholder text motherfucker.....");//temp
@@ -538,7 +557,7 @@ void drawIntroText (struct Interface *win, struct Map *map){
 }
 
 
-void drawOutroText (struct Interface *win, struct Map *map){
+void drawOutroText (struct GameInterface *win, struct Map *map){
     /* creates pause with text output*/
     mvwprintw(win->body, 7, 10, "Placeholder text motherfucker.....");//temp
     wrefresh(win->body);

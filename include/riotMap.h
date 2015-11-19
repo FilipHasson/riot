@@ -36,6 +36,7 @@ struct TileNode {/*
     struct TileNode *next;
 };
 
+
 /* Function Prototypes */
 
 struct MapList * parseMap(char *loadDir);/*

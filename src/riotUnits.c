@@ -1,15 +1,10 @@
+#define _DEFAULT_SOURCE
+
 #include <ctype.h>
-#include <unistd.h>
+#include <time.h>
 #include "riotUnits.h"
 #include "riotUI.h"
 
-static void writeToFile(char *message){
-    FILE * file = fopen("test.txt","a");
-
-    fprintf(file,"%s\n",message);
-
-    fclose(file);
-}
 
 struct UnitList *createList(void) {
 
@@ -68,7 +63,7 @@ struct UnitNode *getTail(struct UnitList *listIn) {
 
 
 int getLength(struct UnitList *listIn) {
-    return listIn ? listIn->count : (int) -1;
+    return listIn ? listIn->count : (int) - 1;
 }
 
 
@@ -149,81 +144,81 @@ struct Inmate *createInmate(enum InmateType type) {
 
     switch (type) {
 
-        case PROTAGONIST:
-            unit->currentHealth = unit->maxHealth = 5;
-            unit->speed = 2;
-            unit->rep = 0;
-            unit->panic = 0;
-            unit->delUnit = FALSE;
-            break;
+    case PROTAGONIST:
+        unit->currentHealth = unit->maxHealth = 5;
+        unit->speed = 2;
+        unit->rep = 0;
+        unit->panic = 0;
+        unit->delUnit = FALSE;
+        break;
 
-        case HOMEBOY:
-            unit->currentHealth = unit->maxHealth = 10;
-            unit->speed = 4;
-            unit->rep = 5;
-            unit->panic = 2;
-            unit->delUnit = FALSE;
-            break;
+    case HOMEBOY:
+        unit->currentHealth = unit->maxHealth = 10;
+        unit->speed = 4;
+        unit->rep = 5;
+        unit->panic = 2;
+        unit->delUnit = FALSE;
+        break;
 
-        case BRUISER:
-            unit->currentHealth = unit->maxHealth = 16;
-            unit->speed = 4;
-            unit->rep = 15;
-            unit->panic = 6;
-            unit->delUnit = FALSE;
-            break;
+    case BRUISER:
+        unit->currentHealth = unit->maxHealth = 16;
+        unit->speed = 4;
+        unit->rep = 15;
+        unit->panic = 6;
+        unit->delUnit = FALSE;
+        break;
 
-        case LUNATIC:
-            unit->currentHealth = unit->maxHealth = 16;
-            unit->speed = 6;
-            unit->rep = 10;
-            unit->panic = 8;
-            unit->delUnit = FALSE;
-            break;
+    case LUNATIC:
+        unit->currentHealth = unit->maxHealth = 16;
+        unit->speed = 6;
+        unit->rep = 10;
+        unit->panic = 8;
+        unit->delUnit = FALSE;
+        break;
 
-        case FATTY:
-            unit->currentHealth = unit->maxHealth = 40;
-            unit->speed = 2;
-            unit->rep = 10;
-            unit->panic = 4;
-            unit->delUnit = FALSE;
-            break;
+    case FATTY:
+        unit->currentHealth = unit->maxHealth = 40;
+        unit->speed = 2;
+        unit->rep = 10;
+        unit->panic = 4;
+        unit->delUnit = FALSE;
+        break;
 
-        case SPEEDY:
-            unit->currentHealth = unit->maxHealth = 10;
-            unit->speed = 8;
-            unit->rep = 20;
-            unit->panic = 2;
-            unit->delUnit = FALSE;
-            break;
+    case SPEEDY:
+        unit->currentHealth = unit->maxHealth = 10;
+        unit->speed = 8;
+        unit->rep = 20;
+        unit->panic = 2;
+        unit->delUnit = FALSE;
+        break;
 
-        case CUTIE:
-            unit->currentHealth = unit->maxHealth = 20;
-            unit->speed = 4;
-            unit->rep = 20;
-            unit->panic = 1;
-            unit->delUnit = FALSE;
-            break;
+    case CUTIE:
+        unit->currentHealth = unit->maxHealth = 20;
+        unit->speed = 4;
+        unit->rep = 20;
+        unit->panic = 1;
+        unit->delUnit = FALSE;
+        break;
 
-        case ATTORNEY:
-            unit->currentHealth = unit->maxHealth = 30;
-            unit->speed = 4;
-            unit->rep = 30;
-            unit->panic = 2;
-            unit->delUnit = FALSE;
-            break;
+    case ATTORNEY:
+        unit->currentHealth = unit->maxHealth = 30;
+        unit->speed = 4;
+        unit->rep = 30;
+        unit->panic = 2;
+        unit->delUnit = FALSE;
+        break;
 
-        case DOCTOR:
-            unit->currentHealth = unit->maxHealth = 10;
-            unit->speed = 4;
-            unit->rep = 40;
-            unit->panic = 2;
-            unit->delUnit = FALSE;
-            break;
+    case DOCTOR:
+        unit->currentHealth = unit->maxHealth = 10;
+        unit->speed = 4;
+        unit->rep = 40;
+        unit->panic = 2;
+        unit->delUnit = FALSE;
+        break;
 
-        default:
-            quit("Creating unsupported unit type.");
-            break;
+    default:
+        quit("Creating unsupported unit type.");
+        break;
     }
 
     return unit;
@@ -239,91 +234,95 @@ struct Guard *createGuard(enum GuardType type) {
 
     switch (type) {
 
-        case GUARD:
-            unit->damage = 5;
-            unit->range = 2;
-            unit->cooldown = 4;
-            unit->ai = PROX;
-            break;
+    case GUARD:
+        unit->damage = 5;
+        unit->range = 2;
+        unit->cooldown = 4;
+        unit->ai = PROX;
+        break;
 
-        case DOGS:
-            unit->damage = 4;
-            unit->range = 4;
-            unit->cooldown = 6;
-            unit->ai = AOE;
-            break;
+    case DOGS:
+        unit->damage = 4;
+        unit->range = 4;
+        unit->cooldown = 6;
+        unit->ai = AOE;
+        break;
 
-        case LUNCH:
-            unit->damage = 0;
-            unit->range = 6;
-            unit->cooldown = 12;
-            unit->ai = AOE;
-            break;
+    case LUNCH:
+        unit->damage = 0;
+        unit->range = 6;
+        unit->cooldown = 12;
+        unit->ai = AOE;
+        break;
 
-        case PSYCH:
-            unit->damage = 0;
-            unit->range = 6;
-            unit->cooldown = 12;
-            unit->ai = PROX;
-            break;
+    case PSYCH:
+        unit->damage = 0;
+        unit->range = 6;
+        unit->cooldown = 12;
+        unit->ai = PROX;
+        break;
 
-        case SHARP:
-            unit->damage = 6;
-            unit->range = 10;
-            unit->cooldown = 8;
-            unit->ai = END;
-            break;
+    case SHARP:
+        unit->damage = 6;
+        unit->range = 10;
+        unit->cooldown = 8;
+        unit->ai = END;
+        break;
 
-        case WARDEN:
-            unit->damage = 100;
-            unit->range = 8;
-            unit->cooldown = 2;
-            unit->ai = PROX;
-            break;
+    case WARDEN:
+        unit->damage = 100;
+        unit->range = 8;
+        unit->cooldown = 2;
+        unit->ai = PROX;
+        break;
 
-        case CYBORG:
-            unit->damage = 12;
-            unit->range = 8;
-            unit->cooldown = 2;
-            unit->ai = PROX;
-            break;
+    case CYBORG:
+        unit->damage = 12;
+        unit->range = 8;
+        unit->cooldown = 2;
+        unit->ai = PROX;
+        break;
 
-        default:
-            quit("Creating unsupported unit type.");
-            break;
+    default:
+        quit("Creating unsupported unit type.");
+        break;
     }
 
     return unit;
 }
 
-void runSimulation(struct Interface *gameInterface, struct UnitList *guardList, struct UnitList *inmateList,
+
+void runSimulation(struct GameInterface *gameInterface,
+    struct UnitList *guardList, struct UnitList *inmateList,
     struct Path *path) {
+
     struct UnitNode *nextInmate;
     float simulateTime = 0;
     int prevPos[inmateList->count];
-    char printstring[100];
+    struct timespec delay;
+
+    delay.tv_sec = 0;
+    delay.tv_nsec = 50000000L;  // Half second in nano seconds
+
     while (simulateTime < 30) {
 
-    	nextInmate = getHead(inmateList);
-    	for (int i=0;i<inmateList->count;i++){
-            prevPos[i] = ((struct Inmate*)nextInmate->unit)->position;
+        nextInmate = getHead(inmateList);
+        for (int i = 0; i < inmateList->count; i++) {
+            prevPos[i] = ((struct Inmate *)nextInmate->unit)->position;
             nextInmate = nextInmate->next;
         }
 
         inmateMove(inmateList, path);
         guardAttack(guardList, inmateList);
-        
         nextInmate = getHead(inmateList);
-        for (int i=0;i<inmateList->count;i++){
-            redrawUnit(gameInterface->body,(struct Inmate*)nextInmate->unit,path,prevPos[i]);
-            /*
-            sprintf(printstring, "position %f", ((struct Inmate*)nextInmate->unit)->position);
-      	    writeToFile(printstring);*/
+
+        for (int i = 0; i < inmateList->count; i++) {
+            redrawUnit(gameInterface->body, (struct Inmate *)nextInmate->unit, path, prevPos[i]);
             nextInmate = nextInmate->next;
         }
         simulateTime += .25;
         wrefresh(gameInterface->body);
-        usleep(25000);
+        nanosleep(&delay,NULL);
     }
 }
 
@@ -337,24 +336,21 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
 
     nextInmate = getHead(inmateList);
     do {
-    nextTile = path->first;
+        nextTile = path->first;
         for (int i = 0; i < path->count; i++) {
-            if (nextTile->location == (int)((struct Inmate *) nextInmate->unit)->position) {
+            if (nextTile->location == (int)((struct Inmate *) nextInmate->unit)->position)
                 break;
-            }
             nextTile = nextTile->next;
         }
         prevPos = ((struct Inmate *) nextInmate->unit)->position;
         ((struct Inmate *) nextInmate->unit)->position =
-        ((struct Inmate *) nextInmate->unit)->position +
-        (float)((struct Inmate *) nextInmate->unit)->speed / 8;
-        if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 /*&& nextTile->next->type == '.'*/) {
-            ((struct Inmate *) nextInmate->unit)->position = nextTile->next->location;
-        } else if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 && nextTile->next->type == '&') {
-        	((struct Inmate *) nextInmate->unit)->delUnit = TRUE;
-        }
+            ((struct Inmate *) nextInmate->unit)->position +
+            (float)((struct Inmate *) nextInmate->unit)->speed / 8;
+        if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 /*&& nextTile->next->type == '.'*/)
+            ((struct Inmate *) nextInmate->unit)->position = nextTile->next->location; else if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 && nextTile->next->type == '&')
+            ((struct Inmate *) nextInmate->unit)->delUnit = TRUE;
         nextInmate = getNext(nextInmate);
-    } while (getNext(nextInmate) != NULL);
+    } while (getNext(nextInmate));
 }
 
 
@@ -377,7 +373,9 @@ void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
 
 
 void dealDamage(struct UnitNode *inmateNode, struct UnitNode *guardNode) {
-    ((struct Inmate *) inmateNode->unit)->currentHealth =((struct Inmate *) inmateNode->unit)->currentHealth -((struct Guard *) guardNode->unit)->damage;
+    ((struct Inmate *) inmateNode->unit)->currentHealth =
+        ((struct Inmate *) inmateNode->unit)->currentHealth -
+            ((struct Guard *) guardNode->unit)->damage;
 }
 
 
@@ -394,8 +392,8 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
     range = ((struct Guard *) guard->unit)->range;
 
     yDifference = (((inmatePosition - 1) / MAX_COLS) + 1) -
-        -
-            (((guardPosition - 1) / MAX_COLS) + 1);
+                  -
+                  (((guardPosition - 1) / MAX_COLS) + 1);
     xDifference = (guardPosition + (yDifference * MAX_COLS)) - inmatePosition;
     yDifference = abs(yDifference);
     xDifference = abs(xDifference);
@@ -404,22 +402,23 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
     return range >= totalDifference;
 }
 
-struct UnitList *getGuardList(struct Map map){
-    int i,j, position;
+
+struct UnitList *getGuardList(struct Map map) {
+    int i, j, position;
     char mapChar;
     struct Guard *insertGuard;
     struct UnitList *guardList;
 
     guardList = createList();
 
-    for (i=0;i<MAP_ROWS;i++){
-        for (j=0;j<MAP_COLS;j++){
-            position = (i*MAP_COLS)+j;
+    for (i = 0; i < MAP_ROWS; i++) {
+        for (j = 0; j < MAP_COLS; j++) {
+            position = (i * MAP_COLS) + j;
             mapChar = toupper(map.overlay[i][j]);
-            if (isalpha(mapChar)){
+            if (isalpha(mapChar)) {
                 insertGuard = createGuard(mapChar);
                 insertGuard->position = position;
-                enqueue(guardList,insertGuard);
+                enqueue(guardList, insertGuard);
             }
         }
     }
@@ -427,16 +426,16 @@ struct UnitList *getGuardList(struct Map map){
     return guardList;
 }
 
+
 struct Path *getPath(struct Map map) {
     struct Path *path = NULL;
     int i, j;
-    int count=0;
-    int position=0;
+    int count = 0;
+    int position = 0;
     int prevChecked[MAP_ROWS * MAP_COLS];
 
-    for (int i = 0; i < (MAP_ROWS * MAP_COLS); i++) {
+    for (i = 0; i < (MAP_ROWS * MAP_COLS); i++)
         prevChecked[i] = 0;
-    }
     path = (struct Path *) malloc(sizeof(struct Path));
     path->count = 0;
     for (i = 0; i < MAP_ROWS; i++) {
@@ -450,78 +449,83 @@ struct Path *getPath(struct Map map) {
         }
     }
 
-    outer:
-    pathSolve(map, path, prevChecked, count + 1, position);
+outer: pathSolve(map, path, prevChecked, count + 1, position);
 
     return path;
 }
 
 
-struct Path *pathSolve(struct Map map,struct Path *path,int prevChecked[],int count,int currentPosition){
-    int i,j,nextPosition,beingChecked;
+struct Path *pathSolve(struct Map map, struct Path *path, int prevChecked[], int count, int currentPosition) {
+    int i, j, nextPosition, beingChecked;
 
-    i = (currentPosition-1)/MAP_COLS;
-    j = currentPosition - (MAP_COLS*i);
+    i = (currentPosition - 1) / MAP_COLS;
+    j = currentPosition - (MAP_COLS * i);
 
-    beingChecked = ((i+1)*MAP_COLS)+j;
+    beingChecked = ((i + 1) * MAP_COLS) + j;
 
-    if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i+1][j])){
+    if (!beenChecked(prevChecked, beingChecked) && isPathCharacter(map.overlay[i + 1][j])) {
         nextPosition = currentPosition + MAP_COLS;
         prevChecked[count] = currentPosition;
-        pushToPath(createTileNode(currentPosition,map.overlay[i+1][j]),path);
-        pathSolve(map,path,prevChecked,count+1,nextPosition);
+        pushToPath(createTileNode(currentPosition, map.overlay[i + 1][j]), path);
+        pathSolve(map, path, prevChecked, count + 1, nextPosition);
     }
 
-    beingChecked = (i*MAP_COLS)+(j+1);
+    beingChecked = (i * MAP_COLS) + (j + 1);
 
-    if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i][j+1])){
+    if (!beenChecked(prevChecked, beingChecked) && isPathCharacter(map.overlay[i][j + 1])) {
         nextPosition = currentPosition + 1;
         prevChecked[count] = currentPosition;
-        pushToPath(createTileNode(currentPosition,map.overlay[i][j+1]),path);
-        pathSolve(map,path,prevChecked,count+1,nextPosition);
+        pushToPath(createTileNode(currentPosition, map.overlay[i][j + 1]), path);
+        pathSolve(map, path, prevChecked, count + 1, nextPosition);
     }
 
-    beingChecked = ((i-1)*MAP_COLS)+j;
+    beingChecked = ((i - 1) * MAP_COLS) + j;
 
-    if (i > 0){
-        if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i-1][j])){
+    if (i > 0) {
+        if (!beenChecked(prevChecked, beingChecked) && isPathCharacter(map.overlay[i - 1][j])) {
             nextPosition = currentPosition - MAP_COLS;
             prevChecked[count] = currentPosition;
-            pushToPath(createTileNode(currentPosition,map.overlay[i-1][j]),path);
-            pathSolve(map,path,prevChecked,count+1,nextPosition);
+            pushToPath(createTileNode(currentPosition, map.overlay[i - 1][j]), path);
+            pathSolve(map, path, prevChecked, count + 1, nextPosition);
         }
     }
 
-    beingChecked = (i*MAP_COLS)+(j-1);
+    beingChecked = (i * MAP_COLS) + (j - 1);
 
-    if (j > 0){
-        if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i][j-1])){
+    if (j > 0) {
+        if (!beenChecked(prevChecked, beingChecked) && isPathCharacter(map.overlay[i][j - 1])) {
             nextPosition = currentPosition - 1;
             prevChecked[count] = currentPosition;
-            pushToPath(createTileNode(currentPosition,map.overlay[i][j]),path);
-            pathSolve(map,path,prevChecked,count+1,nextPosition);
+            pushToPath(createTileNode(currentPosition, map.overlay[i][j]), path);
+            pathSolve(map, path, prevChecked, count + 1, nextPosition);
         }
     }
 
     return path;
 }
+
 
 bool beenChecked(int prevChecked[], int position) {
     int arrayLength;
 
     arrayLength = MAP_COLS * MAP_ROWS;
     for (int i = 0; i < arrayLength; i++) {
-        if (prevChecked[i] == position) {
+        if (prevChecked[i] == position)
             return true;
-        }
     }
     return false;
 }
 
+
 bool isPathCharacter(char tileChar) {
-    return (tileChar == '.' || tileChar == '#' || tileChar == '$' ||
-        tileChar == '&' || tileChar == '%');
+    return
+        tileChar == '.' ||
+        tileChar == '#' ||
+        tileChar == '$' ||
+        tileChar == '&' ||
+        tileChar == '%';
 }
+
 
 struct TileNode *createTileNode(int location, char type) {
     struct TileNode *tileNode = NULL;
@@ -535,31 +539,32 @@ struct TileNode *createTileNode(int location, char type) {
     return tileNode;
 }
 
+
 void pushToPath(struct TileNode *insertNode, struct Path *path) {
     struct TileNode *nextNode = NULL;
 
     if (path->count > 0) {
         nextNode = path->first;
 
-        while (nextNode->next != NULL) {
+        while (nextNode->next)
             nextNode = nextNode->next;
-        }
 
         nextNode->next = insertNode;
         path->count++;
     }
+
     else {
         path->first = insertNode;
         path->count++;
     }
 }
 
+
 void destroyPath(struct Path *path) {
     struct TileNode *nextNode = NULL;
 
-    if (path->count > 0) {
+    if (path->count > 0)
         nextNode = path->first;
-    }
 
     for (int i = 0; i < path->count; i++) {
         while (nextNode->next != NULL) {

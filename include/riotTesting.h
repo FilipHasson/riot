@@ -9,6 +9,7 @@
 #define TRIALS 10
 #define MAPSIZE 100
 
+
 void printInmates(struct UnitList *list);/*
 
 DESCRIPTION: Prints the inmate list
@@ -16,12 +17,16 @@ DESCRIPTION: Prints the inmate list
 ARGUMENTS: The inmate list
 */
 
+
 void printGuards(struct UnitList *list);/*
 
 DESCRIPTION: Prints the guard list
 
 ARGUMENTS: The guard list
 */
+
+
+void printGuardList(struct UnitList *guardList);
 
 
 void unitsMove(char *loadDir);/*
@@ -39,7 +44,9 @@ DESCRIPTION: Testing the guard range and attacking
 ARGUMENTS:
 */
 
+
 void unitsPlay(char *argument);
+
 
 void mapTest(char *loadDir);/*
 
@@ -47,6 +54,10 @@ DESCRIPTION: Tests the map
 
 ARGUMENTS: The location of the directory
 */
+
+
+void writeToFile(char *message);
+
 
 void testingHelp();
 
