@@ -145,12 +145,10 @@ void drawInmateSelection(struct Windows *win, struct Map *map,
     char input;
     int y;
     int numAdded = 0;
-
-    mvwprintw(win->body, MAP_ROWS, 3,
-        "Press the corresponding letter to buy inmate");
-    mvwprintw(win->footer, 0, 3, "Press \"Enter\" to play:");
-    drawLevel(win, map, guards);
-    wrefresh(win->footer);
+//
+//    mvwprintw(win->body, MAP_ROWS, 3,
+//        "Press the corresponding letter to buy inmate");
+//    mvwprintw(win->footer, 0, 3, "Press \"Enter\" to play:");
     do {
         updateHeader(win->header, map);
         wrefresh(win->header);
@@ -359,7 +357,6 @@ void drawLevel(struct Windows *windows, struct Map *map,
     drawMap(windows->body, map);
     drawGuards(windows->body, map, guards);
 
-
     /* Draw Queue */
     mvwaddstr(windows->body, 4, MAX_COLS - 6, "QUEUE");
     mvwaddch(windows->body, 5, MAX_COLS - 6, ACS_ULCORNER);
@@ -377,7 +374,6 @@ void drawLevel(struct Windows *windows, struct Map *map,
         mvwaddch(windows->body, 6 + y, MAX_COLS - 6, ACS_VLINE);
         mvwaddch(windows->body, 6 + y, MAX_COLS - 2, ACS_VLINE);
     }
-
 
     /*Draws the header*/
     updateHeader(windows->header, map);
@@ -404,6 +400,11 @@ void drawLevel(struct Windows *windows, struct Map *map,
     }
     mvwprintw(windows->footer, 1, 1, "INMATES");
     mvwaddstr(windows->footer, 2, 10, output);
+
+    wrefresh(windows->body);
+    wrefresh(windows->header);
+    wrefresh(windows->footer);
+
     return;
 }
 
@@ -477,6 +478,10 @@ void drawText(struct Windows *windows, struct Dialog *dialog) {
     box(windows->menu, 0, 0);
     wrefresh(windows->menu);
     getchar();
+
+    wclear(windows->body);
+    wclear(windows->header);
+    wclear(windows->footer);
 }
 
 

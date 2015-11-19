@@ -116,24 +116,159 @@ void parseMap(char *loadDir, struct MapList *mapList, struct Dialog *dialog) {
 }
 
 
-int getFilename(char *filename, char *ext) {
-    const char *dotPos = strrchr(filename, '.');
-    if (dotPos)
-        return !strncmp(++dotPos, ext, strlen(ext));
-    return 0;
+void getPath(struct Path *path, struct Map map) {
+    int i, j;
+    int count = 0;
+    int position = 0;
+    int prevChecked[MAP_ROWS * MAP_COLS];
+
+    for (i = 0; i < (MAP_ROWS * MAP_COLS); i++)
+        prevChecked[i] = 0;
+    path->count = 0;
+    for (i = 0; i < MAP_ROWS; i++) {
+        for (j = 0; j < MAP_COLS; j++) {
+            if (map.overlay[i][j] == '$') {
+                position = (i * MAP_COLS) + j;
+                count = 0;
+                prevChecked[count] = position;
+                goto outer;
+            }
+        }
+    }
+
+    outer:
+    pathSolve(map, path, prevChecked, count + 1, position);
+
+    return;
 }
 
 
-void checkArgs(int argc, char **argv) {
+struct Path *pathSolve(struct Map map, struct Path *path, int prevChecked[],
+    int count, int currentPosition) {
+    int i, j, nextPosition, beingChecked;
 
-    /* Assess passed directory */
+    i = (currentPosition - 1) / MAP_COLS;
+    j = currentPosition - (MAP_COLS * i);
 
-    if (argc > 2) quit("Too Many arguments");
+    beingChecked = ((i + 1) * MAP_COLS) + j;
 
-    if (argc == 2) {
-        //check passed dir
-        //if invalid, abort
+    if (!beenChecked(prevChecked, beingChecked) &&
+        isPathCharacter(map.overlay[i + 1][j])) {
+        nextPosition = currentPosition + MAP_COLS;
+        prevChecked[count] = currentPosition;
+        pushToPath(createTileNode(currentPosition, map.overlay[i + 1][j]),
+            path);
+        pathSolve(map, path, prevChecked, count + 1, nextPosition);
     }
 
-    return;
+    beingChecked = (i * MAP_COLS) + (j + 1);
+
+    if (!beenChecked(prevChecked, beingChecked) &&
+        isPathCharacter(map.overlay[i][j + 1])) {
+        nextPosition = currentPosition + 1;
+        prevChecked[count] = currentPosition;
+        pushToPath(createTileNode(currentPosition, map.overlay[i][j + 1]),
+            path);
+        pathSolve(map, path, prevChecked, count + 1, nextPosition);
+    }
+
+    beingChecked = ((i - 1) * MAP_COLS) + j;
+
+    if (i > 0) {
+        if (!beenChecked(prevChecked, beingChecked) &&
+            isPathCharacter(map.overlay[i - 1][j])) {
+            nextPosition = currentPosition - MAP_COLS;
+            prevChecked[count] = currentPosition;
+            pushToPath(createTileNode(currentPosition, map.overlay[i - 1][j]),
+                path);
+            pathSolve(map, path, prevChecked, count + 1, nextPosition);
+        }
+    }
+
+    beingChecked = (i * MAP_COLS) + (j - 1);
+
+    if (j > 0) {
+        if (!beenChecked(prevChecked, beingChecked) &&
+            isPathCharacter(map.overlay[i][j - 1])) {
+            nextPosition = currentPosition - 1;
+            prevChecked[count] = currentPosition;
+            pushToPath(createTileNode(currentPosition, map.overlay[i][j]),
+                path);
+            pathSolve(map, path, prevChecked, count + 1, nextPosition);
+        }
+    }
+
+    return path;
+}
+
+
+void pushToPath(struct TileNode *insertNode, struct Path *path) {
+    struct TileNode *nextNode = NULL;
+
+    if (path->count > 0) {
+        nextNode = path->first;
+
+        while (nextNode->next)
+            nextNode = nextNode->next;
+
+        nextNode->next = insertNode;
+        path->count++;
+    }
+
+    else {
+        path->first = insertNode;
+        path->count++;
+    }
+}
+
+
+bool beenChecked(int prevChecked[], int position) {
+    int arrayLength;
+
+    arrayLength = MAP_COLS * MAP_ROWS;
+    for (int i = 0; i < arrayLength; i++) {
+        if (prevChecked[i] == position)
+            return true;
+    }
+    return false;
+}
+
+
+bool isPathCharacter(char tileChar) {
+    return
+        tileChar == '.' ||
+            tileChar == '#' ||
+            tileChar == '$' ||
+            tileChar == '&' ||
+            tileChar == '%';
+}
+
+
+struct TileNode *createTileNode(int location, char type) {
+    struct TileNode *tileNode = NULL;
+
+    tileNode = (struct TileNode *) malloc(sizeof(struct TileNode));
+
+    tileNode->next = NULL;
+    tileNode->location = location;
+    tileNode->type = type;
+
+    return tileNode;
+}
+
+
+void destroyPath(struct Path *path) {
+    struct TileNode *nextNode = NULL;
+
+    if (path->count > 0)
+        nextNode = path->first;
+
+    for (int i = 0; i < path->count; i++) {
+        while (nextNode->next != NULL) {
+            nextNode = nextNode->next;
+            free(nextNode);
+            path->count--;
+        }
+    }
+    free(path);
 }

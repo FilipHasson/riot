@@ -5,16 +5,6 @@
 #include "riotMap.h"
 /* Data Types */
 
-struct UnitList {/*
-
- UnitList stores the head, tail, and count of a doubly linked list of
- UnitNodes.*/
-
-    struct UnitNode *head;
-    struct UnitNode *tail;
-    int count;
-};
-
 
 struct UnitNode {/*
 
@@ -56,15 +46,6 @@ struct Guard {/*
 
 
 /* Linked UnitList Operations */
-
-struct UnitList *createList(void);/*
-
-DESCRIPTION: createList() is used to allocate memory for a UnitList struct.
- Initializes values to NULL or 0.
-
-POSTCONDITIONS: Memory is allocated for a UnitList, the address for which is
- returned by the function.*/
-
 
 void destroyList(struct UnitList *);/*
 
@@ -166,14 +147,6 @@ ARGUMENTS: The inmate type to be assigned to the inmate that is being created (e
 */
 
 
-struct Guard *createGuard(enum GuardType type);/*
-
-DESCRIPTION: Creates a guard and initializes it
-
-ARGUMENTS: The guard type to be assigned to the guard that is being created (enum GuardType type);
-*/
-
-
 void rmUnit(struct UnitNode* target);/*
 
 DESCRIPTION: inmateRm() is used to remove a unit from the game.
@@ -239,100 +212,5 @@ DESCRIPTION: Decrements the inmates health by the guards damage during an attack
 ARGUMENTS: Inmate that is being dealt damage (struct UnitNode *inmateNode).
            Guard that is dealing damage (struct UnitNode *guardNode).*/
 
-
-void addToPath(struct Path *path, int location, char type);/*
-
-DESCRIPTION: Adds an additional tile to the path
-
-ARGUMENTS: The path which the tile is being added to
-           The location(position) of where the tile will be located
-           The type of tile that is going to be added*/
-
-
-struct Path * getPath(struct Map map);/*
-
-DESCRIPTION: Retreieves information from the given map and stores this data into a path structure.
-             Returns said path structure.
-
-ARGUMENTS: The map that will be parsed.*/
-
-
-struct UnitList * getGuardList(struct Map map);/*
-
-DESCRIPTION: Retrieves the guard data from the given map and stores the guards into a linked list UnitList structure.
-
-ARGUMENTS: The map that will be parsed */
-
-
-bool isPathCharacter(char tileChar);/*
-
-DESCRIPTION: Returns a boolean based on whether the character is a path character. 
-
-ARGUMENTS: Character to be checked.
-*/
-
-
-struct TileNode * createTileNode(int location, char type);/*
-
-DESCRIPTION: Creates a tile node and initializes it.
-
-ARGUMENTS: Location of the tile node (int location).
-           Character type of the tile node (char type).
-*/
-
-
-void destroyPath(struct Path * path);/*
-
-DESCRIPTION: Destroys the path and all the contents of the path.
-
-ARGUMENTS: Path to be destroyed (struct Path *path).
-*/
-
-
-void pushToPath(struct TileNode* insertNode, struct Path* path);/*
-
-DESCRIPTION: Pushes a tile node to the back of the path list.
-
-ARGUMENTS: Tile Node to be pushes (struct TileNode* insertNode).
-           Path that the tile node is pushed into (struct Path* path).
-*/
-
-
-struct UnitNode * createGuardNode(char type, int position);/*
-
-DESCRIPTION: Creates a unit node with a guard as a unit and initializes its variables.
-
-ARGUMENTS: Character which represents the guard (char type).
-           Position of the guard (int position).
-*/
-
-struct UnitList *getGuardList(struct Map map);/*
-
-DESCRIPTION: Creates a list of all the guards found inside the map struct overlay.
-
-ARGUMENTS: Map struct to be searched for guards present (struct Map map).
-*/
-
-
-struct Path *pathSolve(struct Map map,struct Path *path,int prevChecked[],int count,int currentPosition);/*
-
-DESCRIPTION: Recursive function which creates an ordered path struct.
-
-ARGUMENTS: Map struct to be searched (struct Map map).
-           Path struct to be created(struct Path *path).
-           Previously checked positions(int prevChecked[]).
-           Number of the tile that has been added to the path(int count).
-           Current position being searched in the map struct(int currentPosition).
-
-*/
-
-
-bool beenChecked(int prevChecked[],int position);/*
-
-DESCRIPTION: Checks whether the position exists in the previously checked array.
-
-ARGUMENTS: Array of all positions previously checked (int prevChecked[]).
-           Position to be compared against the previously checked positions.
-*/
 
 #endif //RIOT_UNITS

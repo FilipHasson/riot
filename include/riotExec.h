@@ -51,7 +51,18 @@ struct Map {/*
     char inmates[INMATE_TYPES];
     int panicMax;
     int repMax;
-    struct Dialog dialog;
+};
+
+
+
+struct UnitList {/*
+
+ UnitList stores the head, tail, and count of a doubly linked list of
+ UnitNodes.*/
+
+    struct UnitNode *head;
+    struct UnitNode *tail;
+    int count;
 };
 
 

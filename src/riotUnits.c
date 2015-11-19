@@ -6,18 +6,6 @@
 #include "riotUI.h"
 
 
-struct UnitList *createList(void) {
-
-    struct UnitList *newList = malloc(sizeof(struct UnitList));
-
-    newList->count = 0;
-    newList->head = NULL;
-    newList->tail = NULL;
-
-    return newList;
-}
-
-
 void destroyList(struct UnitList *list) {
 
     struct UnitNode *tempNode = NULL;
@@ -33,19 +21,6 @@ void destroyList(struct UnitList *list) {
     return;
 }
 
-
-bool isEmpty(struct UnitList *list) {
-
-    bool eval = TRUE;
-
-    if (list) {
-        if (list->count)
-            eval = FALSE;
-    }
-
-    return eval;
-
-}
 
 struct UnitNode *getNext(struct UnitNode *list) {
     return list ? list->next : NULL;
@@ -227,60 +202,60 @@ struct Inmate *createInmate(enum InmateType type) {
 
 struct Guard *createGuard(enum GuardType type) {
 
-    struct Guard *unit = malloc(sizeof(struct Guard));
+    struct Guard *guard = malloc(sizeof(struct Guard));
 
-    unit->type = type;
-    unit->position = -1;
+    guard->type = type;
+    guard->position = -1;
 
     switch (type) {
 
         case GUARD:
-            unit->damage = 5;
-            unit->range = 2;
-            unit->cooldown = 4;
-            unit->ai = PROX;
+            guard->damage = 5;
+            guard->range = 2;
+            guard->cooldown = 4;
+            guard->ai = PROX;
             break;
 
         case DOGS:
-            unit->damage = 4;
-            unit->range = 4;
-            unit->cooldown = 6;
-            unit->ai = AOE;
+            guard->damage = 4;
+            guard->range = 4;
+            guard->cooldown = 6;
+            guard->ai = AOE;
             break;
 
         case LUNCH:
-            unit->damage = 0;
-            unit->range = 6;
-            unit->cooldown = 12;
-            unit->ai = AOE;
+            guard->damage = 0;
+            guard->range = 6;
+            guard->cooldown = 12;
+            guard->ai = AOE;
             break;
 
         case PSYCH:
-            unit->damage = 0;
-            unit->range = 6;
-            unit->cooldown = 12;
-            unit->ai = PROX;
+            guard->damage = 0;
+            guard->range = 6;
+            guard->cooldown = 12;
+            guard->ai = PROX;
             break;
 
         case SHARP:
-            unit->damage = 6;
-            unit->range = 10;
-            unit->cooldown = 8;
-            unit->ai = END;
+            guard->damage = 6;
+            guard->range = 10;
+            guard->cooldown = 8;
+            guard->ai = END;
             break;
 
         case WARDEN:
-            unit->damage = 100;
-            unit->range = 8;
-            unit->cooldown = 2;
-            unit->ai = PROX;
+            guard->damage = 100;
+            guard->range = 8;
+            guard->cooldown = 2;
+            guard->ai = PROX;
             break;
 
         case CYBORG:
-            unit->damage = 12;
-            unit->range = 8;
-            unit->cooldown = 2;
-            unit->ai = PROX;
+            guard->damage = 12;
+            guard->range = 8;
+            guard->cooldown = 2;
+            guard->ai = PROX;
             break;
 
         default:
@@ -288,7 +263,7 @@ struct Guard *createGuard(enum GuardType type) {
             break;
     }
 
-    return unit;
+    return guard;
 }
 
 
@@ -415,185 +390,30 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
 }
 
 
-struct UnitList *getGuardList(struct Map map) {
+void getGuards(struct UnitList *guards, struct Map map) {
+
+    struct Guard *guard;
     int i, j, position;
     char mapChar;
-    struct Guard *insertGuard;
-    struct UnitList *guardList;
 
-    guardList = createList();
+    /* Initialize guards list */
+    guards->count = 0;
+    guards->head = NULL;
+    guards->tail = NULL;
 
+    /* Get guards */
     for (i = 0; i < MAP_ROWS; i++) {
         for (j = 0; j < MAP_COLS; j++) {
             position = (i * MAP_COLS) + j;
             mapChar = toupper(map.overlay[i][j]);
             if (isalpha(mapChar)) {
-                insertGuard = createGuard(mapChar);
-                insertGuard->position = position;
-                enqueue(guardList, insertGuard);
+                guard = createGuard(mapChar);
+                guard->position = position;
+                enqueue(guards, guard);
             }
         }
     }
 
-    return guardList;
+    return;
 }
 
-
-struct Path *getPath(struct Map map) {
-    struct Path *path = NULL;
-    int i, j;
-    int count = 0;
-    int position = 0;
-    int prevChecked[MAP_ROWS * MAP_COLS];
-
-    for (i = 0; i < (MAP_ROWS * MAP_COLS); i++)
-        prevChecked[i] = 0;
-    path = (struct Path *) malloc(sizeof(struct Path));
-    path->count = 0;
-    for (i = 0; i < MAP_ROWS; i++) {
-        for (j = 0; j < MAP_COLS; j++) {
-            if (map.overlay[i][j] == '$') {
-                position = (i * MAP_COLS) + j;
-                count = 0;
-                prevChecked[count] = position;
-                goto outer;
-            }
-        }
-    }
-
-    outer:
-    pathSolve(map, path, prevChecked, count + 1, position);
-
-    return path;
-}
-
-
-struct Path *pathSolve(struct Map map, struct Path *path, int prevChecked[],
-    int count, int currentPosition) {
-    int i, j, nextPosition, beingChecked;
-
-    i = (currentPosition - 1) / MAP_COLS;
-    j = currentPosition - (MAP_COLS * i);
-
-    beingChecked = ((i + 1) * MAP_COLS) + j;
-
-    if (!beenChecked(prevChecked, beingChecked) &&
-        isPathCharacter(map.overlay[i + 1][j])) {
-        nextPosition = currentPosition + MAP_COLS;
-        prevChecked[count] = currentPosition;
-        pushToPath(createTileNode(currentPosition, map.overlay[i + 1][j]),
-            path);
-        pathSolve(map, path, prevChecked, count + 1, nextPosition);
-    }
-
-    beingChecked = (i * MAP_COLS) + (j + 1);
-
-    if (!beenChecked(prevChecked, beingChecked) &&
-        isPathCharacter(map.overlay[i][j + 1])) {
-        nextPosition = currentPosition + 1;
-        prevChecked[count] = currentPosition;
-        pushToPath(createTileNode(currentPosition, map.overlay[i][j + 1]),
-            path);
-        pathSolve(map, path, prevChecked, count + 1, nextPosition);
-    }
-
-    beingChecked = ((i - 1) * MAP_COLS) + j;
-
-    if (i > 0) {
-        if (!beenChecked(prevChecked, beingChecked) &&
-            isPathCharacter(map.overlay[i - 1][j])) {
-            nextPosition = currentPosition - MAP_COLS;
-            prevChecked[count] = currentPosition;
-            pushToPath(createTileNode(currentPosition, map.overlay[i - 1][j]),
-                path);
-            pathSolve(map, path, prevChecked, count + 1, nextPosition);
-        }
-    }
-
-    beingChecked = (i * MAP_COLS) + (j - 1);
-
-    if (j > 0) {
-        if (!beenChecked(prevChecked, beingChecked) &&
-            isPathCharacter(map.overlay[i][j - 1])) {
-            nextPosition = currentPosition - 1;
-            prevChecked[count] = currentPosition;
-            pushToPath(createTileNode(currentPosition, map.overlay[i][j]),
-                path);
-            pathSolve(map, path, prevChecked, count + 1, nextPosition);
-        }
-    }
-
-    return path;
-}
-
-
-bool beenChecked(int prevChecked[], int position) {
-    int arrayLength;
-
-    arrayLength = MAP_COLS * MAP_ROWS;
-    for (int i = 0; i < arrayLength; i++) {
-        if (prevChecked[i] == position)
-            return true;
-    }
-    return false;
-}
-
-
-bool isPathCharacter(char tileChar) {
-    return
-        tileChar == '.' ||
-            tileChar == '#' ||
-            tileChar == '$' ||
-            tileChar == '&' ||
-            tileChar == '%';
-}
-
-
-struct TileNode *createTileNode(int location, char type) {
-    struct TileNode *tileNode = NULL;
-
-    tileNode = (struct TileNode *) malloc(sizeof(struct TileNode));
-
-    tileNode->next = NULL;
-    tileNode->location = location;
-    tileNode->type = type;
-
-    return tileNode;
-}
-
-
-void pushToPath(struct TileNode *insertNode, struct Path *path) {
-    struct TileNode *nextNode = NULL;
-
-    if (path->count > 0) {
-        nextNode = path->first;
-
-        while (nextNode->next)
-            nextNode = nextNode->next;
-
-        nextNode->next = insertNode;
-        path->count++;
-    }
-
-    else {
-        path->first = insertNode;
-        path->count++;
-    }
-}
-
-
-void destroyPath(struct Path *path) {
-    struct TileNode *nextNode = NULL;
-
-    if (path->count > 0)
-        nextNode = path->first;
-
-    for (int i = 0; i < path->count; i++) {
-        while (nextNode->next != NULL) {
-            nextNode = nextNode->next;
-            free(nextNode);
-            path->count--;
-        }
-    }
-    free(path);
-}
