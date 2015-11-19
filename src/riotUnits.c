@@ -304,7 +304,7 @@ void runSimulation(struct GameInterface *gameInterface,
     delay.tv_sec = 0;
     delay.tv_nsec = 50000000L;  // Half second in nano seconds
 
-    while (simulateTime < 30) {
+    while (simulateTime < 40) {
 
         nextInmate = getHead(inmateList);
         for (int i = 0; i < inmateList->count; i++) {
@@ -313,11 +313,16 @@ void runSimulation(struct GameInterface *gameInterface,
         }
 
         inmateMove(inmateList, path);
-        guardAttack(guardList, inmateList);
+        //guardAttack(guardList, inmateList);
         nextInmate = getHead(inmateList);
 
         for (int i = 0; i < inmateList->count; i++) {
-            redrawUnit(gameInterface->body, (struct Inmate *)nextInmate->unit, path, prevPos[i]);
+        	if (((struct Inmate *)nextInmate->unit)->delUnit == FALSE)
+            	redrawUnit(gameInterface->body, (struct Inmate *)nextInmate->unit, path, prevPos[i]);
+            else {
+            	/*Call redraw but delete it?, or simply call eraseUnit in UI*/
+            	dequeue(inmateList);
+            }
             nextInmate = nextInmate->next;
         }
         simulateTime += .25;
@@ -350,7 +355,7 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
         	((struct Inmate *) nextInmate->unit)->position = nextTile->next->location; 
         else if ((int)((struct Inmate *) nextInmate->unit)->position == prevPos + 1 && nextTile->next == NULL) {
             ((struct Inmate *) nextInmate->unit)->delUnit = TRUE;
-            dequeue(inmateList);
+            //endwin();
         }
 		nextInmate = getNext(nextInmate);
     } while (getNext(nextInmate));

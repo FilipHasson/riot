@@ -114,9 +114,9 @@ void unitsMove(char *loadDir) {
 
     inmates = createList();
     //guards = createList();
-    current = &testList->level[1];
+    current = &testList->level[3];
     path = getPath(*current);
-    printf("LEVEL %d: \n\n", 1);
+    printf("LEVEL %d: \n\n", 3);
     for (int j = 0; j < MAP_ROWS; j++) {
         printf("%s\n", current->overlay[j]);
     }
