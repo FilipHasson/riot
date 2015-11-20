@@ -7,13 +7,6 @@
 
 /* Data Types */
 
-struct Interface {
-    WINDOW *menu;
-    WINDOW *body;
-    WINDOW *header;
-    WINDOW *footer;
-};
-
 struct MenuEntry {
     char key;
     char *text;
@@ -23,66 +16,70 @@ struct MenuEntry {
 
 /* Function Prototypes */
 
-void uiSet(enum GameMode gameMode, struct Interface *win);/*
-
-DESCRIPTION: uiSet() will initialize the various ncurses windows used
- throughout gameplay.
-
-ARGUMENTS: a GameMode enum corresponding with the required game mode and a
- Interface struct which contains pointers to the target ncurses WINDOWs.
-
-POSTCONDITIONS: Memory may either be allocated or deallocated for ncurses
- windows depending on the passed gameMode.*/
+void uiInit(struct Windows *win);
 
 
-enum GameMode menuMain(struct Interface *);/*
+void uiFree(struct Windows *win);
+
+
+void drawText (struct Windows *windows, struct Dialog dialog,
+    enum GameMode gameMode);
+
+
+enum GameMode menuMain(struct Windows *);/*
 
 DESCRIPTION: menuMain() will present the user with the body menu.
 
-ARGUMENTS: the Interface struct containing the targer ncurses WINDOWs.*/
+ARGUMENTS: the Windows struct containing the targer ncurses WINDOWs.*/
 
 
-int menuContinue(struct Interface *gameInterface, struct MapList *mapList);
+int levelSelect(struct Windows *gameInterface, struct MapList *mapList,
+    bool *playerProgress);/*
+
+DESCRIPTION: The menu that comes up when 'C' is pressed; it displays all the levels and lets
+the user select ones that are unlocked
+
+ARGUMENTS: The game interface
+           The list of maps*/
 
 
-void inmateUpdate(enum Colour, char inmateType, int from, int to);
+void inmateRemove(int position);/*
+
+DESCRIPTION: Removes an inmate of a certain position from the list
+
+ARGUMENTS: The position of the inmate which will be removed
+*/
 
 
-void inmateRemove(int position);
+void drawMap (WINDOW *bod, struct Map*map);/*
+
+DESCRIPTION: A function that is called at the beginning of the game to
+create the map (path and all the obstacles)
+
+ARGUMENTS: The window the map will be drawn on
+           The map that will be loaded   */
 
 
-void guardUpdate(bool isAttacking, int position);
+void updateHeader (WINDOW *header, struct Map *map);/*
+
+DESCRIPTION: Updates the text in the header bar
+
+ARGUMENTS: The header window
+           The map (each map has a different header description)
+*/
 
 
-void drawMap (WINDOW *bod, struct Map*map);
+void updateQueue (WINDOW *body, struct UnitList *list, int numAdded);/*
+DESCRIPTION: Updates the units in the box drawn by drawQueue function
+
+ArRGUMENTS: The body window
+            The unit list that will be displayed
+*/
 
 
-char * getLevelName (int level);
+void redrawUnit(WINDOW *body, struct Inmate *inmate, struct Path *path, float oldPosition);
 
 
-void updateHeader (WINDOW *header, struct Map *map);
-
-
-void drawIntroText (struct Interface *win, struct Map *map);
-
-
-void drawOutroText (struct Interface *win, struct Map *map);
-
-
-void drawQueue (WINDOW *body);
-
-
-void updateQueue (WINDOW *body, struct UnitList *list);/*
-
-
-
-
-DESCRIPTION: Gets name of level
-
-ARGUMENTS: integer value of what level (0-7)*/
-
-
-void redrawUnit(struct Interface *win, struct Inmate *inmate, struct Path *path, int oldPosition);
 /*
 
 DESCRIPTION: Function to redraw units on the screen
@@ -90,18 +87,7 @@ DESCRIPTION: Function to redraw units on the screen
 ARGUMENTS: A pointer to the interface window, unit to be drawn, integer health value, curreent position and position to be mmoved to
 
 POSTCONDITION: Ensures that the unit given is drawn at the given newPostiion*/
-
-
-void drawUnit(struct Interface * win, char unitType,int health, int position);/*
-
-DESCRIPTION: Draws a unit to a given position on the screen
-
-ARGUMENTS: A pointer to the interface window, unit to be drawn, integer health value, integer value to draw at
-
-POSTCONDITION:*/
-
-
-void eraseUnit(struct Interface * win, int position);/*
+void eraseUnit(struct Windows * win, int position);/*
 
 DESCRIPTION: Erases a unit off the screen and restores tile
 
@@ -110,31 +96,38 @@ ARGUMENTS: Pointer to the interface window and position as an integer value
 POSTCONDITION: Ensures the given position displays an aseterisk */
 
 
-void drawTile(struct Interface * win, char type, int position);/*
-
-DESCRIPTION: Draws a tile to the screen 
- 
-ARGUMENTS: take pointer to interface window, haracter to be drawn, and a position as an integer value
-
-POSTCONDITION: Ensures the character given is displayed at the position given */
-
-
 int * getCoordinate(int position);/*
 
 DESCRIPTION: Takes the position and converts it into a 2 dimensional coordinate
 
 ARGUMENTS: a position as a single integer value */
 
-void drawInmateSelection (struct Interface *win, struct Map *map, struct UnitList *imates);
- 
-void drawLevel(struct Interface *win, struct Map* map);
 
-void drawFooterInmates(struct Interface * win, char * inmates);
+void drawInmateSelection (struct Windows *win, struct Map *map, struct UnitList *inmates, struct UnitList *guards);/*
 
-void startHeadFoot(struct Interface *win, struct Map *map);
+DESCRIPTION: Draws the window of all the inmates that the player an choose from 
 
-char * getInmateName(char ch);
-/*
-void drawBorders (struct Interface * win);
+ARGUMENTS: The interface window
+           The current map loaded
+           The list of inmates
 */
+
+
+void drawLevel(struct Windows *windows, struct Map* map, struct UnitList *guard); /*
+
+DESCRIPTION: Calls drawMap and drawQueue and refreshes the body window
+
+ARGUMENTS: The body window
+           The map that will be loaded
+*/
+
+
+char * getInmateName(char ch); /*
+
+DESCRIPTION: Return the name of the inmate
+
+ARGUMENTS: The abbreviation of the inmate, for example 'H' for homeboy  
+*/
+
+
 #endif //RIOT_UI

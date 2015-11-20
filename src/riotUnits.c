@@ -1,17 +1,9 @@
-#include <riotMap.h>
+#define _DEFAULT_SOURCE
+
 #include <ctype.h>
+#include <time.h>
 #include "riotUnits.h"
-
-struct UnitList *createList(void) {
-
-    struct UnitList *newList = malloc(sizeof(struct UnitList));
-
-    newList->count = 0;
-    newList->head = NULL;
-    newList->tail = NULL;
-
-    return newList;
-}
+#include "riotUI.h"
 
 
 void destroyList(struct UnitList *list) {
@@ -29,19 +21,6 @@ void destroyList(struct UnitList *list) {
     return;
 }
 
-
-bool isEmpty(struct UnitList *list) {
-
-    bool eval = TRUE;
-
-    if (list) {
-        if (list->count)
-            eval = FALSE;
-    }
-
-    return eval;
-
-}
 
 struct UnitNode *getNext(struct UnitNode *list) {
     return list ? list->next : NULL;
@@ -145,6 +124,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 2;
             unit->rep = 0;
             unit->panic = 0;
+            unit->delUnit = FALSE;
             break;
 
         case HOMEBOY:
@@ -152,6 +132,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 4;
             unit->rep = 5;
             unit->panic = 2;
+            unit->delUnit = FALSE;
             break;
 
         case BRUISER:
@@ -159,6 +140,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 4;
             unit->rep = 15;
             unit->panic = 6;
+            unit->delUnit = FALSE;
             break;
 
         case LUNATIC:
@@ -166,6 +148,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 6;
             unit->rep = 10;
             unit->panic = 8;
+            unit->delUnit = FALSE;
             break;
 
         case FATTY:
@@ -173,6 +156,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 2;
             unit->rep = 10;
             unit->panic = 4;
+            unit->delUnit = FALSE;
             break;
 
         case SPEEDY:
@@ -180,6 +164,7 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 8;
             unit->rep = 20;
             unit->panic = 2;
+            unit->delUnit = FALSE;
             break;
 
         case CUTIE:
@@ -187,20 +172,23 @@ struct Inmate *createInmate(enum InmateType type) {
             unit->speed = 4;
             unit->rep = 20;
             unit->panic = 1;
+            unit->delUnit = FALSE;
             break;
 
         case ATTORNEY:
             unit->currentHealth = unit->maxHealth = 30;
-            unit->speed = 5;
+            unit->speed = 4;
             unit->rep = 30;
             unit->panic = 2;
+            unit->delUnit = FALSE;
             break;
 
         case DOCTOR:
             unit->currentHealth = unit->maxHealth = 10;
-            unit->speed = 5;
+            unit->speed = 4;
             unit->rep = 40;
             unit->panic = 2;
+            unit->delUnit = FALSE;
             break;
 
         default:
@@ -214,60 +202,60 @@ struct Inmate *createInmate(enum InmateType type) {
 
 struct Guard *createGuard(enum GuardType type) {
 
-    struct Guard *unit = malloc(sizeof(struct Guard));
+    struct Guard *guard = malloc(sizeof(struct Guard));
 
-    unit->type = type;
-    unit->position = -1;
+    guard->type = type;
+    guard->position = -1;
 
     switch (type) {
 
         case GUARD:
-            unit->damage = 5;
-            unit->range = 2;
-            unit->cooldown = 4;
-            unit->ai = PROX;
+            guard->damage = 5;
+            guard->range = 2;
+            guard->cooldown = 4;
+            guard->ai = PROX;
             break;
 
         case DOGS:
-            unit->damage = 4;
-            unit->range = 4;
-            unit->cooldown = 6;
-            unit->ai = AOE;
+            guard->damage = 4;
+            guard->range = 4;
+            guard->cooldown = 6;
+            guard->ai = AOE;
             break;
 
         case LUNCH:
-            unit->damage = 0;
-            unit->range = 6;
-            unit->cooldown = 12;
-            unit->ai = AOE;
+            guard->damage = 0;
+            guard->range = 6;
+            guard->cooldown = 12;
+            guard->ai = AOE;
             break;
 
         case PSYCH:
-            unit->damage = 0;
-            unit->range = 6;
-            unit->cooldown = 12;
-            unit->ai = PROX;
+            guard->damage = 0;
+            guard->range = 6;
+            guard->cooldown = 12;
+            guard->ai = PROX;
             break;
 
         case SHARP:
-            unit->damage = 6;
-            unit->range = 10;
-            unit->cooldown = 8;
-            unit->ai = END;
+            guard->damage = 6;
+            guard->range = 10;
+            guard->cooldown = 8;
+            guard->ai = END;
             break;
 
         case WARDEN:
-            unit->damage = 100;
-            unit->range = 8;
-            unit->cooldown = 2;
-            unit->ai = PROX;
+            guard->damage = 100;
+            guard->range = 8;
+            guard->cooldown = 2;
+            guard->ai = PROX;
             break;
 
         case CYBORG:
-            unit->damage = 12;
-            unit->range = 8;
-            unit->cooldown = 2;
-            unit->ai = PROX;
+            guard->damage = 12;
+            guard->range = 8;
+            guard->cooldown = 2;
+            guard->ai = PROX;
             break;
 
         default:
@@ -275,26 +263,51 @@ struct Guard *createGuard(enum GuardType type) {
             break;
     }
 
-    return unit;
+    return guard;
 }
 
-/*Need to pass in interface?*/
-void runSimulation(struct UnitList *guardList, struct UnitList *inmateList,
-    struct Path *path) {
-    struct UnitNode *nextInmate;
-    //struct UnitNode *nextGuard;
-    int simulate = 0;
-    int prevPos = 0;
 
-    nextInmate = getHead(inmateList);
-    while (simulate < 10) {
-        prevPos = ((struct Inmate *) nextInmate->unit)->position;
+bool simulate(struct Windows *gameInterface,
+    struct UnitList *guardList, struct UnitList *inmateList,
+    struct Path *path) {
+
+    struct UnitNode *nextInmate;
+    float simulateTime = 0;
+    int prevPos[inmateList->count];
+    struct timespec delay;
+
+    delay.tv_sec = 0;
+    delay.tv_nsec = 50000000L;  // Half second in nano seconds
+
+    while (simulateTime < 40) {
+
+        nextInmate = getHead(inmateList);
+        for (int i = 0; i < inmateList->count; i++) {
+            prevPos[i] = ((struct Inmate *) nextInmate->unit)->position;
+            nextInmate = nextInmate->next;
+        }
+
         inmateMove(inmateList, path);
-        //drawUnit(win, nextInmate->unit, path, prevPos); (draw new position)
-        guardAttack(guardList, inmateList);
-        //drawUnit(); (new colour)
-        printf("here");
+        //guardAttack(guardList, inmateList);
+        nextInmate = getHead(inmateList);
+
+        for (int i = 0; i < inmateList->count; i++) {
+            if (((struct Inmate *) nextInmate->unit)->delUnit == FALSE)
+                redrawUnit(gameInterface->body,
+                    (struct Inmate *) nextInmate->unit, path, prevPos[i]);
+            else {
+                /*Call redraw but delete it?, or simply call eraseUnit in UI*/
+                dequeue(inmateList);
+            }
+            nextInmate = nextInmate->next;
+        }
+        simulateTime += .25;
+        wrefresh(gameInterface->body);
+        nanosleep(&delay, NULL);
     }
+
+    return true;  //TODO return win condition
+
 }
 
 
@@ -306,31 +319,28 @@ void inmateMove(struct UnitList *inmateList, struct Path *path) {
     int prevPos;
 
     nextInmate = getHead(inmateList);
-    printf("Checking to move units\n");
     do {
-    nextTile = path->first;
+        nextTile = path->first;
         for (int i = 0; i < path->count; i++) {
-            if (nextTile->location == (int)((struct Inmate *) nextInmate->unit)->position) {
+            if (nextTile->location ==
+                (int) ((struct Inmate *) nextInmate->unit)->position)
                 break;
-            }
             nextTile = nextTile->next;
         }
-        printf("Tile position: %d\n", nextTile->location);
-        printf("Unit position: %f\n", ((struct Inmate *) nextInmate->unit)->position);
         prevPos = ((struct Inmate *) nextInmate->unit)->position;
-        printf("PrevPos: %d\n", prevPos);
         ((struct Inmate *) nextInmate->unit)->position =
-        ((struct Inmate *) nextInmate->unit)->position +
-        (float)((struct Inmate *) nextInmate->unit)->speed / 8;
-        printf("Temp Unit Position: %f\n---\n", ((struct Inmate *) nextInmate->unit)->position);
-        if ((int) ((struct Inmate *) nextInmate->unit)->position == prevPos + 1) {
-            printf("Unit Moved\n");
+            ((struct Inmate *) nextInmate->unit)->position +
+                (float) ((struct Inmate *) nextInmate->unit)->speed / 8;
+        if ((int) ((struct Inmate *) nextInmate->unit)->position ==
+            prevPos + 1 && nextTile->next != NULL)
             ((struct Inmate *) nextInmate->unit)->position = nextTile->next->location;
-            printf("Unit moved to new Tile Position%f\n----END\n",
-            ((struct Inmate *) nextInmate->unit)->position);
+        else if ((int) ((struct Inmate *) nextInmate->unit)->position ==
+            prevPos + 1 && nextTile->next == NULL) {
+            ((struct Inmate *) nextInmate->unit)->delUnit = TRUE;
+            //endwin();
         }
         nextInmate = getNext(nextInmate);
-    } while (getNext(nextInmate) != NULL);
+    } while (getNext(nextInmate));
 }
 
 
@@ -340,8 +350,6 @@ void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
 
     nextGuard = getHead(guardList);
     nextInmate = getHead(inmateList);
-
-    printf("Guard Attack has begun.\n\n");
 
     do {
         do {
@@ -355,23 +363,9 @@ void guardAttack(struct UnitList *guardList, struct UnitList *inmateList) {
 
 
 void dealDamage(struct UnitNode *inmateNode, struct UnitNode *guardNode) {
-    printf("#####Inmate attacked#####\n");
-    printf("Inmate Position: %f\n",
-        ((struct Inmate *) inmateNode->unit)->position);
-    printf("Guard Position: %d\n",
-        ((struct Guard *) guardNode->unit)->position);
-    printf("Health before attack: %d\n",
-        ((struct Inmate *) inmateNode->unit)->currentHealth);
-    printf("Damage dealt by guard: %d\n",
-        ((struct Guard *) guardNode->unit)->damage);
     ((struct Inmate *) inmateNode->unit)->currentHealth =
         ((struct Inmate *) inmateNode->unit)->currentHealth -
             ((struct Guard *) guardNode->unit)->damage;
-
-    printf("Health after attack: %d\n",
-        ((struct Inmate *) inmateNode->unit)->currentHealth);
-    printf("########################\n");
-    printf("\n");
 }
 
 
@@ -394,182 +388,35 @@ bool inRange(struct UnitNode *inmate, struct UnitNode *guard) {
     yDifference = abs(yDifference);
     xDifference = abs(xDifference);
     totalDifference = xDifference + yDifference;
-    printf("#####Calculating Range#####\n");
-    printf("Unit position: %d\n", inmatePosition);
-    printf("Guard position: %d\n", guardPosition);
-    printf("Y Difference: %d\n", yDifference);
-    printf("X Difference: %d\n", xDifference);
-    printf("Total Difference: %d\n", totalDifference);
-    printf("Range of the Guard: %d\n", range);
-    printf("############################\n");
-    printf("\n");
 
     return range >= totalDifference;
 }
 
-struct UnitList *getGuardList(struct Map map){
-    int i,j, position;
+
+void getGuards(struct UnitList *guards, struct Map map) {
+
+    struct Guard *guard;
+    int i, j, position;
     char mapChar;
-    struct Guard *insertGuard;
-    struct UnitList *guardList;
 
-    guardList = createList();
+    /* Initialize guards list */
+    guards->count = 0;
+    guards->head = NULL;
+    guards->tail = NULL;
 
-    for (i=0;i<MAP_ROWS;i++){
-        for (j=0;j<MAP_COLS;j++){
-            position = (i*MAP_COLS)+j;
-            mapChar = toupper(map.overlay[i][j]);
-            if (isalpha(mapChar)){
-                insertGuard = createGuard(mapChar);
-                insertGuard->position = position;
-                enqueue(guardList,insertGuard);
-            }
-        }
-    }
-
-    return guardList;
-}
-
-struct Path *getPath(struct Map map) {
-    struct Path *path = NULL;
-    int i, j;
-    int count=0;
-    int position=0;
-    int prevChecked[MAP_ROWS * MAP_COLS];
-
-    for (int i = 0; i < (MAP_ROWS * MAP_COLS); i++) {
-        prevChecked[i] = 0;
-    }
-    path = (struct Path *) malloc(sizeof(struct Path));
-    path->count = 0;
+    /* Get guards */
     for (i = 0; i < MAP_ROWS; i++) {
         for (j = 0; j < MAP_COLS; j++) {
-            if (map.overlay[i][j] == '$') {
-                position = (i * MAP_COLS) + j;
-                count = 0;
-                prevChecked[count] = position;
-                goto outer;
+            position = (i * MAP_COLS) + j;
+            mapChar = toupper(map.overlay[i][j]);
+            if (isalpha(mapChar)) {
+                guard = createGuard(mapChar);
+                guard->position = position;
+                enqueue(guards, guard);
             }
         }
     }
 
-    outer:
-    pathSolve(map, path, prevChecked, count + 1, position);
-
-    return path;
+    return;
 }
 
-
-struct Path *pathSolve(struct Map map,struct Path *path,int prevChecked[],int count,int currentPosition){
-    int i,j,nextPosition,beingChecked;
-
-    i = (currentPosition-1)/MAP_COLS;
-    j = currentPosition - (MAP_COLS*i);
-
-    beingChecked = ((i+1)*MAP_COLS)+j;
-
-    if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i+1][j])){
-        nextPosition = currentPosition + MAP_COLS;
-        prevChecked[count] = currentPosition;
-        pushToPath(createTileNode(currentPosition,map.overlay[i+1][j]),path);
-        pathSolve(map,path,prevChecked,count+1,nextPosition);
-    }
-
-    beingChecked = (i*MAP_COLS)+(j+1);
-
-    if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i][j+1])){
-        nextPosition = currentPosition + 1;
-        prevChecked[count] = currentPosition;
-        pushToPath(createTileNode(currentPosition,map.overlay[i][j+1]),path);
-        pathSolve(map,path,prevChecked,count+1,nextPosition);
-    }
-
-    beingChecked = ((i-1)*MAP_COLS)+j;
-
-    if (i > 0){
-        if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i-1][j])){
-            nextPosition = currentPosition - MAP_COLS;
-            prevChecked[count] = currentPosition;
-            pushToPath(createTileNode(currentPosition,map.overlay[i-1][j]),path);
-            pathSolve(map,path,prevChecked,count+1,nextPosition);
-        }
-    }
-
-    beingChecked = (i*MAP_COLS)+(j-1);
-
-    if (j > 0){
-        if (!beenChecked(prevChecked,beingChecked) && isPathCharacter(map.overlay[i][j-1])){
-            nextPosition = currentPosition - 1;
-            prevChecked[count] = currentPosition;
-            pushToPath(createTileNode(currentPosition,map.overlay[i][j-1]),path);
-            pathSolve(map,path,prevChecked,count+1,nextPosition);
-        }
-    }
-
-    return path;
-}
-
-bool beenChecked(int prevChecked[], int position) {
-    int arrayLength;
-
-    arrayLength = MAP_COLS * MAP_ROWS;
-    for (int i = 0; i < arrayLength; i++) {
-        if (prevChecked[i] == position) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool isPathCharacter(char tileChar) {
-    return (tileChar == '.' || tileChar == '#' || tileChar == '$' ||
-        tileChar == '&' || tileChar == '%');
-}
-
-struct TileNode *createTileNode(int location, char type) {
-    struct TileNode *tileNode = NULL;
-
-    tileNode = (struct TileNode *) malloc(sizeof(struct TileNode));
-
-    tileNode->next = NULL;
-    tileNode->location = location;
-    tileNode->type = type;
-
-    return tileNode;
-}
-
-void pushToPath(struct TileNode *insertNode, struct Path *path) {
-    struct TileNode *nextNode = NULL;
-
-    if (path->count > 0) {
-        nextNode = path->first;
-
-        while (nextNode->next != NULL) {
-            nextNode = nextNode->next;
-        }
-
-        nextNode->next = insertNode;
-        path->count++;
-    }
-    else {
-        path->first = insertNode;
-        path->count++;
-    }
-}
-
-void destroyPath(struct Path *path) {
-    struct TileNode *nextNode = NULL;
-
-    if (path->count > 0) {
-        nextNode = path->first;
-    }
-
-    for (int i = 0; i < path->count; i++) {
-        while (nextNode->next != NULL) {
-            nextNode = nextNode->next;
-            free(nextNode);
-            path->count--;
-        }
-    }
-    free(path);
-}

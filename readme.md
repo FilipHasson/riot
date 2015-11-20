@@ -43,6 +43,8 @@ RIOT! intends to switch the roles of a traditional tower defence game, placing t
 
 ## Changelog
 
+*(11/18/2015)Unit speeds changed from random values to powers of 2 (1,2,4,8..)
+
 
 ## Contributors
 

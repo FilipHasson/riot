@@ -9,6 +9,7 @@
 
 
 /* Macro Constants */
+
 #define MAX_COLS 80
 #define MAX_ROWS 24
 #define MAP_COLS 72
@@ -17,8 +18,53 @@
 #define FOOTER 4
 #define MAIN 17
 
+#define MAX_TEXT 500
+#define INMATE_TYPES 10
+#define LINE_MAX 72
+
 
 /* Data Types */
+
+struct Windows {
+    WINDOW *menu;
+    WINDOW *body;
+    WINDOW *header;
+    WINDOW *footer;
+};
+
+
+struct Dialog{
+    char textIntro[MAX_TEXT];
+    char textWin[MAX_TEXT];
+    char textLose[MAX_TEXT];
+};
+
+
+struct Map {/*
+
+ Map stores the game landscape as a 2D array, along with a linked list
+ containing the path.*/
+
+    char name[LINE_MAX];
+    int levelNo;
+    char overlay[MAP_ROWS][MAP_COLS+1]; //+1 for null char
+    char inmates[INMATE_TYPES];
+    int panicMax;
+    int repMax;
+};
+
+
+
+struct UnitList {/*
+
+ UnitList stores the head, tail, and count of a doubly linked list of
+ UnitNodes.*/
+
+    struct UnitNode *head;
+    struct UnitNode *tail;
+    int count;
+};
+
 
 enum InmateType {/*
 
@@ -77,11 +123,10 @@ enum GameMode {/*
  GameMode is a mnemonic which can be used to equivocate game modes with the
  associated keypresses used to inititate them.*/
 
-    INIT,
-    MENU,
-    PLAY,
     NEW = 'n',
     CONTINUE = 'c',
+    WIN,
+    LOSE,
     EXIT = 'e',
     _GAME_MODE_LIMIT,
 };
@@ -112,5 +157,15 @@ ARGUMENTS: argc, represents the number of command line paramers passed to the
 
 POSTCONDITIONS: May call quit() to terminate program operation if the user
  has provided an invalid map file path.*/
+
+
+void play(struct Windows *gameInterface,struct Map* map);/*
+
+DESCRIPTION: play() calls all functions that involve player unit selection, and game simulation.
+
+ARGUMENTS: Game interface struct that holds neccessary windows (struct Windows gameInterface).
+           Map struct which holds neccessary map information (struct Map map). 
+
+*/
 
 #endif //RIOT_EXEC
