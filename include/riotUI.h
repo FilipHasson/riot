@@ -33,8 +33,8 @@ DESCRIPTION: menuMain() will present the user with the body menu.
 ARGUMENTS: the Windows struct containing the targer ncurses WINDOWs.*/
 
 
-int menuContinue(struct Windows *gameInterface, struct MapList *mapList,
-    bool* playerProgress);/*
+int levelSelect(struct Windows *gameInterface, struct MapList *mapList,
+    bool *playerProgress);/*
 
 DESCRIPTION: The menu that comes up when 'C' is pressed; it displays all the levels and lets
 the user select ones that are unlocked

@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
     struct UnitNode *unitNode;
     struct Path path;
     bool progress[MAX_LEVELS];
-    int level;
+    int level=0;
 
     /* Parse map files */
     parseMap(argv[1], &mapList, dialog);
@@ -23,47 +23,47 @@ int main(int argc, char **argv) {
     /* Present user with main menu */
     gameMode = menuMain(&windows);
 
-    /* Begin main game loop */
-    if (gameMode != EXIT) {
-
-        /* New game starts on level 0 (tutorial) */
-        if (gameMode == NEW) level = 0;
-
-            /* Continue loads continue meno */
-        else level = menuContinue(&windows, &mapList, progress);
-
-        /* Exit frees system resources, terminates program operation */
-        while (level != EXIT) {
-
-            /* Select correct map */
-            map = &(mapList).level[level];
-
-            /* Display intro text */
-            drawText(&windows, dialog[level], gameMode);
-
-            /* Initialize game elements */
-            getGuards(&guards, *map);
-            getPath(&path, *map);
-            inmates.count = 0;
-            inmates.head = NULL;
-            inmates.tail = NULL;
-
-            /* Draw level */
-            drawLevel(&windows, map, &guards);
-
-            /* Prompt for unit selection */
-            drawInmateSelection(&windows, map, &inmates, &guards);
-
-            unitNode = getHead(&inmates);
-            for (int i = 0; i < inmates.count; i++) {
-                ((struct Inmate *) unitNode->unit)->position = path.first->location;
-                unitNode = unitNode->next;
-            }
-
-            /* Simulate unit interactions */
-            progress[level] = simulate(&windows, &guards, &inmates, &path);
+    do{
+        if(gameMode==EXIT){
+            break;
+        } else if (gameMode!=NEW){
+            level = levelSelect(&windows, &mapList, progress);
         }
-    }
+
+        /* Select current map */
+        map = &(mapList).level[level];
+
+        /* Display intro text */
+        drawText(&windows, dialog[level], gameMode);
+
+        /* Initialize game elements */
+        getGuards(&guards, *map);
+        getPath(&path, *map);
+        inmates.count = 0;
+        inmates.head = NULL;
+        inmates.tail = NULL;
+
+        /* Draw level */
+        drawLevel(&windows, map, &guards);
+
+        /* Prompt user for unit selection */
+        drawInmateSelection(&windows, map, &inmates, &guards);
+
+        unitNode = getHead(&inmates);
+        for (int i = 0; i < inmates.count; i++) {
+            ((struct Inmate *) unitNode->unit)->position = path.first->location;
+            unitNode = unitNode->next;
+        }
+
+        /* Simulate unit interactions */
+        progress[level] = simulate(&windows, &guards, &inmates, &path);
+        if(progress[level]) gameMode=WIN;
+        else gameMode=LOSE;
+
+        /* Display outro text */
+        drawText(&windows, dialog[level], gameMode);
+
+    } while (level!=EXIT);
 
     uiFree(&windows);
     quit("Thanks for playing.\n");

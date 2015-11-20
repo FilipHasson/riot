@@ -75,7 +75,7 @@ enum GameMode menuMain(struct Windows *gameInterface) {
 }
 
 
-int menuContinue(struct Windows *gameInterface, struct MapList *mapList,
+int levelSelect(struct Windows *gameInterface, struct MapList *mapList,
     bool *playerProgress) {
     WINDOW *menu = gameInterface->menu;
     struct Map *current;
@@ -538,7 +538,7 @@ void drawText(struct Windows *windows, struct Dialog dialog,
 
     /* Restore window dimensions */
     wresize(windows->menu, MAX_ROWS, MAX_COLS);
-    wresize(windows->menu, 0, 0);
+    mvwin(windows->menu, 0, 0);
 }
 
 

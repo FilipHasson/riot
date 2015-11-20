@@ -156,7 +156,7 @@ void unitsMove(char *loadDir) {
 //                play(gameInterface,mapList->level[0]);
 //                break;
 //            case CONTINUE:
-//                levelSelect = menuContinue(&gameInterface, mapList);
+//                levelSelect = levelSelect(&gameInterface, mapList);
 //                play(gameInterface,mapList->level[levelSelect]);
 //                break;
 //            default:
