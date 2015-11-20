@@ -31,6 +31,7 @@ void parseMap(char *loadDir, struct MapList *mapList, struct Dialog *dialog) {
     /* Use map directory passed as argument if provided, else cwd */
     if (!loadDir) {
         loadDir = getcwd(loadDir, PATH_MAX);
+        strcat(loadDir,"/assets");
         useCwd = true;
     }
 
