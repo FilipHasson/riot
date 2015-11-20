@@ -2,10 +2,15 @@
 #define RIOT_MAP
 
 #include "riotExec.h"
+#include <locale.h>
+#include <wchar.h>
 
 #define PATH_MAX 4096
+#define LINE_MAX 72
 #define MAP_SIZE 1545
 #define MAX_LEVELS 10
+#define MAX_TEXT 500
+#define INMATE_TYPES 10
 #define REGEX_EXT "(\\.)?[0-9](.riot)$"
 
 

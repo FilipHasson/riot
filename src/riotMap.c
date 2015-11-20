@@ -14,13 +14,15 @@ void parseMap(char *loadDir, struct MapList *mapList, struct Dialog *dialog) {
     struct dirent *entry;
 
     char path[PATH_MAX];
-    char line[MAX_COLS];
+    wchar_t line[MAX_COLS];
     char *textBox[3];
-    char checkChar;
+    wchar_t checkChar;
     bool useCwd = false;
     bool firstRun = true;
 
     int x, y;
+
+    setlocale(LC_ALL, "");
 
     /* Compile regex */
     regcomp(&riotExt, REGEX_EXT, REG_NOSUB | REG_EXTENDED);
@@ -77,10 +79,10 @@ void parseMap(char *loadDir, struct MapList *mapList, struct Dialog *dialog) {
             strcpy(current->inmates, strtok(NULL, "\n"));
 
             /* Get map */
-            while ((fgetc(file) == '>'));
-            for (y = 0; y < MAP_ROWS; y++) {
-                fgets(current->overlay[y], MAP_COLS, file);
-                fseek(file, 2, SEEK_CUR);
+            while((fgetc(file)=='>'));
+            for(y=0;y<MAP_ROWS;y++) {
+                fgets(current->overlay[y], MAP_COLS*2, file);
+                fseek(file,2,SEEK_CUR);
             }
 
             /* Get text boxes*/
